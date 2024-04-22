@@ -7,8 +7,8 @@ import { THeaderprops } from "@/types"
 
 const Header: FC<THeaderprops> = ({ children, className }) => {
   return (
-    <Fragment>
-      <header className={clsx("", className)}>{children}</header>
+    <Fragment >
+      <header className={clsx("h-[137px]", className)}>{children}</header>
     </Fragment>
   )
 }

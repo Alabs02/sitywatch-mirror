@@ -1,0 +1,67 @@
+import React, { useState } from "react"
+import Link from "next/link"
+
+// Assuming Material UI icons are imported elsewhere in your project
+import HomeIcon from "@mui/icons-material/Home"
+import GistsIcon from "@mui/icons-material/Description" // Using DescriptionIcon as an alternative
+import ExploreIcon from "@mui/icons-material/Explore"
+import NotificationsIcon from "@mui/icons-material/Notifications"
+import ChatIcon from "@mui/icons-material/Chat"
+import MenuOpenIcon from "@mui/icons-material/MenuOpen"
+
+
+interface SidePaneProps {
+  children?: React.ReactNode 
+  isOpen?: boolean 
+  initialIsOpen?:
+  className?: string 
+}
+
+interface SideNavItem {
+  href: string
+  label: string
+  icon: React.ComponentType<any> 
+}
+
+const SidePane: React.FC<SidePaneProps> = ({
+  children,
+  isOpen = false,
+  initialIsOpen = false,
+  className,
+}) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(initialIsOpen)
+
+  const toggleSideNav = () => setInternalIsOpen(!isOpen)
+
+  const navItems: SideNavItem[] = [
+    { href: "/", label: "Home", icon: HomeIcon },
+    { href: "/gists", label: "Gists", icon: GistsIcon },
+    { href: "/explore", label: "Explore", icon: ExploreIcon },
+    { href: "/notifications", label: "Notifications", icon: NotificationsIcon },
+    { href: "/messages", label: "Messages", icon: ChatIcon },
+  ]
+
+  return (
+    <nav className={`${className} ${internalIsOpen ? "open" : ""}`}>
+      <button className="toggleBtn" onClick={toggleSideNav}>
+        <span className="sr-only">Toggle navigation</span>
+        <MenuOpenIcon fontSize="small" /> 
+      </button>
+      <ul className="navList">
+        {navItems.map((item) => (
+          <li key={item.label} className="navItem">
+            <Link href={item.href}>
+              <a className="navLink">
+                <item.icon fontSize="small" />{" "}
+                {/* Use fontSize prop for smaller icons */}
+                {item.label}
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+export default SidePane
