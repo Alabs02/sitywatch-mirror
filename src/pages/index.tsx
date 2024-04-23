@@ -12,7 +12,7 @@ export default function Home() {
         <AppLayout.Header className="col-span-full">
           {" "}
           {/* Header spans all columns */}
-          <nav>Nav component goes here</nav>
+          
         </AppLayout.Header>
         <AppLayout.SidePane className="col-span-3">
           {" "}

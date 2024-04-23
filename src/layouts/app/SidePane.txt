@@ -65,3 +65,6 @@ const SidePane: React.FC<SidePaneProps> = ({
 }
 
 export default SidePane
+
+
+ // group-hover:bg-gradient-to-b from-[#F24055] to-[#1E7881]

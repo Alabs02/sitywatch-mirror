@@ -31,3 +31,10 @@ body {
     text-wrap: balance;
   }
 }
+// text gradient styles
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  transition: background-image 0.3s ease-in-out;
+}
