@@ -10,6 +10,9 @@ import PandaHeadIcon from "@mui/icons-material/Whatshot"
 import { EditNotificationsSharp } from "@mui/icons-material"
 import { useRouter } from "next/router"
 
+// ICONS
+// import HomeIcon from "@/components/atoms/HomeIcon"
+
 interface SidePaneProps {
   children?: React.ReactNode
   isOpen?: boolean
