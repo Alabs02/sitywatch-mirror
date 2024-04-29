@@ -11,7 +11,7 @@ import { EditNotificationsSharp } from "@mui/icons-material"
 import { useRouter } from "next/router"
 
 // ICONS
-// import HomeIcon from "@/components/atoms/HomeIcon"
+// import HomeIcon from "@/components/atoms/HomeAppLogo"
 
 interface SidePaneProps {
   children?: React.ReactNode
@@ -94,7 +94,7 @@ const SidePane: React.FC<SidePaneProps> = ({
           background-clip: text;
           -webkit-background-clip: text;
           color: transparent;
-          transition: background-image 0.3s ease-in-out;
+          transition: background-image 0.7s ease-in-out;
           background-image: linear-gradient(to bottom, #f24055, #1e7881);
         }
       `}</style>

@@ -37,5 +37,13 @@ body {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.7s ease-in-out;
 }
+.h1-with-border::before {
+  content: "411 "; /* Add space after 411 */
+  display: inline-block;
+  margin-right: 10px; /* Adjust margin as needed */
+  border-right: 3px solid gray; /* Define border style */
+  padding-right: 5px; /* Add padding after the border */
+}
+

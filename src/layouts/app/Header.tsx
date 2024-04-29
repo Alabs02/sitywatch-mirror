@@ -1,4 +1,4 @@
-import React, { Fragment, FC } from "react"
+import React, { Fragment, FC, useState, useEffect } from "react"
 import clsx from "clsx"
 import Image from "next/image"
 import HomeIcon from "@/components/atoms/HomeIcon"
@@ -8,23 +8,46 @@ interface HeaderProps {
   children?: React.ReactNode 
   className?: string 
 }
+const texts = [
+  "This is the first sentence.",
+  "This is the second sentence.",
+  "This is the third sentence.",
+  "This is the fourth sentence.",
+];
+
+
 
 const Header: FC<HeaderProps> = ({ children, className }) => {
+const [currentText, setCurrentText] = useState(texts[0]); 
+useEffect(() => {
+  const intervalId = setInterval(() => {
+    const nextIndex = (texts.indexOf(currentText) + 1) % texts.length
+    if (nextIndex === texts.length) {
+      setCurrentText(texts[0])
+    } else {
+      setCurrentText(texts[nextIndex])
+    }
+    console.log("Current Text:", currentText)
+  }, 3000)
+
+  return () => clearInterval(intervalId)
+}, [currentText])
+
+
+
+
   return (
     <Fragment>
       <header className={clsx("h-[137px] px-2 md:px-6", className)}>
         <div className="flex h-full items-center justify-between">
           <div className="">
-            <HomeIcon
-              width={50}
-              height={50}
-            />
+            <HomeIcon width={50} height={50} />
           </div>
 
           {/* Center Section: Dynamic Text */}
-          <div className="text-center border-l-2 border-gray-500 pl-4">
+          <div className="text-center pl-4 ">
             {/* Logig for changing texts after secs */}
-            <h1>Some text to be replaced</h1>
+            <h1 className="h1-with-border">{currentText}</h1>
           </div>
 
           {/* Right Section: Search Icon, Avatar, Hamburger Menu */}
