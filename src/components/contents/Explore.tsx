@@ -1,9 +1,7 @@
 import React from 'react'
 
-const Explore = () => {
-  return (
-    <div>Explore</div>
-  )
+const Explore: React.FC = () => {
+  return <div>Explore</div>
 }
 
 export default Explore

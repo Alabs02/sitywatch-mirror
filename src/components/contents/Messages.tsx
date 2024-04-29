@@ -1,9 +1,7 @@
 import React from 'react'
 
-const Messages = () => {
-  return (
-    <div>Messages</div>
-  )
+const Messages: React.FC = () => {
+  return <div>Messages</div>
 }
 
 export default Messages

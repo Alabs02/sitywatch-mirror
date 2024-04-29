@@ -1,9 +1,7 @@
 import React from 'react'
 
-const Bookmarks = () => {
-  return (
-    <div>Bookmarks</div>
-  )
+const Bookmarks: React.FC = () => {
+  return <div>Bookmarks</div>
 }
 
 export default Bookmarks
