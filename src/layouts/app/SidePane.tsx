@@ -67,7 +67,7 @@ const SidePane: React.FC<SidePaneProps> = ({
         {navItems.map((item) => (
           <li key={item.label} className="navItem py-2 md:py-4 group">
             {/* Use Link with legacyBehavior and passHref */}
-            <Link href={item.href} passHref legacyBehavior>
+            <Link href={item.href}>
               <span
                 className={`
         navLink inline-flex rounded-md
