@@ -68,3 +68,13 @@ export default SidePane
 
 
  // group-hover:bg-gradient-to-b from-[#F24055] to-[#1E7881]
+
+    <main className="w-[100%] lg:w-[calc(100%-80px)] xl:w-[calc(100%-280px)] col-span-10 border">
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}
+
+export default Layout

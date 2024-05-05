@@ -59,3 +59,10 @@ body {
   padding-right: 5px; /* Add padding after the border */
 }
 
+// Primary gradient
+.text-gradient {
+  background-clip: text;
+  background-color: linear-gradient(to bottom, #f24055, #1e7881);
+}
+
+
