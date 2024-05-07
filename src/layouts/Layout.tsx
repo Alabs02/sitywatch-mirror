@@ -53,7 +53,6 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
     <div className="min-h-screen overflow-hidden">
       {/* <nav className=" h-[80px] flex items-center px-8"></nav> */}
       <Header />
-
       <div className="flex min-h-[calc(100vh-80px)]">
         <aside className={sidebarClasses}>
           <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
