@@ -1,12 +1,13 @@
-import React, { ReactNode, FC, useState, useEffect } from "react"
+import React, { ReactNode, FC, useState } from "react"
 import Link from "next/link"
 import classnames from "classnames"
-import Header from "./app/Header"
+import Header from "./app/Header" 
+import clsx from "clsx"
 
 interface NavLink {
   href: string
   label: string
-  icon: string // We'll keep the icon definition for future use
+  icon: string
 }
 
 const navLinks: NavLink[] = [
@@ -19,52 +20,34 @@ const navLinks: NavLink[] = [
   { href: "/bookmarks", label: "Bookmarks", icon: "bookmarks" },
 ]
 
-
 const Layout: FC<{ children: ReactNode }> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
-   const [activeLink, setActiveLink] = useState("/")
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+  const [activeLink, setActiveLink] = useState("/")
 
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed)
+ const handleLinkClick = (href: string): boolean => {
+   const shouldCollapse = ["/messages", "/explore"].includes(href)
+   setActiveLink(href)
+   setIsCollapsed(shouldCollapse)
+   return shouldCollapse
+ }
+
 
   const sidebarClasses = classnames(
     "w-full lg:w-[80px] xl:w-[280px] p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200",
     {
-      "xl:w-0": isCollapsed || screenWidth < 768, 
+      "flex-shrink": 0,
+      "w-[200px]": !isCollapsed,
     },
   )
 
   const linkClasses = (isActive: boolean) =>
     classnames("text-lg", "font-medium", "flex", "items-center", "xl:gap-x-2", {
       "text-hidden xl:text-block": isCollapsed,
-      "bg-gradient-to-b from-[#F24055] to-[#1E7881]": isActive,
+      "bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text": isActive,
+      "bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-primary-500 hover:to-secondary-500 font-medium transition-colors duration-[400ms]":
+        !isCollapsed,
     })
 
-
-  const dropGistButtonClasses = classnames(
-    "toggleBtn rounded-full text-sm text-white px-4 py-1",
-    {
-      "bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center": true,
-      "w-full": isCollapsed,
-      "w-auto": !isCollapsed,
-    },
-  )
-
-  const handleResize = () => setScreenWidth(window.innerWidth)
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
-  const handleLinkClick = (href: string) => {
-    setActiveLink(href)
-    if (["/messages", "/explore"].includes(href)) {
-      setIsCollapsed(true)
-    } else {
-      setIsCollapsed(false) // Reset collapse for other links
-    }
-  }
 
   return (
     <div className="min-h-screen overflow-hidden">
@@ -73,30 +56,28 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
 
       <div className="flex min-h-[calc(100vh-80px)]">
         <aside className={sidebarClasses}>
-          <button className={dropGistButtonClasses}>
-            <span className="material-symbols-outlined">draft_orders</span>
-            <span className={`mx-2 ${isCollapsed ? "hidden" : "sm:block"}`}>
-              Drop a Gist
+          <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
+            <span className="material-symbols-outlined text-[26px] lg:text-inherit">
+              draft_orders
             </span>
+            <span className={clsx("hidden lg:inline")}>Drop a Gist</span>
           </button>
           {navLinks.map((navLink) => (
             <Link
               key={navLink.href}
               href={navLink.href}
-              className={linkClasses(navLink.href === activeLink)} // Pass active state
+              className={clsx(
+                "flex items-center gap-x-2 font-medium transition-colors duration-[400ms]",
+                isCollapsed && handleLinkClick(navLink.href) ? "collapsed" : "",
+                linkClasses(navLink.href === activeLink),
+              )}
               onClick={() => handleLinkClick(navLink.href)}
             >
-              <div className="h-10 w-10 overflow-hidden grid place-items-center">
-                <span className="material-symbols-outlined">
-                  {navLink.icon}
-                </span>
-              </div>
-              {/* Hide text on collapse on all screens */}
+              <i className="material-symbols-outlined">{navLink.icon}</i>
               <span
-                className={classnames(
-                  linkClasses(navLink.href === activeLink),
-                  navLink.label,
-                )}
+                className={clsx("hidden lg:inline-block", {
+                  hidden: isCollapsed,
+                })}
               >
                 {navLink.label}
               </span>
@@ -104,11 +85,6 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
           ))}
         </aside>
 
-        {/* <p className="font-semibold text-xl uppercase">Scout City</p> */}
-        {/* <button className="focus:outline-none" onClick={toggleSidebar}>
-          TOGGLE ICON FOR SIDENAV COLLAPSE
-          <span className="material-symbols-outlined">switch_left</span>
-        </button> */}
         <main className="w-[100%] lg:w-[calc(100%-80px)] xl:w-[calc(100%-280px)] col-span-10 mt-4 ml-4">
           {children}
         </main>
@@ -118,3 +94,4 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
 }
 
 export default Layout
+

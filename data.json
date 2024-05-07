@@ -1,0 +1,25 @@
+{
+  "home": {
+    "carousel": [
+      {
+        "image": "/images/carousel/image1.jpg",
+        "text": "Slide 1 Text",
+        "link": "/more-info" 
+      },
+      {
+        "image": "/images/carousel/image2.jpg",
+        "text": "Slide 2 Text",
+        "link": "/" 
+      }
+      
+    ],
+    "featuredCard": {
+      "image": "/images/featured-card.jpg",
+      "icon": "star_outline", 
+      "description": "This is the featured card description."
+    }
+  },
+  "otherPage": { 
+    
+  }
+}

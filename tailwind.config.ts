@@ -1,9 +1,10 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
 const colors = {
   transparent: "transparent",
   primary: {
     DEFAULT: "#F24055",
+    content: "#fef4f5",
     100: "#fcd9dd",
     200: "#fab3bb",
     300: "#f78c99",
@@ -128,4 +129,4 @@ const config: Config = {
   },
   plugins: [require("@tailwindcss/typography")],
 }
-export default config;
+export default config
