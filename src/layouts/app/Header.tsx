@@ -38,7 +38,7 @@ useEffect(() => {
 
   return (
     <Fragment>
-      <header className={clsx("h-[137px] px-2 md:px-6 sticky top-0", className)}>
+      <header className={clsx("h-[137px] px-2 md:px-6 border border-[red] sticky", className)}>
         <div className="flex h-full items-center justify-between">
           <div className="">
             <HomeIcon width={50} height={50} />

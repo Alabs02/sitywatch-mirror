@@ -1,7 +1,7 @@
 import React, { ReactNode, FC, useState } from "react"
 import Link from "next/link"
 import classnames from "classnames"
-import Header from "./app/Header" 
+import Header from "./app/Header"
 import clsx from "clsx"
 
 interface NavLink {
@@ -24,37 +24,35 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeLink, setActiveLink] = useState("/")
 
- const handleLinkClick = (href: string): boolean => {
-   const shouldCollapse = ["/messages", "/explore"].includes(href)
-   setActiveLink(href)
-   setIsCollapsed(shouldCollapse)
-   return shouldCollapse
- }
-
-
-  const sidebarClasses = classnames(
-    "w-full lg:w-[80px] xl:w-[280px] p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200",
-    {
-      "flex-shrink": 0,
-      "w-[200px]": !isCollapsed,
-    },
-  )
+  const handleLinkClick = (href: string): boolean => {
+    const shouldCollapse = ["/messages", "/explore"].includes(href)
+    setActiveLink(href)
+    setIsCollapsed(shouldCollapse)
+    return shouldCollapse
+  }
 
   const linkClasses = (isActive: boolean) =>
     classnames("text-lg", "font-medium", "flex", "items-center", "xl:gap-x-2", {
-      "text-hidden xl:text-block": isCollapsed,
+      "text-hidden lg:text-block": isCollapsed,
       "bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text": isActive,
       "bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-primary-500 hover:to-secondary-500 font-medium transition-colors duration-[400ms]":
         !isCollapsed,
     })
 
-
   return (
     <div className="min-h-screen overflow-hidden">
-      {/* <nav className=" h-[80px] flex items-center px-8"></nav> */}
       <Header />
-      <div className="flex min-h-[calc(100vh-80px)]">
-        <aside className={sidebarClasses}>
+      <div className="flex min-h-[calc(100vh-137px)] sticky">
+        <aside
+          className={classnames(
+            " lg:w-[80px] xl:w-[280px] p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red]",
+            {
+              "flex-shrink": 0,
+              "w-[200px]": !isCollapsed,
+              fixed: isCollapsed, // Add fixed class if collapsed
+            },
+          )}
+        >
           <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
             <span className="material-symbols-outlined text-[26px] lg:text-inherit">
               draft_orders
@@ -84,7 +82,7 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
           ))}
         </aside>
 
-        <main className="w-[100%] lg:w-[calc(100%-80px)] xl:w-[calc(100%-280px)] col-span-10 mt-4 ml-4">
+        <main className="w-[100%] lg:w-[calc(100%-80px)] xl:w-[calc(100%-280px)] col-span-10 mt-4 ml-4 overflow-y-scroll">
           {children}
         </main>
       </div>
@@ -93,4 +91,3 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
 }
 
 export default Layout
-
