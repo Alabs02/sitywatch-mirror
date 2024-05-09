@@ -42,7 +42,7 @@ const PandaUs = () => {
           </a>
         </nav>
         {/* Content for each tab */}
-        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/75 border rounded-t-[20px]">
+        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
           {activeTab === "PANDA POLLS" && <div>PANDA POLLS Content</div>}
           {activeTab === "SOUL PANDA" && <div>SOUL PANDA Content</div>}
           {activeTab === "PANDA SCENTS" && <div>PANDA SCENTS Content</div>}

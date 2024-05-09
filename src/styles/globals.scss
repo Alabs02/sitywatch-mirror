@@ -64,5 +64,17 @@ body {
   background-clip: text;
   background-color: linear-gradient(to bottom, #f24055, #1e7881);
 }
+.tab-link {
+  white-space: nowrap;
+  overflow: hidden;
+  // text-overflow: ellipsis;
+}
+
+// .tab-link:hover {
+//   overflow: visible;
+//   white-space: normal;
+//   text-overflow: unset;
+// }
+
 
 
