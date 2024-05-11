@@ -15,7 +15,7 @@ const Notifications = () => {
         <nav className="flex p-4 items-center space-x-2 overflow-x-auto">
           <a
             href="#"
-            className={`tab-link flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
+            className={`tab-link items-center justify-center p-1 w-[30px] inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
               activeTab === "All" ? "active-tab text-green-600" : ""
             }`}
             onClick={() => handleTabClick("All")}
@@ -24,7 +24,7 @@ const Notifications = () => {
           </a>
           <a
             href="#"
-            className={`tab-link text-sm bg-slate-100 border border-gray-400 rounded-2 ${
+            className={`tab-link items-center justify-center p-1  inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
               activeTab === "Sertified" ? "active-tab text-green-600" : ""
             }`}
             onClick={() => handleTabClick("Sertified")}
@@ -33,7 +33,7 @@ const Notifications = () => {
           </a>
           <a
             href="#"
-            className={`tab-link m-2 text-sm bg-slate-100 border border-gray-400 rounded-2 ${
+            className={`tab-link items-center justify-center p-1 inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
               activeTab === "Invites" ? "active-tab text-green-600" : ""
             }`}
             onClick={() => handleTabClick("Invites")}
@@ -43,7 +43,12 @@ const Notifications = () => {
         </nav>
         {/* Content for each tab */}
         <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
-          {activeTab === "All" && <div> <NotificationsContent/> </div>}
+          {activeTab === "All" && (
+            <div>
+              {" "}
+              <NotificationsContent />{" "}
+            </div>
+          )}
           {activeTab === "Sertified" && <div>Certified Content</div>}
           {activeTab === "Invites" && <div>Invites Content</div>}
           {/* Add more content components as needed */}
