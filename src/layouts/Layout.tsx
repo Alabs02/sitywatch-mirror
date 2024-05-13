@@ -47,37 +47,38 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
      <div className="flex min-h-[calc(100vh-137px)] sticky">
        <aside
          className={classnames(
-           "w-10 lg:w-80 xl:w-280 p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red] z-10", 
+           "p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red] z-10",
            {
              "flex-shrink": 0,
              "w-full lg:w-80 xl:w-280": !isCollapsed,
              fixed: isCollapsed,
-             "w-full lg:w-[65px] xl:w-[65px]": isCollapsed,
+             "h-full w-full lg:w-[85px]": isCollapsed,
            },
          )}
        >
          <button
            className={classnames(
-             "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow",
-             { 
-               ".collapsed &": {
-                 padding: "8px", 
-               },
-               ".collapsed & .text-content": {
+             "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow z-50",
+             {
+               // Hide text conditionally based on collapse and screen size
+               ".collapsed &, .sm:hidden &": {
                  opacity: 0,
                  transition: "opacity 0.2s ease-in-out",
                },
+               // Adjust icon size on collapse (optional)
                ".collapsed & .material-symbols-outlined": {
-                 fontSize: "18px",
+                 fontSize: "18px", // Adjust size as needed
                },
              },
            )}
          >
+           {isCollapsed || window.innerWidth < 768 ? ( 
+             <span className="hidden">Drop a Gist</span>
+           ) : (
+             <span className="text-content lg:inline">Drop a Gist</span>
+           )}
            <span className="material-symbols-outlined text-[26px] lg:text-inherit">
              draft_orders
-           </span>
-           <span className={clsx("text-content", "hidden lg:inline")}>
-             Drop a Gist
            </span>
          </button>
 
@@ -85,12 +86,15 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
            <Link
              key={navLink.href}
              href={navLink.href}
-             className={clsx(linkClasses(navLink.href === activeLink))}
+             className={clsx(
+               "transition-all duration-[450ms]",
+               linkClasses(navLink.href === activeLink),
+             )}
              onClick={() => handleLinkClick(navLink.href)}
            >
              <i className="material-symbols-outlined">{navLink.icon}</i>
              <span
-               className={clsx("collapsed:hidden lg:inline", {
+               className={clsx("collapsed:hidden", {
                  hidden: isCollapsed,
                })}
              >
@@ -102,7 +106,10 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
        <main
          className={classnames(
            "flex-grow overflow-y-scroll mt-4 ml-4",
-           isCollapsed ? "lg:w-3/4 xl:w-2/3" : "lg:w-full xl:w-full",
+           isCollapsed
+             ? "lg:w-3/4 xl:w-2/3 lg:ml-[120px]"
+             : "lg:w-full xl:w-full",
+           { overflow: "hidden" },
          )}
        >
          {children}
