@@ -3,6 +3,7 @@ import Link from "next/link"
 import classnames from "classnames"
 import Header from "./app/Header"
 import clsx from "clsx"
+import CustomButton from "@/components/molecules/Btn"
 
 interface NavLink {
   href: string
@@ -23,6 +24,8 @@ const navLinks: NavLink[] = [
 const Layout: FC<{ children: ReactNode }> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeLink, setActiveLink] = useState("/")
+  const [isHovered, setIsHovered] = useState(false)
+
 
   const handleLinkClick = (href: string) => {
     setActiveLink(href)
@@ -31,15 +34,17 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
   // useEffect to handle isCollapsed state based on activeLink
   useEffect(() => {
     setIsCollapsed(["/messages", "/explore"].includes(activeLink))
+    setIsHovered(false)
   }, [activeLink])
 
-  const linkClasses = (isActive: boolean) =>
+  const linkClasses = (isActive: boolean, isHovered: boolean) =>
     classnames("text-lg", "font-medium", "flex", "items-center", "xl:gap-x-2", {
-      // "text-hidden": isCollapsed, 
-      "bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text": isActive,
+      "bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text":
+        isActive && !isHovered,
       "bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-primary-500 hover:to-secondary-500 font-medium transition-colors duration-[400ms]":
-        !isCollapsed,
+        !isActive || isHovered,
     })
+
 
  return (
    <div className="min-h-screen overflow-hidden">
@@ -56,31 +61,7 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
            },
          )}
        >
-         <button
-           className={classnames(
-             "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow z-50",
-             {
-               // Hide text conditionally based on collapse and screen size
-               ".collapsed &, .sm:hidden &": {
-                 opacity: 0,
-                 transition: "opacity 0.2s ease-in-out",
-               },
-               // Adjust icon size on collapse (optional)
-               ".collapsed & .material-symbols-outlined": {
-                 fontSize: "18px", // Adjust size as needed
-               },
-             },
-           )}
-         >
-           {isCollapsed || window.innerWidth < 768 ? ( 
-             <span className="hidden">Drop a Gist</span>
-           ) : (
-             <span className="text-content lg:inline">Drop a Gist</span>
-           )}
-           <span className="material-symbols-outlined text-[26px] lg:text-inherit">
-             draft_orders
-           </span>
-         </button>
+         <CustomButton isCollapsed={isCollapsed} />
 
          {navLinks.map((navLink) => (
            <Link
@@ -88,9 +69,14 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
              href={navLink.href}
              className={clsx(
                "transition-all duration-[450ms]",
-               linkClasses(navLink.href === activeLink),
+               linkClasses(
+                 navLink.href === activeLink,
+                 navLink.href === activeLink && isHovered,
+               ),
              )}
              onClick={() => handleLinkClick(navLink.href)}
+             onMouseEnter={() => setIsHovered(true)}
+             onMouseLeave={() => setIsHovered(false)}
            >
              <i className="material-symbols-outlined">{navLink.icon}</i>
              <span
