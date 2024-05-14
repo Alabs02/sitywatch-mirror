@@ -91,9 +91,9 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
        </aside>
        <main
          className={classnames(
-           "flex-grow overflow-y-scroll mt-4 ml-4",
+           "flex-grow overflow-y-scroll",
            isCollapsed
-             ? "lg:w-3/4 xl:w-2/3 lg:ml-[120px]"
+             ? "lg:w-3/4 xl:w-2/3 lg:ml-[100px]"
              : "lg:w-full xl:w-full",
            { overflow: "hidden" },
          )}
