@@ -1,25 +1,23 @@
+
 {
-  "home": {
-    "carousel": [
-      {
-        "image": "/images/carousel/image1.jpg",
-        "text": "Slide 1 Text",
-        "link": "/more-info" 
-      },
-      {
-        "image": "/images/carousel/image2.jpg",
-        "text": "Slide 2 Text",
-        "link": "/" 
-      }
-      
-    ],
-    "featuredCard": {
-      "image": "/images/featured-card.jpg",
-      "icon": "star_outline", 
-      "description": "This is the featured card description."
+  "tourneys": [
+    {
+      "id": 1,
+      "title": "Tourney 1",
+      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/abujatrade.jpg",
+      "description": "Description for Tourney 1"
+    },
+    {
+      "id": 2,
+      "title": "Tourney 2",
+      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/afrima2.png",
+      "description": "Description for Tourney 2"
+    },
+    {
+      "id": 3,
+      "title": "Tourney 3",
+      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/lagosphoto.jfif",
+      "description": "Description for Tourney 3"
     }
-  },
-  "otherPage": { 
-    
-  }
+  ]
 }
