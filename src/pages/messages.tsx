@@ -1,3 +1,7 @@
+import Dispatches from "@/components/contents/messages/Dispatches"
+import Invites from "@/components/contents/messages/Invites"
+import Plugs from "@/components/contents/messages/Plugs"
+import Whispers from "@/components/contents/messages/Whispers"
 import React, { useState } from "react"
 
 const message = () => {
@@ -15,18 +19,18 @@ const message = () => {
               <a
                 href="#"
                 className={`tab-link w-full md:w-auto text-center md:text-left ${
-                  activeTab === "GISTS" ? "active-tab text-green-600" : ""
+                  activeTab === "" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("GISTS")}
+                onClick={() => handleTabClick("nothing")}
               >
                 SEND A NEW MESSAGE
               </a>
               <a
                 href="#"
                 className={`tab-link w-full md:w-auto text-center md:text-left ${
-                  activeTab === "AFFAIRS" ? "active-tab text-green-600" : ""
+                  activeTab === "" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("AFFAIRS")}
+                onClick={() => handleTabClick("Nothing")}
               >
                 SEARCH MESSAGE
               </a>
@@ -35,43 +39,89 @@ const message = () => {
               <a
                 href="#"
                 className={`tab-link ${
-                  activeTab === "NEWS" ? "active-tab text-green-600" : ""
+                  activeTab === "WHISPERS" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("NEWS")}
+                onClick={() => handleTabClick("WHISPERS")}
               >
                 WHISPERS
               </a>
               <a
                 href="#"
                 className={`tab-link ${
-                  activeTab === "EVENTS" ? "active-tab text-green-600" : ""
+                  activeTab === "INVITES" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("EVENTS")}
+                onClick={() => handleTabClick("INVITES")}
               >
                 INVITES
               </a>
               <a
                 href="#"
                 className={`tab-link ${
-                  activeTab === "BLOG" ? "active-tab text-green-600" : ""
+                  activeTab === "DISPATCHES" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("BLOG")}
+                onClick={() => handleTabClick("DISPATCHES")}
               >
                 DISPATCHES
               </a>
               <a
                 href="#"
                 className={`tab-link ${
-                  activeTab === "BLOG" ? "active-tab text-green-600" : ""
+                  activeTab === "PLUGS" ? "active-tab text-green-600" : ""
                 }`}
-                onClick={() => handleTabClick("BLOG")}
+                onClick={() => handleTabClick("PLUGS")}
               >
                 PLUGS
               </a>
             </div>
           </nav>
+          {/* Content for each tab */}
+          <div className="w-full h-full tab-content mt-4 px-4">
+            {activeTab === "WHISPERS" && (
+              <div>
+                <Whispers />
+              </div>
+            )}
+            {activeTab === "INVITES" && (
+              <div>
+                <Invites />
+              </div>
+            )}
+            {activeTab === "DISPATCHES" && (
+              <div>
+                <Dispatches />
+              </div>
+            )}
+            {activeTab === "PLUGS" && (
+              <div>
+                <Plugs />
+              </div>
+            )}
+          </div>
         </section>
-        <section className="bg-neutral-300 col-span-1">Right</section>
+        <section className="bg-neutral-300 col-span-1">
+          <div className="w-full h-full tab-content mt-4 px-4 place-content-center">
+            {activeTab === "WHISPERS" && (
+              <div>
+                <Whispers />
+              </div>
+            )}
+            {activeTab === "INVITES" && (
+              <div>
+                <Invites />
+              </div>
+            )}
+            {activeTab === "DISPATCHES" && (
+              <div>
+                <Dispatches />
+              </div>
+            )}
+            {activeTab === "PLUGS" && (
+              <div>
+                <Plugs />
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   )
