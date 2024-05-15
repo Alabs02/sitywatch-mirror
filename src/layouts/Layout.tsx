@@ -49,15 +49,15 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
  return (
    <div className="min-h-screen overflow-hidden">
      <Header />
-     <div className="flex min-h-[calc(100vh-137px)] sticky">
+     <div className="flex min-h-[calc(100vh - 137px)] sticky">
        <aside
          className={classnames(
-           "p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red] z-10",
+           "flex min-h-[calc(100vh - 137px)] sticky p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red] z-10",
            {
              "flex-shrink": 0,
              "w-full lg:w-80 xl:w-280": !isCollapsed,
              fixed: isCollapsed,
-             "h-full w-full lg:w-[85px]": isCollapsed,
+             "w-full lg:w-[85px]": isCollapsed,
            },
          )}
        >
@@ -91,21 +91,17 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
        </aside>
        <main
          className={classnames(
-           "flex-grow overflow-y-scroll",
+           "flex-grow overflow-y-scroll", // Ensure flex-grow property is included
            isCollapsed
              ? "lg:w-3/4 xl:w-2/3 lg:ml-[100px]"
              : "lg:w-full xl:w-full",
-           { overflow: "hidden" },
          )}
        >
-         {children}
+         <div className="overflow-y-auto h-full">{children}</div>
        </main>
      </div>
    </div>
  )
-
-
-
 }
 
 export default Layout

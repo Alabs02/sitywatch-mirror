@@ -1,18 +1,20 @@
-import { FC, ReactNode, useEffect, useState } from "react"
-import tourneysData from "../../data.json"
+import { FC, ReactNode, useEffect, useState } from "react";
+import tourneysData from "../../data.json";
 
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
+  const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const tourneyInterval = setInterval(() => {
       setCurrentTourneyIndex((prevIndex) =>
-        prevIndex === tourneysData.tourneys.length - 1 ? 0 : prevIndex + 1,
-      )
-    }, 5000) // Change image every 5 seconds
+        prevIndex === tourneysData.leftSection.tourneys.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); 
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => {
+      clearInterval(tourneyInterval);
+    };
+  }, []);
 
   return (
     <div className="grid w-full h-full pr-5">
@@ -20,21 +22,19 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
         <section className="h-full w-full grid grid-cols-12">
           <div className="grid col-span-8 border border-bg-[red] bg-orange-400 p-16 rounded-lg relative overflow-hidden">
             <div className="w-full h-full absolute top-0 left-0 transition-opacity">
-              {tourneysData.tourneys.map((tourney, index) => (
+              {tourneysData.leftSection.tourneys.map((tourney, index) => (
                 <div
                   key={tourney.id}
                   className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity ${
                     index === currentTourneyIndex ? "opacity-100" : "opacity-0"
                   }`}
-                  style={{ aspectRatio: "16/9" }} 
                 >
                   <img
                     src={tourney.image}
                     alt={tourney.title}
                     className="w-full h-full object-cover"
-                    style={{ objectFit: "cover" }} // Ensure image covers the container
                   />
-                  <div className="absolute bottom-0 left-0 p-4 bg-black bg-opacity-50 text-white">
+                  <div className="absolute bottom-0 left-0 p-4 text-tertiary-400">
                     <h2 className="text-lg font-semibold">{tourney.title}</h2>
                     <p className="text-sm">{tourney.description}</p>
                   </div>
@@ -42,16 +42,37 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
               ))}
             </div>
           </div>
-          <div className="col-span-4 border border-bg-[red] bg-orange-700 p-16 rounded-lg">
-            right
+          <div className="col-span-4 border border-tertiary-400 bg-neutral-200 p-6 rounded-lg gap-y-4">
+            <div className="flex items-center">
+              <span className="material-symbols-outlined text-3xl mr-2 bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
+                add_circle
+              </span>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-y-2">
+              <div className=" rounded-full shadow-md overflow-hidden w-[70px] h-[70px] p-4">
+                <img
+                  src={tourneysData.rightSection.cards[0].image}
+                  alt={tourneysData.rightSection.cards[0].title}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+
+              <div className="flex flex-col place-content-center text-center">
+                <h3 className="text-sm font-bold">
+                  {tourneysData.rightSection.cards[0].title}
+                </h3>
+                {tourneysData.rightSection.cards[0].description}
+                <p className="text-sm"></p>
+              </div>
+            </div>
           </div>
         </section>
         <section className="mt-8">
           <h1 className="font-bold">
             Suggested Tourneys That Might Interest You
           </h1>
-          <div className="grid grid-cols-12 w-full gap-x-2 ">
-            {tourneysData.tourneys.map((tourney) => (
+          <div className="grid grid-cols-12 w-full gap-x-2">
+            {tourneysData.leftSection.tourneys.map((tourney) => (
               <div
                 key={tourney.id}
                 className="grid col-span-4 border border-[red] p-24"
@@ -70,6 +91,6 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
       </div>
     </div>
   )
-}
+};
 
-export default Home
+export default Home;

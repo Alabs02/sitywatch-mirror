@@ -1,23 +1,35 @@
-
 {
-  "tourneys": [
-    {
-      "id": 1,
-      "title": "Tourney 1",
-      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/abujatrade.jpg",
-      "description": "Description for Tourney 1"
-    },
-    {
-      "id": 2,
-      "title": "Tourney 2",
-      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/afrima2.png",
-      "description": "Description for Tourney 2"
-    },
-    {
-      "id": 3,
-      "title": "Tourney 3",
-      "image": "/coreAssets/HomePage/PageContent/anticipatedEvents/lagosphoto.jfif",
-      "description": "Description for Tourney 3"
-    }
-  ]
+  "leftSection": {
+    "tourneys": [
+      {
+        "id": 1,
+        "title": "Tourney 1",
+        "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/naira.png",
+        "description": "Description for Tourney 1"
+      },
+      {
+        "id": 2,
+        "title": "Tourney 2",
+        "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/amazon-and-ebay.jpg",
+        "description": "Description for Tourney 2"
+      },
+      {
+        "id": 3,
+        "title": "Tourney 3",
+        "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/crowdevent.jfif",
+        "description": "Description for Tourney 3"
+      }
+    ]
+  },
+  "rightSection": {
+    "cards": [
+      {
+        "id": 1,
+        "icon": "add_circle",
+        "title": "Build a Sitadel",
+        "description": "Make it easy for people to scout your brand, business, organization, events, side-hustle. etc.",
+        "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/castle.svg"
+      }
+    ]
+  }
 }
