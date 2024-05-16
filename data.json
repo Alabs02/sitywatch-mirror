@@ -5,19 +5,19 @@
         "id": 1,
         "title": "Tourney 1",
         "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/naira.png",
-        "description": "Description for Tourney 1"
+        "description": "Do you sell products or have a service you provide? Build a sitadel and boost customer traffic now."
       },
       {
         "id": 2,
         "title": "Tourney 2",
         "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/amazon-and-ebay.jpg",
-        "description": "Description for Tourney 2"
+        "description": "Do you sell products or have a service you provide? Build a sitadel and boost customer traffic now."
       },
       {
         "id": 3,
         "title": "Tourney 3",
         "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/crowdevent.jfif",
-        "description": "Description for Tourney 3"
+        "description": "Do you sell products or have a service you provide? Build a sitadel and boost customer traffic now."
       }
     ]
   },
@@ -27,8 +27,64 @@
         "id": 1,
         "icon": "add_circle",
         "title": "Build a Sitadel",
-        "description": "Make it easy for people to scout your brand, business, organization, events, side-hustle. etc.",
+        "description": "Make it easy for people to scout your brand, business, organization, events, side-hustle, etc.",
         "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/castle.svg"
+      }
+    ],
+    "bottomCards": [
+      {
+        "id": 1,
+        "title": "Bottom Card 1",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/sonyworld.jpeg",
+        "icon": "bookmark",
+        "header": "Sony World Photography Awards 2023",
+        "hashtag": "#SWPA_SC2023",
+        "description": "$25.000 cash price. Entry deadline, 30th march, 2023."
+      },
+      {
+        "id": 2,
+        "title": "Bottom Card 2",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/literaryComp.jfif",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 2",
+        "hashtag": "#BottomCard2Hashtag",
+        "description": "$25.000 cash price."
+      },
+      {
+        "id": 3,
+        "title": "Bottom Card 3",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/lifeinmycity.jfif",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      },
+      {
+        "id": 4,
+        "title": "Bottom Card 1",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/sonyworld.jpeg",
+        "icon": "bookmark",
+        "header": "Sony World Photography Awards 2023",
+        "hashtag": "#SWPA_SC2023",
+        "description": "$25.000 cash price. Entry deadline, 30th march, 2023."
+      },
+      {
+        "id": 5,
+        "title": "Bottom Card 2",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/literaryComp.jfif",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 2",
+        "hashtag": "#BottomCard2Hashtag",
+        "description": "$25.000 cash price."
+      },
+      {
+        "id": 6,
+        "title": "Bottom Card 3",
+        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/lifeinmycity.jfif",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
       }
     ]
   }

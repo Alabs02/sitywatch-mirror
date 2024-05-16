@@ -1,0 +1,51 @@
+ {
+        "id": 4,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      },
+       {
+        "id": 5,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      },
+       {
+        "id": 6,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      }, {
+        "id": 7,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      }, {
+        "id": 8,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      }, {
+        "id": 9,
+        "title": "Bottom Card 3",
+        "image": "/path/to/bottom_card_image_3.jpg",
+        "icon": "bookmark",
+        "header": "Bottom Card Header 3",
+        "hashtag": "#BottomCard3Hashtag",
+        "description": "Bottom Card 3 Description."
+      } 

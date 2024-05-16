@@ -34,9 +34,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     alt={tourney.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 p-4 text-tertiary-400">
+                  <div className="absolute bottom-0 left-0 p-4 text-white">
                     <h2 className="text-lg font-semibold">{tourney.title}</h2>
-                    <p className="text-sm">{tourney.description}</p>
+                    <p className="text-sm tracking-tight w-0 md:w-[60%]">
+                      {tourney.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -68,22 +70,33 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </section>
         <section className="mt-8">
-          <h1 className="font-bold">
+          <h1 className="font-bold my-4">
             Suggested Tourneys That Might Interest You
           </h1>
-          <div className="grid grid-cols-12 w-full gap-x-2">
-            {tourneysData.leftSection.tourneys.map((tourney) => (
-              <div
-                key={tourney.id}
-                className="grid col-span-4 border border-[red] p-24"
-              >
-                <img
-                  src={tourney.image}
-                  alt={tourney.title}
-                  className="object-cover w-full h-40 mb-4"
-                />
-                <h2 className="font-bold mb-2">{tourney.title}</h2>
-                <p className="text-sm text-gray-700">{tourney.description}</p>
+          <div className="grid grid-cols-12 w-full gap-4 bg-white">
+            {tourneysData.rightSection.bottomCards.map((bottomCard) => (
+              <div key={bottomCard.id} className="grid col-span-4 shadow-sm">
+                <div className="relative">
+                  <div className="shadow-lg border border-b border-tertiary-100">
+                    <img
+                      src={bottomCard.image}
+                      alt={bottomCard.title}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <div className="mr-6">
+                    <span className="material-symbols-outlined text-lg absolute top-2 right-2 text-black bg-white p-2 rounded-full">
+                      {bottomCard.icon}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-center space-y-2 py-2">
+                  <h2 className="font-bold mb-2">{bottomCard.header}</h2>
+                  <p className="text-sm text-blue-800 font-bold">{bottomCard.hashtag}</p>
+                  <p className="text-sm text-gray-900 font-medium">
+                    {bottomCard.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
