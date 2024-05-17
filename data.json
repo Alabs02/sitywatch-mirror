@@ -86,6 +86,16 @@
         "hashtag": "#BottomCard3Hashtag",
         "description": "Bottom Card 3 Description."
       }
-    ]
-  }
+    ],
+  "gists": [
+    {
+      "id": 1,
+      "avatarSrc": "/header-images/ellipse.svg",
+      "textUp": "@nasir_gambo",
+      "textDown": "Public",
+      "content": "Hey Nasir, let people know the latest gist. Add pics, vids, voice-notes, hashtags or cite others if you like",
+      "icons": ["add_a_photo", "attach_file", "mic"]
+    }
+   ]
 }
+  }

@@ -84,7 +84,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                       className="object-contain w-full h-full"
                     />
                   </div>
-                  <div className="mr-6">
+                  <div className="">
                     <span className="material-symbols-outlined text-lg absolute top-2 right-2 text-black bg-white p-2 rounded-full">
                       {bottomCard.icon}
                     </span>

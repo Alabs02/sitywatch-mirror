@@ -1,9 +1,9 @@
-import React, { ReactNode, FC, useState, useEffect } from "react"
+import React, { ReactNode, FC, useState, useEffect, useMemo } from "react"
 import Link from "next/link"
-import classnames from "classnames"
 import Header from "./app/Header"
 import clsx from "clsx"
-import CustomButton from "@/components/molecules/Btn"
+import { useRouter } from "next/router"
+import { motion } from "framer-motion";
 
 interface NavLink {
   href: string
@@ -22,106 +22,78 @@ const navLinks: NavLink[] = [
 ]
 
 const Layout: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [activeLink, setActiveLink] = useState("/")
-  const [isHovered, setIsHovered] = useState(false)
+  const router = useRouter()
+  const { asPath } = router
 
+  const collapsedList = ["/messages", "/explore"]
 
-  const handleLinkClick = (href: string) => {
-    setActiveLink(href)
+  const isCollapsed = () => {
+    return collapsedList.includes(asPath)
   }
 
-  // useEffect to handle isCollapsed state based on activeLink
   useEffect(() => {
-    setIsCollapsed(["/messages", "/explore"].includes(activeLink))
-    setIsHovered(false)
-  }, [activeLink])
+    console.log({ isCollapsed: isCollapsed() })
+  }, [])
 
-  const linkClasses = (isActive: boolean, isHovered: boolean) =>
-    classnames("text-lg", "font-medium", "flex", "items-center", "xl:gap-x-2", {
-      "bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text":
-        isActive && !isHovered,
-      "bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-primary-500 hover:to-secondary-500 font-medium transition-colors duration-[400ms]":
-        !isActive || isHovered,
-    })
+  return (
+    <div className="min-h-screen overflow-hidden">
+      <Header />
 
+      <div className="w-full min-h-[calc(100vh-137px)] flex">
+        <motion.div
+        transition={{ 
+          duration: 0.8,
+          ease: 'easeInOut'
+         }}
+          className={clsx(
+            "hidden lg:flex lg:flex-col gap-y-8 shadow",
+            isCollapsed()
+              ? "lg:items-center lg:!w-[80px]"
+              : "xl:items-start xl:!w-[280px] px-6",
+          )}
+        >
+          <button className={clsx("flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none", isCollapsed() ? 'p-1' : 'space-x-3 xl:py-2 xl:px-4')}>
+            <i className="material-symbols-outlined">draft_orders</i>
 
- return (
-   <div className="min-h-screen overflow-hidden">
-     <Header />
-     <div className="flex min-h-[calc(100vh - 137px)] sticky">
-       <aside
-         className={classnames(
-           "flex min-h-[calc(100vh - 137px)] sticky p-8 flex flex-col items-center xl:items-start gap-y-4 overflow-hidden transition-all duration-200 border border-[red] z-10",
-           {
-             "flex-shrink": 0,
-             "w-full lg:w-80 xl:w-280": !isCollapsed,
-             fixed: isCollapsed,
-             "w-full lg:w-[85px]": isCollapsed,
-           },
-         )}
-       >
-         <button
-           className={classnames(
-             "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow z-50",
-             {
-               "hidden lg:block": isCollapsed,
-               "hidden md:block": isCollapsed && !isCollapsed,
-               "hidden sm:block": isCollapsed && !isCollapsed,
-               "text-[18px]": isCollapsed,
-               "py-0 px-0 gap-x-0": isCollapsed,
-             },
-           )}
-         >
-           {isCollapsed ? (
-             <span className="hidden">Drop a Gist</span>
-           ) : (
-             <span className="text-content lg:inline">Drop a Gist</span>
-           )}
-           <span className="material-symbols-outlined text-[26px] lg:text-inherit">
-             draft_orders
-           </span>
-         </button>
+            {!isCollapsed() ? (
+              <span className="hidden xl:inline">Drop a gist</span>
+            ) : (
+              <></>
+            )}
+          </button>
 
-         {navLinks.map((navLink) => (
-           <Link
-             key={navLink.href}
-             href={navLink.href}
-             className={clsx(
-               "transition-all duration-[450ms]",
-               linkClasses(
-                 navLink.href === activeLink,
-                 navLink.href === activeLink && isHovered,
-               ),
-             )}
-             onClick={() => handleLinkClick(navLink.href)}
-             onMouseEnter={() => setIsHovered(true)}
-             onMouseLeave={() => setIsHovered(false)}
-           >
-             <i className="material-symbols-outlined">{navLink.icon}</i>
-             <span
-               className={clsx("collapsed:hidden", {
-                 hidden: isCollapsed,
-               })}
-             >
-               {navLink.label}
-             </span>
-           </Link>
-         ))}
-       </aside>
-       <main
-         className={classnames(
-           "flex-grow overflow-y-scroll", // Ensure flex-grow property is included
-           isCollapsed
-             ? "lg:w-3/4 xl:w-2/3 lg:ml-[100px]"
-             : "lg:w-full xl:w-full",
-         )}
-       >
-         <div className="overflow-y-auto h-full">{children}</div>
-       </main>
-     </div>
-   </div>
- )
+          <div
+            className={clsx(
+              "flex flex-col gap-y-4",
+              isCollapsed() ? "items-center" : "items-start",
+            )}
+          >
+            {navLinks.map((navLink) => (
+              <Link
+                href={navLink.href}
+                className={clsx(
+                  "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
+                  !isCollapsed() && "xl:space-x-3",
+                )}
+              >
+                <i className="material-symbols-outlined">{navLink.icon}</i>
+                {!isCollapsed() ? (
+                  <span className="hidden xl:inline">{navLink.label}</span>
+                ) : (
+                  <></>
+                )}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+
+        <div className="flex-1 border border-green-500 p-5">
+          {children}
+          <h2>Hello World!</h2>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Layout

@@ -49,3 +49,35 @@
         "hashtag": "#BottomCard3Hashtag",
         "description": "Bottom Card 3 Description."
       } 
+      ------------------------------------------------
+      // GISTS EXTRAS
+       {
+      "id": 2,
+      "avatarSrc": "/header-images/ellipse.svg",
+      "textUp": "Text Up 2",
+      "textDown": "Text Down 2",
+      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus.",
+      "icons": ["add_a_photo", "attach_file", "mic"]
+    },
+    {
+      "id": 3,
+      "avatarSrc": "/header-images/ellipse.svg",
+      "textUp": "Text Up 3",
+      "textDown": "Text Down 3",
+      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus.",
+      "icons": ["add_a_photo", "attach_file", "mic"]
+    }
+
+============================================================
+ICONS
+<span class="material-symbols-outlined">
+add_a_photo
+</span>
+
+<span class="material-symbols-outlined">
+attach_file
+</span>
+
+<span class="material-symbols-outlined">
+mic
+</span>
