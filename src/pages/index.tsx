@@ -85,14 +85,16 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     />
                   </div>
                   <div className="">
-                    <span className="material-symbols-outlined text-lg absolute top-2 right-2 text-black bg-white p-2 rounded-full">
+                    <span className="material-symbols-outlined text-lg absolute top-2 right-2 text-black bg-white p-2 rounded-full h-10 w-10 flex justify-center items-center">
                       {bottomCard.icon}
                     </span>
                   </div>
                 </div>
                 <div className="text-center space-y-2 py-2">
                   <h2 className="font-bold mb-2">{bottomCard.header}</h2>
-                  <p className="text-sm text-blue-800 font-bold">{bottomCard.hashtag}</p>
+                  <p className="text-sm text-blue-800 font-bold">
+                    {bottomCard.hashtag}
+                  </p>
                   <p className="text-sm text-gray-900 font-medium">
                     {bottomCard.description}
                   </p>

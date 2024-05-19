@@ -11,27 +11,27 @@ interface Gist {
 }
 
 const Gists: React.FC = () => {
-  const gists = gistsData.rightSection.gists as Gist[]
+  const gists = gistsData.gists as Gist[]
 
   return (
     <div className="w-full h-full border border-[red] px-6">
       {gists.map((gist: Gist) => (
         <section key={gist.id} className="grid grid-cols-12 gap-x-6">
-          <div className="grid col-span-8 border border-[red] p-4 bg-gray-200 shadow-lg rounded-md">
+          <div className="grid col-span-8 border border-[red] p-2 bg-gray-200 shadow-lg rounded-md">
             <div className="flex items-center space-x-2 my-2">
-              <div className="rounded-full h-12 w-12 flex justify-center items-center inset-0 border border-double border-[#F24055] bg-gradient-to-t from-[#F24055] to-[#1E7881]">
+              <div className="rounded-full h-10 w-10 flex justify-center items-center inset-0 border border-double border-[#F24055] bg-gradient-to-t from-[#F24055] to-[#1E7881]">
                 <img
                   src={gist.avatarSrc}
                   alt="avatar"
-                  className="rounded-full h-10 w-10 object-contain"
+                  className="rounded-full object-cover"
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-green-700 font-semibold">
+                <span className="text-green-700 font-semibold text-sm">
                   {gist.textUp}
                 </span>
                 <div className="flex">
-                  <span>{gist.textDown}</span>
+                  <span className="text-sm">{gist.textDown}</span>
                   <span className="material-symbols-outlined">
                     arrow_drop_down
                   </span>

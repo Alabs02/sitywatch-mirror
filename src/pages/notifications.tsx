@@ -1,6 +1,16 @@
-import NotificationsContent from "@/components/content/notifications/NotificationsContent"
 import React, { useState } from "react"
-// import NotificationsContent from "@/components/content/Notifications"
+import AvatarWithTextsAndIcon from "@/components/molecules/AvatarWithTexts"
+import notificationsData from "../../data.json"
+
+interface Notification {
+  id: number
+  avatarSrc: string
+  textUp: string
+  textDown: string
+  content: string
+  icons: string[]
+  action: string[]
+}
 
 const Notifications = () => {
   const [activeTab, setActiveTab] = useState("All")
@@ -9,46 +19,39 @@ const Notifications = () => {
     setActiveTab(tabName)
   }
 
+  const notifications = notificationsData.notifications as Notification[]
+
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
       <section className="col-span-7 w-full h-full border border-red bg-gray-200">
         <nav className="flex p-4 items-center space-x-2 overflow-x-auto">
-          <a
-            href="#"
-            className={`tab-link items-center justify-center p-1 w-[30px] inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
-              activeTab === "All" ? "active-tab text-green-600" : ""
-            }`}
-            onClick={() => handleTabClick("All")}
-          >
-            All
-          </a>
-          <a
-            href="#"
-            className={`tab-link items-center justify-center p-1  inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
-              activeTab === "Sertified" ? "active-tab text-green-600" : ""
-            }`}
-            onClick={() => handleTabClick("Sertified")}
-          >
-            Sertified
-          </a>
-          <a
-            href="#"
-            className={`tab-link items-center justify-center p-1 inline-flex text-sm bg-slate-100 border border-gray-400 rounded-2 ${
-              activeTab === "Invites" ? "active-tab text-green-600" : ""
-            }`}
-            onClick={() => handleTabClick("Invites")}
-          >
-            Invites
-          </a>
+          {/* Nav items */}
         </nav>
         {/* Content for each tab */}
-        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
-          {activeTab === "All" && (
-            <div>
-              {" "}
-              <NotificationsContent />{" "}
-            </div>
-          )}
+        <div className="w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
+          {activeTab === "All" &&
+            notifications.map((notification) => (
+              <div key={notification.id} className="flex items-center">
+                {/* Avatar with texts */}
+                <div className="flex items-center w-full justify-between">
+                  <div className="flex-shrink-0"> {/* Adjusted here */}
+                    <AvatarWithTextsAndIcon
+                      avatarSrc={notification.avatarSrc}
+                      textUp={notification.textUp}
+                      textDown={notification.textDown}
+                      icon={notification.icons[2]}
+                      action={notification.action[0]}
+                    />
+                  </div>
+                  {/* More Icon */}
+                  <div className="flex-shrink"> {/* Adjusted here */}
+                    <div className="material-symbols-outlined">
+                      {notification.icons[2]}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           {activeTab === "Sertified" && <div>Certified Content</div>}
           {activeTab === "Invites" && <div>Invites Content</div>}
           {/* Add more content components as needed */}

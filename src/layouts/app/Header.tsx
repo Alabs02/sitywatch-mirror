@@ -2,6 +2,7 @@ import React, { Fragment, FC, useState, useEffect } from "react"
 import clsx from "clsx"
 import Image from "next/image"
 import HomeIcon from "@/components/atoms/HomeIcon"
+import Link from "next/link"
 
 
 interface HeaderProps {
@@ -38,11 +39,16 @@ useEffect(() => {
 
   return (
     <Fragment>
-      <header className={clsx("h-[137px] px-2 md:px-6 border border-[red] sticky", className)}>
+      <header
+        className={clsx(
+          "h-[137px] px-2 md:px-6 border border-[red] sticky",
+          className,
+        )}
+      >
         <div className="flex h-full items-center justify-between">
-          <div className="">
+          <Link href={"/"} className="">
             <HomeIcon width={50} height={50} />
-          </div>
+          </Link >
 
           {/* Center Section: Dynamic Text */}
           <div className="text-center pl-4 ">
@@ -55,17 +61,17 @@ useEffect(() => {
             <img
               src="./header-images/search.svg"
               alt="Search"
-              className="w-6 h-6 mr-4 cursor-pointer"
+              className="w-6 h-6 mr-4 cursor-pointer object-cover"
             />
             <img
               src="./header-images/avatar.jpg"
               alt="Avatar"
-              className="w-8 h-8 rounded-full mr-4 cursor-pointer"
+              className="w-8 h-8 rounded-full mr-4 cursor-pointer object-cover"
             />
             <img
               src="./header-images/list.svg"
               alt="Menu"
-              className="w-6 h-6 cursor-pointer"
+              className="w-6 h-6 cursor-pointer object-cover"
             />
           </div>
         </div>

@@ -1,0 +1,60 @@
+import React, { useState } from "react"
+import AvatarWithTextsAndIcon from "@/components/molecules/AvatarWithTexts"
+import notificationsData from "../../data.json"
+
+interface Notification {
+  id: number
+  avatarSrc: string
+  textUp: string
+  textDown: string
+  content: string
+  icons: string[]
+}
+
+interface Data {
+  leftSection: {
+    tourneys: {
+      id: number
+      title: string
+      image: string
+      description: string
+    }[]
+  }
+  rightSection: {
+    cards: {
+      id: number
+      icon: string
+      title: string
+      description: string
+      image: string
+    }[]
+    bottomCards: {
+      id: number
+      title: string
+      image: string
+      icon: string
+      header: string
+      hashtag: string
+      description: string
+    }[]
+    gists: {
+      id: number
+      avatarSrc: string
+      textUp: string
+      textDown: string
+      content: string
+      icons: string[]
+    }[]
+    notifications: Notification[]
+  }
+}
+
+
+const Notifications = () => {
+  const [activeTab, setActiveTab] = useState("All")
+
+  const handleTabClick = (tabName: string) => {
+    setActiveTab(tabName)
+  }
+
+const notifications = notificationsData.notifications as Notification[]

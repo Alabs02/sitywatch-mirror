@@ -29,6 +29,13 @@
         "title": "Build a Sitadel",
         "description": "Make it easy for people to scout your brand, business, organization, events, side-hustle, etc.",
         "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/castle.svg"
+      },
+      {
+        "id": 1,
+        "icon": "add_circle",
+        "title": "Build a Sitadel",
+        "description": "Make it easy for people to scout your brand, business, organization, events, side-hustle, etc.",
+        "image": "/coreAssets/HomePage/PageContent/buildasitadelheader/castle.svg"
       }
     ],
     "bottomCards": [
@@ -39,7 +46,7 @@
         "icon": "bookmark",
         "header": "Sony World Photography Awards 2023",
         "hashtag": "#SWPA_SC2023",
-        "description": "$25.000 cash price. Entry deadline, 30th march, 2023."
+        "description": "$25.000 cash prize. Entry deadline, 30th March 2023."
       },
       {
         "id": 2,
@@ -48,7 +55,7 @@
         "icon": "bookmark",
         "header": "Bottom Card Header 2",
         "hashtag": "#BottomCard2Hashtag",
-        "description": "$25.000 cash price."
+        "description": "$25.000 cash prize."
       },
       {
         "id": 3,
@@ -61,32 +68,44 @@
       },
       {
         "id": 4,
-        "title": "Bottom Card 1",
+        "title": "Bottom Card 4",
         "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/sonyworld.jpeg",
         "icon": "bookmark",
-        "header": "Sony World Photography Awards 2023",
-        "hashtag": "#SWPA_SC2023",
-        "description": "$25.000 cash price. Entry deadline, 30th march, 2023."
+        "header": "Sony World Photography Awards 2024",
+        "hashtag": "#SWPA_SC2024",
+        "description": "$25.000 cash prize. Entry deadline, 30th March 2024."
       },
       {
         "id": 5,
-        "title": "Bottom Card 2",
+        "title": "Bottom Card 5",
         "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/literaryComp.jfif",
         "icon": "bookmark",
-        "header": "Bottom Card Header 2",
-        "hashtag": "#BottomCard2Hashtag",
-        "description": "$25.000 cash price."
+        "header": "Bottom Card Header 5",
+        "hashtag": "#BottomCard5Hashtag",
+        "description": "$25.000 cash prize."
       },
       {
         "id": 6,
-        "title": "Bottom Card 3",
+        "title": "Bottom Card 6",
         "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/lifeinmycity.jfif",
         "icon": "bookmark",
-        "header": "Bottom Card Header 3",
-        "hashtag": "#BottomCard3Hashtag",
-        "description": "Bottom Card 3 Description."
+        "header": "Bottom Card Header 6",
+        "hashtag": "#BottomCard6Hashtag",
+        "description": "Bottom Card 6 Description."
       }
     ],
+    "panda": {
+      "cards": [
+        {
+          "id": 1,
+          "icon": "add_circle",
+          "title": "Create panda poll",
+          "description": "Set up your own pandar poll to help others find their soul_pandars You can ask those questions you don’t wanna ask in person and no one will know its you ... not even us.",
+          "image": "/coreAssets/PandarUs/CreatePollHeader/poll.svg"
+        }
+      ]
+    }
+  },
   "gists": [
     {
       "id": 1,
@@ -96,6 +115,85 @@
       "content": "Hey Nasir, let people know the latest gist. Add pics, vids, voice-notes, hashtags or cite others if you like",
       "icons": ["add_a_photo", "attach_file", "mic"]
     }
-   ]
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "avatarSrc": "/coreAssets/Notifications/invested.jpeg",
+      "textUp": "@investedsylvester",
+      "textDown": "13 mins ago",
+      "action": [
+        "cited you in a gist",
+        "started watching you",
+        "looked at you",
+        "just dropped a gist"
+      ],
+      "icons": ["add_a_photo", "attach_file", "more_vert"]
+    },
+    {
+      "id": 2,
+      "avatarSrc": "/coreAssets/Notifications/afan.jpeg",
+      "textUp": "@another_user",
+      "textDown": "38 mins ago",
+      "action": [
+        "started watching you",
+        "cited you",
+        "looked at you",
+        "just dropped a gist"
+      ],
+      "icons": ["add_a_photo", "send", "more_vert"]
+    },
+    {
+      "id": 3,
+      "avatarSrc": "/coreAssets/Notifications/afan.jpeg",
+      "textUp": "@afanjalinda",
+      "textDown": "13 mins ago",
+      "action": [
+        "looked at you",
+        "cited you",
+        "started watching you",
+        "just dropped a gist"
+      ],
+      "icons": ["add_a_photo", "attach_file", "more_vert"]
+    },
+    {
+      "id": 4,
+      "avatarSrc": "/coreAssets/Notifications/veechic.jpeg",
+      "textUp": "@veechic",
+      "textDown": "38 mins ago",
+      "action": [
+        "just dropped a gist",
+        "cited you",
+        "started watching you",
+        "looked at you"
+      ],
+      "icons": ["add_a_photo", "send", "more_vert"]
+    },
+    {
+      "id": 5,
+      "avatarSrc": "/coreAssets/Notifications/yungboss.jpeg",
+      "textUp": "@nasir_gambo",
+      "textDown": "13 mins ago",
+      "action": [
+        "cited you",
+        "started watching you",
+        "looked at you",
+        "just dropped a gist"
+      ],
+      "icons": ["add_a_photo", "attach_file", "more_vert"]
+    },
+    {
+      "id": 6,
+      "avatarSrc": "/coreAssets/Notifications/datbrain.jpeg",
+      "textUp": "@another_user",
+      "textDown": "38 mins ago",
+      "action": [
+        "cited you",
+        "started watching you",
+        "looked at you",
+        "just dropped a gist"
+      ],
+      "icons": ["add_a_photo", "send", "more_vert"]
+    }
+  ]
 }
-  }
