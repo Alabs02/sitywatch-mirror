@@ -10,6 +10,7 @@ interface Notification {
   content: string
   icons: string[]
   action: string[]
+  iconText:string
 }
 
 const Notifications = () => {
@@ -40,8 +41,8 @@ const Notifications = () => {
                       textUp={notification.textUp}
                       textDown={notification.textDown}
                       icon={notification.icons[2]}
-                      action={notification.action[0]}
-                    />
+                      action={notification.action[0]} 
+                      iconText={""}                   />
                   </div>
                   {/* More Icon */}
                   <div className="flex-shrink"> {/* Adjusted here */}

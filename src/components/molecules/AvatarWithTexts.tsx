@@ -5,6 +5,7 @@ interface AvatarWithTextsAndIconProps {
   textUp: string
   textDown: string
   icon: string
+  iconText: string
   action: string
 }
 
@@ -13,6 +14,7 @@ const AvatarWithTextsAndIcon: React.FC<AvatarWithTextsAndIconProps> = ({
   textUp,
   textDown,
   icon,
+  iconText,
   action,
 }) => {
   return (
@@ -23,6 +25,12 @@ const AvatarWithTextsAndIcon: React.FC<AvatarWithTextsAndIconProps> = ({
           alt="avatar"
           className="rounded-full object-cover w-full h-full"
         />
+        {icon && iconText && (
+          <div className="absolute top-0 right-0 flex items-center mr-1 mt-1">
+            {icon}
+            <span className="text-xs text-white">{iconText}</span>
+          </div>
+        )}
       </div>
       <div className="flex flex-col justify-center">
         <div className="text-green-700 font-semibold text-sm flex space-x-2">
@@ -31,7 +39,6 @@ const AvatarWithTextsAndIcon: React.FC<AvatarWithTextsAndIconProps> = ({
         </div>
         <span className="text-sm italic">{textDown}</span>
       </div>
-      {/* <div className="material-symbols-outlined">{icon}</div> */}
     </div>
   )
 }

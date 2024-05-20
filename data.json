@@ -195,5 +195,66 @@
       ],
       "icons": ["add_a_photo", "send", "more_vert"]
     }
+  ],
+  "whispers": [
+    {
+      "id": 1,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "yesterday",
+      "icon": "fiber_manual_record"
+    },
+    {
+      "id": 2,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "feb 28",
+      "icon": "fiber_manual_record"
+    },
+     {
+      "id": 3,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "feb 29",
+      "icon": "fiber_manual_record"
+    },
+     {
+       "id": 4,
+       "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+       "full_name": "Julia James",
+       "handle": "@juliajames",
+       "first_name": "Julia",
+       "message": "something texted here",
+       "iconText": "feb 25",
+       "icon": "fiber_manual_record"
+     } ,  {
+      "id": 5,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "feb 25",
+      "icon": "fiber_manual_record"
+    } ,
+      {
+      "id": 6,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "feb 25",
+      "icon": "fiber_manual_record"
+    }
   ]
 }
