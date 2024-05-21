@@ -24,27 +24,27 @@ const Notifications = () => {
 return (
   <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
     <section className="col-span-7 w-full h-full border border-red bg-gray-200">
-      <nav className="flex p-4 items-center space-x-2">
+      <nav className="flex p-4 items-center space-x-2 overflow-x-scroll scrollbar-hidden">
         {/* Styled buttons for tabs */}
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "All" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "All" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
           onClick={() => handleTabClick("All")}
         >
           All
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Satisfied" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Satisfied" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
           onClick={() => handleTabClick("Satisfied")}
         >
           Satisfied
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Invites" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Invites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
           onClick={() => handleTabClick("Invites")}
         >
@@ -52,56 +52,59 @@ return (
         </button>
         {/* ... Add more buttons here as needed ... */}
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Flowers" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Pitches" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("Flowers")}
+          onClick={() => handleTabClick("Pitches")}
         >
           Pitches
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Flowers" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Gists" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("Flowers")}
+          onClick={() => handleTabClick("Gists")}
         >
           Gists
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Flowers" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Hypes" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("Flowers")}
+          onClick={() => handleTabClick("Hypes")}
         >
           Hypes
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Flowers" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Cites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("Flowers")}
+          onClick={() => handleTabClick("Cites")}
         >
           Cites
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "Flowers" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Recites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("Flowers")}
+          onClick={() => handleTabClick("Recites")}
         >
           Recites
         </button>
         <button
-          className={`btn px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-200 active:bg-gray-100 shadow-sm shadow-gray-400/20 ${
-            activeTab === "More" ? "active font-bold text-white" : ""
+          className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            activeTab === "Flows" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
           }`}
-          onClick={() => handleTabClick("More")}
+          onClick={() => handleTabClick("Flows")}
         >
           Flows
         </button>
       </nav>
       {/* Content for each tab */}
-      <div className="w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
+      <div
+        className="w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]"
+        style={{ scrollbarWidth: "none" }}
+      >
         {activeTab === "All" &&
           notifications.map((notification) => (
             <div key={notification.id} className="flex items-center">

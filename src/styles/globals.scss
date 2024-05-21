@@ -45,6 +45,15 @@ body {
     text-wrap: balance;
   }
 }
+
+nav {
+  overflow: auto;
+}
+
+nav::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
 // text gradient styles
 
 .text-gradient {
