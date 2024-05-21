@@ -2,10 +2,11 @@ import Dispatches from "@/components/contents/messages/Dispatches"
 import Invites from "@/components/contents/messages/Invites"
 import Plugs from "@/components/contents/messages/Plugs"
 import Whispers from "@/components/contents/messages/Whispers"
+import WTS from "@/components/contents/messages/WTS"
 import React, { useState } from "react"
 
 const message = () => {
-    const [activeTab, setActiveTab] = useState("PANDA POLLS")
+    const [activeTab, setActiveTab] = useState("WHISPERS")
 
     const handleTabClick = (tabName: string) => {
       setActiveTab(tabName)
@@ -16,62 +17,62 @@ const message = () => {
         <section className="bg-tertiary-100 col-span-1">
           <nav className="flex p-4 items-center space-x-4 flex-col">
             <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto border-b border-gray-800 divide-x divide-tertiary-600">
-              <a
-                href="#"
+              <button
+                
                 className={`tab-link w-full md:w-auto text-center md:text-left ${
                   activeTab === "" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("nothing")}
               >
                 SEND A NEW MESSAGE
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                
                 className={`tab-link w-full md:w-auto text-center md:text-left ${
                   activeTab === "" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("Nothing")}
               >
                 SEARCH MESSAGE
-              </a>
+              </button>
             </div>
             <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0">
-              <a
-                href="#"
+              <button
+                
                 className={`tab-link ${
                   activeTab === "WHISPERS" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("WHISPERS")}
               >
                 WHISPERS
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                
                 className={`tab-link ${
                   activeTab === "INVITES" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("INVITES")}
               >
                 INVITES
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                
                 className={`tab-link ${
                   activeTab === "DISPATCHES" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("DISPATCHES")}
               >
                 DISPATCHES
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                
                 className={`tab-link ${
                   activeTab === "PLUGS" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("PLUGS")}
               >
                 PLUGS
-              </a>
+              </button>
             </div>
           </nav>
           {/* Content for each tab */}
@@ -102,7 +103,7 @@ const message = () => {
           <div className="w-full h-full tab-content mt-4 px-4 place-content-center">
             {activeTab === "WHISPERS" && (
               <div>
-                <Whispers />
+                <WTS />
               </div>
             )}
             {activeTab === "INVITES" && (
