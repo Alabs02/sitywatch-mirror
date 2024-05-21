@@ -25,7 +25,7 @@ const Whispers = () => {
   const whispersData = messages.whispers as Message[]
 
   return (
-    <div className="flex flex-col justify-around">
+    <div className="flex flex-col justify-around px-4">
       {whispersData.map((message) => (
         <div className="flex items-center space-y-4" key={message.id}>
           <div className="mr-4">

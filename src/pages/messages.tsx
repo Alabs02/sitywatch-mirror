@@ -6,40 +6,45 @@ import WTS from "@/components/contents/messages/WTS"
 import React, { useState } from "react"
 
 const message = () => {
-    const [activeTab, setActiveTab] = useState("WHISPERS")
+  const [activeTab, setActiveTab] = useState("WHISPERS") 
 
-    const handleTabClick = (tabName: string) => {
-      setActiveTab(tabName)
-    }
+  const handleTabClick = (tabName: string) => {
+    setActiveTab(tabName)
+  }
+
   return (
     <div className="h-full w-full shadow-inner shadow-tertiary-400/30 rounded-t-[10px] p-1">
       <div className="grid grid-cols-2 h-full w-ful px-2]">
         <section className="bg-tertiary-100 col-span-1">
           <nav className="flex p-4 items-center space-x-4 flex-col">
-            <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto border-b border-gray-800 divide-x divide-tertiary-600">
+            <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto border-b-2 border-gray-400 ">
+              <div className="flex">
+                <span className="material-symbols-outlined">edit_square</span>
+                <button
+                  className={`tab-link mr-2 border-r-2 border-gray-400 px-3 w-full md:w-auto text-center md:text-left ${
+                    activeTab === "" ? "active-tab text-green-600" : ""
+                  }`}
+                  onClick={() => handleTabClick("nothing")}
+                >
+                  SEND A NEW MESSAGE
+                </button>
+              </div>
+              <div>
+                <span className="material-symbols-outlined">manage_search</span>
               <button
-                
-                className={`tab-link w-full md:w-auto text-center md:text-left ${
-                  activeTab === "" ? "active-tab text-green-600" : ""
-                }`}
-                onClick={() => handleTabClick("nothing")}
-              >
-                SEND A NEW MESSAGE
-              </button>
-              <button
-                
-                className={`tab-link w-full md:w-auto text-center md:text-left ${
+                className={`tab-link px-3 w-full md:w-auto text-center md:text-left ${
                   activeTab === "" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("Nothing")}
               >
                 SEARCH MESSAGE
               </button>
+              </div>
             </div>
             <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0">
               <button
-                
-                className={`tab-link ${
+                className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
+                  // Add padding and borders
                   activeTab === "WHISPERS" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("WHISPERS")}
@@ -47,8 +52,8 @@ const message = () => {
                 WHISPERS
               </button>
               <button
-                
-                className={`tab-link ${
+                className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
+                  // Add padding and borders
                   activeTab === "INVITES" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("INVITES")}
@@ -56,8 +61,8 @@ const message = () => {
                 INVITES
               </button>
               <button
-                
-                className={`tab-link ${
+                className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
+                  // Add padding and borders
                   activeTab === "DISPATCHES" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("DISPATCHES")}
@@ -65,8 +70,8 @@ const message = () => {
                 DISPATCHES
               </button>
               <button
-                
-                className={`tab-link ${
+                className={`tab-link px-3 py-2 ${
+                  // Add padding, remove right border
                   activeTab === "PLUGS" ? "active-tab text-green-600" : ""
                 }`}
                 onClick={() => handleTabClick("PLUGS")}
@@ -129,3 +134,4 @@ const message = () => {
 }
 
 export default message
+
