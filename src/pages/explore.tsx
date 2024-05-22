@@ -91,8 +91,8 @@ const Explore: FC<ExploreProps> = ({ children }) => {
             </button>
           </div>
         </section>
-        <section className="mt-8"></section>
-        <section className="mt-8">
+        {/* <section className="mt-8"></section> */}
+        <section className="">
           <h1 className="font-bold">Bottom of the top</h1>
           <div className="grid grid-cols-2 gap-x-2 ">
             <div className="col-span-1 border border-[red]">1</div>
