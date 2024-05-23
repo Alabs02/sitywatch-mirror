@@ -88,6 +88,16 @@ const config: Config = {
   darkMode: "class",
   theme: {
     extend: {
+      ringWidth: {
+        DEFAULT: "4px", 
+      },
+      ringOffsetWidth: {
+        DEFAULT: "2", 
+      },
+      ringOffsetColor: (theme) => ({
+        ...theme.colors,
+        gradient: "linear-gradient(to bottom, #f24055, #1e7881)",
+      }),
       colors,
       gridTemplateColumns: {
         13: "repeat(13, minmax(0, 1fr))",
@@ -127,6 +137,8 @@ const config: Config = {
       },
     },
   },
+
   plugins: [require("@tailwindcss/typography")],
 }
+
 export default config

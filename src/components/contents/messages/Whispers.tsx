@@ -1,6 +1,5 @@
 import React from "react"
 import messages from "@/../../data.json"
-import AvatarWithTextsAndIcon from "@/components/molecules/AvatarWithTexts"
 
 interface Message {
   id: number

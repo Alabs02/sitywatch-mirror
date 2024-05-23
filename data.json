@@ -217,7 +217,7 @@
       "iconText": "feb 28",
       "icon": "fiber_manual_record"
     },
-     {
+    {
       "id": 3,
       "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
       "full_name": "Julia James",
@@ -227,16 +227,17 @@
       "iconText": "feb 29",
       "icon": "fiber_manual_record"
     },
-     {
-       "id": 4,
-       "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
-       "full_name": "Julia James",
-       "handle": "@juliajames",
-       "first_name": "Julia",
-       "message": "something texted here",
-       "iconText": "feb 25",
-       "icon": "fiber_manual_record"
-     } ,  {
+    {
+      "id": 4,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "full_name": "Julia James",
+      "handle": "@juliajames",
+      "first_name": "Julia",
+      "message": "something texted here",
+      "iconText": "feb 25",
+      "icon": "fiber_manual_record"
+    },
+    {
       "id": 5,
       "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
       "full_name": "Julia James",
@@ -245,8 +246,8 @@
       "message": "something texted here",
       "iconText": "feb 25",
       "icon": "fiber_manual_record"
-    } ,
-      {
+    },
+    {
       "id": 6,
       "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
       "full_name": "Julia James",
@@ -256,5 +257,22 @@
       "iconText": "feb 25",
       "icon": "fiber_manual_record"
     }
+  ],
+  "bookmarks": [
+    {
+      "id": 1,
+      "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+      "handle": "@paulo4real",
+      "university": "Covenant University, Ogun.",
+      "role": "Student",
+      "gist": "Let's settle this once and for all. Covenant  and Babcock boys , who fresh pass",
+      "icons": ["more_horiz", "mark_unread_chat_alt", "repeat", "bookmark"],
+      "gif": "/coreAssets/MessagesPage/juliana.jpeg",
+      "gist_stats": "2.7k sitizens followed with this gist",
+      "emoji": "hands",
+      "emoji_count": 5888,
+      "share_count": "2.9k"
+    }
+   
   ]
 }
