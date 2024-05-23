@@ -99,7 +99,7 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
             className="flex-1 border border-green-500 overflow-y-auto"
           >
             {children}
-            <h2>Hello World!</h2>
+            {/* <h2>Hello World!</h2> */}
           </motion.div>
         </AnimatePresence>
       </div>

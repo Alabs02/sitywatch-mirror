@@ -35,16 +35,16 @@ const Gists: React.FC = () => {
                 alt={bookmark.role}
                 className="h-16 w-16 object-cover rounded-full ring-gradient mr-2"
               />
-              <div className='text-sm'>
+              <div className="text-sm">
                 <div className="text-green-600">{bookmark.handle}</div>
                 <div className="flex items-center">
                   <div className="mr">{bookmark.university}</div>
-                  <div className='flex items-center'>
+                  <div className="flex items-center">
                     <span className="h-1 w-1 bg-slate-700 mx-1 rounded-full"></span>
                     <div>{bookmark.role}</div>
                   </div>
                 </div>
-                <h4 className='text-[12px]'>{bookmark.time}</h4>
+                <h4 className="text-[12px]">{bookmark.time}</h4>
                 {/* <span>span> */}
               </div>
             </div>
@@ -54,10 +54,32 @@ const Gists: React.FC = () => {
               </span>
             </div>
           </div>
-          <section>
+          <section className="p-1">
             <span>{bookmark.gist}</span>
             <div>
-              <img src={bookmark.gif} alt={bookmark.role} />
+              <img src={bookmark.gif} alt={bookmark.role} className='my-2' />
+              <div className="border-t border-b border-tertiary-200 flex items-center justify-between">
+                <div className="flex place-content-center">
+                  <span className="material-symbols-outlined text-red-400">
+                    {bookmark.icons[1]}
+                  </span>
+                  <span className="text-sm italic ml-1">
+                    {bookmark.gist_stats}
+                  </span>
+                </div>
+                <div className="inline-flex items-center space-x-4">
+                  <span className="text-3xl mb-2">
+                    {bookmark.emoji}
+                    <span className="text-[10px]">555</span>
+                  </span>
+                  <div className='flex items-center'>
+                    <span className="material-symbols-outlined text-lg text-green-500">
+                      {bookmark.icons[2]}
+                    </span>
+                    <span className='text-sm'>{bookmark.share_count}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </div>
