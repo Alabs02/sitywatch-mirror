@@ -1,4 +1,4 @@
-import Gists from "@/components/contents/gists/Gists"
+import Gists from "@/components/contents/bookmarks/Gists"
 import React, { useState } from "react"
 
 
