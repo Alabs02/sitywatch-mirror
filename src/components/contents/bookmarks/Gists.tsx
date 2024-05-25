@@ -25,7 +25,7 @@ const Gists: React.FC = () => {
     <div>
       {bookmarks.map((bookmark) => (
         <div
-          className="flex flex-col space-y-4 w-full h-full mt-4 bg-neutral-400 p-1 rounded-md overflow-y-auto"
+          className="flex flex-col space-y-2 w-full h-full mt-2 bg-neutral-400 p-1 rounded-md overflow-y-auto"
           key={bookmark.id}
         >
           <div className="flex justify-between w-full h-full items-center">
@@ -54,10 +54,10 @@ const Gists: React.FC = () => {
               </span>
             </div>
           </div>
-          <section className="p-1">
-            <span>{bookmark.gist}</span>
+          <section className="">
+            <span className='text-[16px] leading-tight tracking-tight'>{bookmark.gist}</span>
             <div>
-              <img src={bookmark.gif} alt={bookmark.role} className='my-2' />
+              <img src={bookmark.gif} alt={bookmark.role} className='my-1' />
               <div className="border-t border-b border-tertiary-200 flex items-center justify-between">
                 <div className="flex place-content-center">
                   <span className="material-symbols-outlined text-red-400">
@@ -68,7 +68,7 @@ const Gists: React.FC = () => {
                   </span>
                 </div>
                 <div className="inline-flex items-center space-x-4">
-                  <span className="text-3xl mb-2">
+                  <span className="">
                     {bookmark.emoji}
                     <span className="text-[10px]">555</span>
                   </span>

@@ -12,7 +12,7 @@ const Bookmarks = () => {
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
       <section className="col-span-7 w-full h-full border border-red bg-gray-200">
-        <nav className="flex p-4 items-center space-x-4">
+        <nav className="flex px-10 items-center space-x-10 font-bold py-1">
           <a
             href="#"
             className={`tab-link ${
@@ -22,7 +22,7 @@ const Bookmarks = () => {
           >
             GISTS
           </a>
-          <div className="border-l-2 border-gray-300 h-8"></div>
+          <div className="border-l-2 border-gray-300 h-10"></div>
           <a
             href="#"
             className={`tab-link ${

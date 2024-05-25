@@ -1,0 +1,8 @@
+for a standard sort algorithm as shown in the pseudocde below when operating on an array of elements, answer the questions below
+
+
+function pertition(numbers: Array<Int>, low: Int, high: Int) : Int
+i: Int = low
+j: Int = high
+tmp: Int
+pivot: Int = numbers[]
