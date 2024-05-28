@@ -5,11 +5,8 @@ import { useRouter } from "next/router"
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter()
   const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
-  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const handleBottomCardClick = (cardId: number) => {
-    setIsCollapsed(true)
-    // You can remove the routing code here if you don't want the top cards to navigate
     router.push(`/tourneys?cardId=${cardId}`)
   }
 
@@ -39,7 +36,6 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                   className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity ${
                     index === currentTourneyIndex ? "opacity-100" : "opacity-0"
                   }`}
-                  onClick={() => handleBottomCardClick(tourney.id)}
                 >
                   <img
                     src={tourney.image}
@@ -88,14 +84,17 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           </h1>
           <div className="grid grid-cols-12 w-full gap-4 bg-white">
             {tourneysData.rightSection.bottomCards.map((bottomCard) => (
-              <div key={bottomCard.id} className="grid col-span-4 shadow-sm">
+              <div
+                key={bottomCard.id}
+                className="grid col-span-4 shadow-sm cursor-pointer"
+                onClick={() => handleBottomCardClick(bottomCard.id)}
+              >
                 <div className="relative">
                   <div className="shadow-lg border border-b border-tertiary-100">
                     <img
                       src={bottomCard.image}
                       alt={bottomCard.title}
                       className="object-contain w-full h-full"
-                      onClick={() => handleBottomCardClick(bottomCard.id)}
                     />
                   </div>
                   <div className="">

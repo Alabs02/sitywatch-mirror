@@ -3,11 +3,11 @@ import { useRouter } from "next/router"
 
 const Tourneys: React.FC = () => {
   const router = useRouter()
+  const { cardId } = router.query
 
   useEffect(() => {
-    // Set the collapse state to true when the component mounts
-    router.prefetch("/tourneys?collapsed=true")
-    router.push("/tourneys?collapsed=true")
+    const query = { collapsed: true }
+    router.push({ pathname: "/tourneys", query })
   }, [])
 
   return <div>Tourneys</div>
