@@ -1,20 +1,31 @@
-import { FC, ReactNode, useEffect, useState } from "react";
-import tourneysData from "../../data.json";
+import React, { FC, ReactNode, useEffect, useState } from "react"
+import tourneysData from "../../data.json"
+import { useRouter } from "next/router"
 
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0);
+  const router = useRouter()
+  const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const handleBottomCardClick = (cardId: number) => {
+    setIsCollapsed(true)
+    // You can remove the routing code here if you don't want the top cards to navigate
+    router.push(`/tourneys?cardId=${cardId}`)
+  }
 
   useEffect(() => {
     const tourneyInterval = setInterval(() => {
       setCurrentTourneyIndex((prevIndex) =>
-        prevIndex === tourneysData.leftSection.tourneys.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000); 
+        prevIndex === tourneysData.leftSection.tourneys.length - 1
+          ? 0
+          : prevIndex + 1,
+      )
+    }, 5000)
 
     return () => {
-      clearInterval(tourneyInterval);
-    };
-  }, []);
+      clearInterval(tourneyInterval)
+    }
+  }, [])
 
   return (
     <div className="grid w-full h-full pr-5">
@@ -28,6 +39,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                   className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity ${
                     index === currentTourneyIndex ? "opacity-100" : "opacity-0"
                   }`}
+                  onClick={() => handleBottomCardClick(tourney.id)}
                 >
                   <img
                     src={tourney.image}
@@ -69,6 +81,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
             </div>
           </div>
         </section>
+        {/* Bottom Cards */}
         <section className="mt-8">
           <h1 className="font-bold my-4">
             Suggested Tourneys That Might Interest You
@@ -82,6 +95,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                       src={bottomCard.image}
                       alt={bottomCard.title}
                       className="object-contain w-full h-full"
+                      onClick={() => handleBottomCardClick(bottomCard.id)}
                     />
                   </div>
                   <div className="">
@@ -106,6 +120,6 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
       </div>
     </div>
   )
-};
+}
 
-export default Home;
+export default Home

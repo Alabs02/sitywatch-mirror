@@ -1,8 +1,8 @@
 import React, { Fragment, FC, useState, useEffect } from "react"
 import clsx from "clsx"
 import Link from "next/link"
-import Image from "next/image"
-import HomeIcon from "@/components/atoms/HomeIcon" // Assuming HomeIcon is a custom component
+import HomeIcon from "@/components/atoms/HomeIcon"
+import DropdownMenu from "@/components/molecules/DropdownMenu"
 
 interface HeaderProps {
   children?: React.ReactNode
@@ -17,27 +17,29 @@ const texts = [
 ]
 
 const Header: FC<HeaderProps> = ({ children, className }) => {
-  const [currentText, setCurrentText] = useState(texts[0])
+  const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const nextIndex = (texts.indexOf(currentText) + 1) % texts.length
-      setCurrentText(texts[nextIndex])
-    }, 3000)
-
-    return () => clearInterval(intervalId)
-  }, [currentText])
 
   const handleAvatarClick = () => {
     setIsDropdownOpen(!isDropdownOpen)
+    console.log("Dropdown Open State:", isDropdownOpen)
   }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
+    }, 3000)
+
+    return () => clearInterval(intervalId)
+  }, [])
+
+  const currentText = texts[currentTextIndex]
 
   return (
     <Fragment>
       <header
         className={clsx(
-          "h-[137px] px-2 md:px-6 border border-[red] sticky",
+          "h-[137px] w-full px-2 md:px-6 border border-[red] sticky",
           className,
         )}
       >
@@ -64,18 +66,7 @@ const Header: FC<HeaderProps> = ({ children, className }) => {
               className="w-8 h-8 rounded-full mr-4 cursor-pointer object-cover"
               onClick={handleAvatarClick}
             />
-            {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 w-40 rounded-lg bg-white shadow-md transition ease-in-out duration-300">
-                {/* Dummy Dropdown Content */}
-                <ul className="py-1">
-                  <li className="px-4 py-2 hover:bg-gray-100">Menu Item 1</li>
-                  <li className="border-t border-b px-4 py-2 hover:bg-gray-100">
-                    Menu Item 2
-                  </li>
-                  <li className="px-4 py-2 hover:bg-gray-100">Menu Item 3</li>
-                </ul>
-              </div>
-            )}
+            {isDropdownOpen && <DropdownMenu />}
           </div>
         </div>
       </header>
