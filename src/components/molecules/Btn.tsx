@@ -7,7 +7,7 @@ interface CustomButtonProps {
   isCollapsed: boolean
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ isCollapsed }) => (
+const Btn: React.FC<CustomButtonProps> = ({ isCollapsed }) => (
   <button
     className={classnames(
       "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow z-50",
@@ -31,4 +31,4 @@ const CustomButton: React.FC<CustomButtonProps> = ({ isCollapsed }) => (
   </button>
 )
 
-export default CustomButton
+export default Btn
