@@ -106,7 +106,7 @@ const RightSide: React.FC = () => {
       </p>
       <h3 className="font-bold text-sm mt-2">Prizes:</h3>
       <h5>Overall winner:</h5>
-      <ul className="text-[14px] mt-2 tracking-wider font-medium ml-4">
+      <ul className="text-[14px] mt-2 tracking-wider font-medium ml-4 list-disc">
         <li>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius,
           voluptate!
@@ -134,7 +134,7 @@ const RightSide: React.FC = () => {
         <li>Lorem ipsum dolor sit.</li>
       </ul>
       <h5>Overall winner's institution/university:</h5>
-      <ul className="text-[14px] mt-2 tracking-wider font-medium ml-4">
+      <ul className="text-[14px] mt-2 tracking-wider font-medium ml-4 list-disc">
         <li>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel, at!
         </li>

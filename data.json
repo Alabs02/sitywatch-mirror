@@ -115,6 +115,7 @@
       "content": "Hey Nasir, let people know the latest gist. Add pics, vids, voice-notes, hashtags or cite others if you like",
       "icons": ["add_a_photo", "attach_file", "mic"]
     }
+
   ],
   "notifications": [
     {
@@ -270,9 +271,17 @@
       "icons": ["more_horiz", "mark_unread_chat_alt", "repeat", "bookmark"],
       "gif": "/coreAssets/GistsPage/Gist4/naijagif.gif",
       "gist_stats": "2.7k sitizens followed with this gist",
-      "emoji": "\uD83D\uDE4C", 
+      "emoji": "\uD83D\uDE4C",
       "emoji_count": 5888,
-      "share_count": "2.9k"
+      "share_count": "2.9k",
+      "additionalContent": {
+        "text": "something",
+        "emoji": {
+          "black": "\uD83D\uDE4F",
+          "yellow": "\uD83D\uDE4C"
+        },
+        "icons": ["speaker_notes", "repeat"]
+      }
     }
   ]
 }

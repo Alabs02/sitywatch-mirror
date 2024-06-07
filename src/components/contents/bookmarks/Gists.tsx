@@ -1,5 +1,5 @@
-import React from 'react'
-
+// Assuming you import useState and useEffect from React
+import React, { useState, useEffect } from "react"
 import bookmarksData from "@/../../data.json"
 
 interface Bookmarks {
@@ -16,14 +16,35 @@ interface Bookmarks {
   emoji: string
   emoji_count: number
   share_count: string
+  additionalContent?: {
+    text?: string // Make text optional
+    emoji?: { black: string; yellow: string }
+    icons?: string[]
+  }
 }
 
 const Gists: React.FC = () => {
-  const bookmarks = bookmarksData.bookmarks as Bookmarks[]
+  const [bookmarks, setBookmarks] = useState<Bookmarks[]>([])
+
+  useEffect(() => {
+    setBookmarks(bookmarksData.bookmarks as Bookmarks[])
+  }, [])
+
+  const toggleEmoji = (index: number) => {
+    const updatedBookmarks = [...bookmarks]
+    const emojiKey =
+      updatedBookmarks[index].emoji ===
+      updatedBookmarks[index].additionalContent?.emoji?.black
+        ? "yellow"
+        : "black" // Use optional chaining
+    updatedBookmarks[index].emoji =
+      updatedBookmarks[index].additionalContent?.emoji?.[emojiKey] ?? "" 
+    setBookmarks(updatedBookmarks)
+  }
 
   return (
     <div>
-      {bookmarks.map((bookmark) => (
+      {bookmarks.map((bookmark, index) => (
         <div
           className="flex flex-col space-y-2 w-full h-full mt-2 bg-neutral-400 p-1 rounded-md overflow-y-auto"
           key={bookmark.id}
@@ -45,20 +66,21 @@ const Gists: React.FC = () => {
                   </div>
                 </div>
                 <h4 className="text-[12px]">{bookmark.time}</h4>
-                {/* <span>span> */}
               </div>
             </div>
-            <div>
+            <div className="flex items-center space-x-4">
               <span className="material-symbols-outlined">
                 {bookmark.icons[0]}
               </span>
             </div>
           </div>
           <section className="">
-            <span className='text-[16px] leading-tight tracking-tight'>{bookmark.gist}</span>
-            <div>
-              <img src={bookmark.gif} alt={bookmark.role} className='my-1' />
-              <div className="border-t border-b border-tertiary-200 flex items-center justify-between">
+            <span className="text-[16px] leading-tight tracking-tight">
+              {bookmark.gist}
+            </span>
+            <div className="">
+              <img src={bookmark.gif} alt={bookmark.role} className="my-1" />
+              <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
                 <div className="flex place-content-center">
                   <span className="material-symbols-outlined text-red-400">
                     {bookmark.icons[1]}
@@ -68,17 +90,36 @@ const Gists: React.FC = () => {
                   </span>
                 </div>
                 <div className="inline-flex items-center space-x-4">
-                  <span className="">
-                    {bookmark.emoji}
-                    <span className="text-[10px]">555</span>
-                  </span>
-                  <div className='flex items-center'>
-                    <span className="material-symbols-outlined text-lg text-green-500">
-                      {bookmark.icons[2]}
+                  <div className="flex items-center p-1 space-x-2">
+                    <span className="inline-flex">
+                      {bookmark.emoji}
+                      <p className="text-[10px]">555</p>
                     </span>
-                    <span className='text-sm'>{bookmark.share_count}</span>
+                    <span className="material-symbols-outlined">
+                      {bookmark.additionalContent?.icons?.[0]}
+                    </span>
                   </div>
                 </div>
+              </div>
+            </div>
+            {/* Add the new emojis and icons to the div below */}
+            <div className="flex items-center justify-between ">
+              <div className="flex items-center space-x-4 p-1">
+                <span onClick={() => toggleEmoji(index)}>
+                  {bookmark.additionalContent?.emoji &&
+                    (bookmark.emoji === bookmark.additionalContent.emoji.black
+                      ? bookmark.additionalContent.emoji.black
+                      : bookmark.additionalContent.emoji.yellow)}
+                </span>
+                <span className="material-symbols-outlined">
+                  {bookmark.additionalContent?.icons?.[0]}
+                </span>
+                <span className="material-symbols-outlined">
+                  {bookmark.additionalContent?.icons?.[1]}
+                </span>
+              </div>
+              <div className="flex items-center p-1">
+                <span className="material-symbols-outlined">bookmark</span>
               </div>
             </div>
           </section>
