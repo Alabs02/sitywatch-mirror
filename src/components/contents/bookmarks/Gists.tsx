@@ -81,19 +81,17 @@ const Gists: React.FC = () => {
             <div className="">
               <img src={bookmark.gif} alt={bookmark.role} className="my-1" />
               <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
-                <div className="flex place-content-center">
+                <div className="flex items-center space-x-2">
                   <span className="material-symbols-outlined text-red-400">
                     {bookmark.icons[1]}
                   </span>
-                  <span className="text-sm italic ml-1">
-                    {bookmark.gist_stats}
-                  </span>
+                  <span className="text-sm italic">{bookmark.gist_stats}</span>
                 </div>
                 <div className="inline-flex items-center space-x-4">
-                  <div className="flex items-center p-1 space-x-2">
-                    <span className="inline-flex">
+                  <div className="flex items-center  space-x-2">
+                    <span className="inline-flex items-center text-2xl">
                       {bookmark.emoji}
-                      <p className="text-[10px]">555</p>
+                      <p className="text-[10px] ml-1">555</p>
                     </span>
                     <span className="material-symbols-outlined">
                       {bookmark.additionalContent?.icons?.[0]}
@@ -103,9 +101,12 @@ const Gists: React.FC = () => {
               </div>
             </div>
             {/* Add the new emojis and icons to the div below */}
-            <div className="flex items-center justify-between ">
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 p-1">
-                <span onClick={() => toggleEmoji(index)}>
+                <span
+                  onClick={() => toggleEmoji(index)}
+                  className="text-2xl flex items-center" // Adjust emoji size and align items
+                >
                   {bookmark.additionalContent?.emoji &&
                     (bookmark.emoji === bookmark.additionalContent.emoji.black
                       ? bookmark.additionalContent.emoji.black

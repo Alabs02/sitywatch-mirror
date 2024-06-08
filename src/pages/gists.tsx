@@ -101,11 +101,11 @@ const Gists: React.FC = () => {
                 className="object-cover w-full h-full"
               />
               <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
-                <div className="flex place-content-center">
+                <div className="flex items-center space-x-2">
                   <span className="material-symbols-outlined text-green-700">
                     repeat
                   </span>
-                  <span className="text-sm italic ml-1">
+                  <span className="text-sm italic">
                     2.7k sitizens flowed with this gist
                   </span>
                 </div>
@@ -122,6 +122,7 @@ const Gists: React.FC = () => {
                   </div>
                 </div>
               </div>
+
               <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
                 <div className="inline-flex items-center space-x-4">
                   <span className="">🙏</span>
