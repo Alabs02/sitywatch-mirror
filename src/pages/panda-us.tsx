@@ -12,14 +12,15 @@ const PandaUs = () => {
   const pandaSection = pandaData.rightSection.panda
 
   const renderPandaCard = () => {
-    return (
+    return pandaSection.cards.map((card) => (
       <PandPollContent
-        icon={pandaSection.cards[0].icon}
-        image={pandaSection.cards[0].image}
-        title={pandaSection.cards[0].title}
-        description={pandaSection.cards[0].description}
+        key={card.id}
+        icon={card.icon}
+        image={card.image}
+        title={card.title}
+        description={card.description}
       />
-    )
+    ))
   }
 
   return (

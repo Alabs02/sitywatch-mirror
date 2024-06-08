@@ -146,6 +146,279 @@ const Gists: React.FC = () => {
               </div>
             </div>
           </div>
+          <div className="mt-8">
+            <div className="w-full h-full bg-slate-100 mt-8 rounded-md border border-slate-200 shadow-sm">
+              <div className="flex items-center p-2">
+                <div className="flex h-16 w-16 mr-2">
+                  <img
+                    src="/coreAssets/GistsPage/Gist1/hufl1.jpeg"
+                    alt="Hufl"
+                    className="object-cover rounded-full w-full h-full"
+                  />
+                </div>
+                <div className="flex flex-col my-2">
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[12px] font-bold m-0 p-0">
+                      @HiFL
+                    </span>
+                    <span className="inline-flex h-2 w-2 p-1 rounded-full bg-yellow-500 m-0"></span>
+                    <span className="text-blue-800 text-[12px] font-bold m-0 p-0">
+                      #HiFL2023
+                    </span>
+                  </div>
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[11px] font-semibold m-0 p-0">
+                      Sports
+                    </span>
+                    <span className="inline-flex h-[3px] w-[3px] p-0 rounded-full bg-black m-0"></span>
+                    <span className="text-blue-800 text-[11px] font-semibold m-0 p-0">
+                      Football
+                    </span>
+                  </div>
+                  <div className="m-0 p-0">
+                    <span className="text-[11px] text-gray-600 m-0 p-0 font-medium">
+                      9 mins ago
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <p className="text-sm px-2">
+                  #HiFL2023 N200,000 up for grabs this season for a lucky
+                  winner. All you have to do is make a cov...{" "}
+                </p>
+                {/* <img
+                src="/coreAssets/GistsPage/Gist1/hufl.jpeg"
+                alt="Hufl"
+                className="object-cover w-full h-full"
+              /> */}
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="material-symbols-outlined text-green-700">
+                      repeat
+                    </span>
+                    <span className="text-sm italic">
+                      2.7k sitizens flowed with this gist
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center space-x-4">
+                    <div className="flex items-center p-1 space-x-2">
+                      <span className="inline-flex items-center">
+                        🙏
+                        <p className="text-[10px] ml-1">555</p>
+                      </span>
+                      <span className="material-symbols-outlined text-red-500">
+                        speaker_notes
+                      </span>
+                      <p className="text-[10px] ml-1">647</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="inline-flex items-center space-x-4">
+                    <span className="">🙏</span>
+                    <span className="material-symbols-outlined text-red-400 ml-1">
+                      speaker_notes
+                    </span>
+                    <span className="material-symbols-outlined text-red-500">
+                      repeat
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center">
+                    <div className="inline-flex items-center p-1 space-x-2">
+                      <span className="material-symbols-outlined text-red-500">
+                        bookmark
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-2">
+                  <SearchInputPlain />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8">
+            <div className="w-full h-full bg-slate-100 mt-8 rounded-md border border-slate-200 shadow-sm">
+              <div className="flex items-center p-2">
+                <div className="flex h-16 w-16 mr-2">
+                  <img
+                    src="/coreAssets/GistsPage/Gist1/hufl1.jpeg"
+                    alt="Hufl"
+                    className="object-cover rounded-full w-full h-full"
+                  />
+                </div>
+                <div className="flex flex-col my-2">
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[12px] font-bold m-0 p-0">
+                      @HiFL
+                    </span>
+                    <span className="inline-flex h-2 w-2 p-1 rounded-full bg-yellow-500 m-0"></span>
+                    <span className="text-blue-800 text-[12px] font-bold m-0 p-0">
+                      #HiFL2023
+                    </span>
+                  </div>
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[11px] font-semibold m-0 p-0">
+                      Sports
+                    </span>
+                    <span className="inline-flex h-[3px] w-[3px] p-0 rounded-full bg-black m-0"></span>
+                    <span className="text-blue-800 text-[11px] font-semibold m-0 p-0">
+                      Football
+                    </span>
+                  </div>
+                  <div className="m-0 p-0">
+                    <span className="text-[11px] text-gray-600 m-0 p-0 font-medium">
+                      9 mins ago
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <p className="text-sm px-2">
+                  #HiFL2023 N200,000 up for grabs this season for a lucky
+                  winner. All you have to do is make a cov...{" "}
+                </p>
+                <img
+                  src="/coreAssets/GistsPage/Gist1/hufl.jpeg"
+                  alt="Hufl"
+                  className="object-cover w-full h-full"
+                />
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="material-symbols-outlined text-green-700">
+                      repeat
+                    </span>
+                    <span className="text-sm italic">
+                      2.7k sitizens flowed with this gist
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center space-x-4">
+                    <div className="flex items-center p-1 space-x-2">
+                      <span className="inline-flex items-center">
+                        🙏
+                        <p className="text-[10px] ml-1">555</p>
+                      </span>
+                      <span className="material-symbols-outlined text-red-500">
+                        speaker_notes
+                      </span>
+                      <p className="text-[10px] ml-1">647</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="inline-flex items-center space-x-4">
+                    <span className="">🙏</span>
+                    <span className="material-symbols-outlined text-red-400 ml-1">
+                      speaker_notes
+                    </span>
+                    <span className="material-symbols-outlined text-red-500">
+                      repeat
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center">
+                    <div className="inline-flex items-center p-1 space-x-2">
+                      <span className="material-symbols-outlined text-red-500">
+                        bookmark
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8">
+            <div className="w-full h-full bg-slate-100 mt-8 rounded-md border border-slate-200 shadow-sm">
+              <div className="flex items-center p-2">
+                <div className="flex h-16 w-16 mr-2">
+                  <img
+                    src="/coreAssets/GistsPage/Gist1/hufl1.jpeg"
+                    alt="Hufl"
+                    className="object-cover rounded-full w-full h-full"
+                  />
+                </div>
+                <div className="flex flex-col my-2">
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[12px] font-bold m-0 p-0">
+                      @HiFL
+                    </span>
+                    <span className="inline-flex h-2 w-2 p-1 rounded-full bg-yellow-500 m-0"></span>
+                    <span className="text-blue-800 text-[12px] font-bold m-0 p-0">
+                      #HiFL2023
+                    </span>
+                  </div>
+                  <div className="flex space-x-2 items-center">
+                    <span className="text-green-800 text-[11px] font-semibold m-0 p-0">
+                      Sports
+                    </span>
+                    <span className="inline-flex h-[3px] w-[3px] p-0 rounded-full bg-black m-0"></span>
+                    <span className="text-blue-800 text-[11px] font-semibold m-0 p-0">
+                      Football
+                    </span>
+                  </div>
+                  <div className="m-0 p-0">
+                    <span className="text-[11px] text-gray-600 m-0 p-0 font-medium">
+                      9 mins ago
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <p className="text-sm px-2">
+                  #HiFL2023 N200,000 up for grabs this season for a lucky
+                  winner. All you have to do is make a cov...{" "}
+                </p>
+                <img
+                  src="/coreAssets/GistsPage/Gist1/hufl.jpeg"
+                  alt="Hufl"
+                  className="object-cover w-full h-full"
+                />
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="material-symbols-outlined text-green-700">
+                      repeat
+                    </span>
+                    <span className="text-sm italic">
+                      2.7k sitizens flowed with this gist
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center space-x-4">
+                    <div className="flex items-center p-1 space-x-2">
+                      <span className="inline-flex items-center">
+                        🙏
+                        <p className="text-[10px] ml-1">555</p>
+                      </span>
+                      <span className="material-symbols-outlined text-red-500">
+                        speaker_notes
+                      </span>
+                      <p className="text-[10px] ml-1">647</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-b border-tertiary-200 flex items-center justify-between p-1">
+                  <div className="inline-flex items-center space-x-4">
+                    <span className="">🙏</span>
+                    <span className="material-symbols-outlined text-red-400 ml-1">
+                      speaker_notes
+                    </span>
+                    <span className="material-symbols-outlined text-red-500">
+                      repeat
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center">
+                    <div className="inline-flex items-center p-1 space-x-2">
+                      <span className="material-symbols-outlined text-red-500">
+                        bookmark
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       ))}
       <section className="grid col-span-4 border border-[red] p-14 bg-gray-200 place-content-center">

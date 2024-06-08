@@ -21,7 +21,7 @@ const PandPollContent: React.FC<PandaCardProps> = ({
         </span>
       </div>
       <div className="flex flex-col items-center justify-center gap-y-2">
-        <div className=" rounded-full shadow-md overflow-hidden w-[60px] h-[60px] p-3 bg-white">
+        <div className="rounded-full shadow-md overflow-hidden w-[60px] h-[60px] p-3 bg-white">
           <img
             src={image}
             alt={title}
