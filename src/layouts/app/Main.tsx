@@ -1,15 +1,19 @@
 import React, { Fragment, FC } from "react"
-import clsx from "clsx";
+import clsx from "clsx"
 
-// TYPES
-import { TMainprops } from "@/types"
+interface MainProps {
+  children: React.ReactNode
+  className?: string
+}
 
-const Main: FC<TMainprops> = ({ children, className }) => {
+const Main: FC<MainProps> = ({ children, className }) => {
   return (
     <Fragment>
-      <main className={clsx("", className)}>{children}</main>
+      <main className={clsx("flex-1 p-4 overflow-auto", className)}>
+        {children}
+      </main>
     </Fragment>
   )
 }
 
-export default Main;
+export default Main

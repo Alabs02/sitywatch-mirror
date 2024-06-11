@@ -1,40 +1,38 @@
-import React, { useState } from "react"
-import Link from "next/link"
-import HomeIcon from "@mui/icons-material/Home"
-import GistsIcon from "@mui/icons-material/Description"
-import ExploreIcon from "@mui/icons-material/Explore"
-import NotificationsIcon from "@mui/icons-material/Notifications"
-import ChatIcon from "@mui/icons-material/Chat"
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"
-import PandaHeadIcon from "@mui/icons-material/Whatshot"
-import { EditNotificationsSharp } from "@mui/icons-material"
-import { useRouter } from "next/router"
-
-// ICONS
-// import HomeIcon from "@/components/atoms/HomeAppLogo"
+import React, { useState } from "react";
+import Link from "next/link";
+import HomeIcon from "@mui/icons-material/Home";
+import GistsIcon from "@mui/icons-material/Description";
+import ExploreIcon from "@mui/icons-material/Explore";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import ChatIcon from "@mui/icons-material/Chat";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import PandaHeadIcon from "@mui/icons-material/Whatshot";
+import { EditNotificationsSharp } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 interface SidePaneProps {
-  children?: React.ReactNode
-  isOpen?: boolean
-  initialIsOpen?: boolean
-  className?: string
+  children?: React.ReactNode;
+  isOpen?: boolean;
+  initialIsOpen?: boolean;
+  className?: string;
 }
 
 interface SideNavItem {
-  href: string
-  label: string
-  icon: React.ComponentType<any> // Type for Material UI icon component
+  href: string;
+  label: string;
+  icon: React.ComponentType<any>;
 }
 
 const SidePane: React.FC<SidePaneProps> = ({
   children,
-  isOpen = false,
+  isOpen = true,
   initialIsOpen = true,
   className,
 }) => {
-  const [internalIsOpen, setInternalIsOpen] = useState(initialIsOpen)
+  const [internalIsOpen, setInternalIsOpen] = useState(initialIsOpen);
+  const router = useRouter();
 
-  const toggleSideNav = () => setInternalIsOpen(!isOpen)
+  const toggleSideNav = () => setInternalIsOpen(!internalIsOpen);
 
   const navItems: SideNavItem[] = [
     { href: "/", label: "Home", icon: HomeIcon },
@@ -44,16 +42,16 @@ const SidePane: React.FC<SidePaneProps> = ({
     { href: "/messages", label: "Messages", icon: ChatIcon },
     { href: "/explore", label: "Explore", icon: ExploreIcon },
     { href: "/bookmarks", label: "Bookmarks", icon: BookmarkBorderIcon },
-  ]
+  ];
 
   return (
     <nav
-      className={`w-[310px] mx-2 sm:mx-6 ${className} ${
+      className={`fixed lg:relative w-[310px] mx-2 sm:mx-6 ${className} ${
         internalIsOpen ? "open" : ""
       }`}
     >
       <button
-        className={`toggleBtn rounded-full text-sm px-4 py-1 bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center`}
+        className={`toggleBtn rounded-full text-sm px-4 py-1 bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4`}
         onClick={toggleSideNav}
       >
         <EditNotificationsSharp
@@ -66,24 +64,22 @@ const SidePane: React.FC<SidePaneProps> = ({
       <ul className="navList">
         {navItems.map((item) => (
           <li key={item.label} className="navItem py-2 md:py-4 group">
-            {/* Use Link with legacyBehavior and passHref */}
             <Link href={item.href}>
-              <span
+              <a
                 className={`
-        navLink inline-flex rounded-md
-        text-gray-700
-        group-hover:text-white
-        ${
-          // Apply gradient on hover and active states
-          item.href === useRouter().pathname
-            ? "active gradient-text"
-            : "group-hover:gradient-text"
-        }
-      `}
+                  navLink inline-flex rounded-md
+                  text-gray-700
+                  group-hover:text-white
+                  ${
+                    item.href === router.pathname
+                      ? "active gradient-text"
+                      : "group-hover:gradient-text"
+                  }
+                `}
               >
                 <item.icon fontSize="small" className="mr-2" />
                 <span>{item.label}</span>
-              </span>
+              </a>
             </Link>
           </li>
         ))}
@@ -99,7 +95,7 @@ const SidePane: React.FC<SidePaneProps> = ({
         }
       `}</style>
     </nav>
-  )
-}
+  );
+};
 
-export default SidePane
+export default SidePane;

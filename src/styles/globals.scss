@@ -1,8 +1,5 @@
-// @import  "../../reset.css";
-
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
-
 
 @tailwind base;
 @tailwind components;
@@ -14,20 +11,12 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-// @media (prefers-color-scheme: dark) {
-//   :root {
-//     --foreground-rgb: 255, 255, 255;
-//     --background-start-rgb: 0, 0, 0;
-//     --background-end-rgb: 0, 0, 0;
-//   }
-// }
-
 .material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 body {
@@ -38,6 +27,18 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
 }
 
 @layer utilities {
@@ -54,14 +55,13 @@ nav::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari and Opera */
 }
 
-// text gradient styles
-
 .text-gradient {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   transition: background-image 0.7s ease-in-out;
 }
+
 .h1-with-border::before {
   content: "411 "; /* Add space after 411 */
   display: inline-block;
@@ -70,20 +70,20 @@ nav::-webkit-scrollbar {
   padding-right: 5px; /* Add padding after the border */
 }
 
-// Primary gradient
 .text-gradient {
   background-clip: text;
   background-color: linear-gradient(to bottom, #f24055, #1e7881);
 }
+
 .tab-link {
   white-space: nowrap;
   overflow: hidden;
-  // text-overflow: ellipsis;
 }
 
 .img-with-ring {
   border-radius: 50%; 
 }
+
 .img-with-ring::after {
   content: ""; 
   position: absolute;
@@ -94,7 +94,3 @@ nav::-webkit-scrollbar {
   border-radius: 50%;
   box-shadow: 0 0 0 4px linear-gradient(to bottom, #f24055, #1e7881);
 }
-
-
-
-

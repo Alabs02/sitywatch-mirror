@@ -39,13 +39,13 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
 
   useEffect(() => {
     console.log({ isCollapsed })
-  }, [])
+  }, [isCollapsed])
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className="min-h-screen flex flex-col">
       <Header />
 
-      <div className="w-full min-h-[calc(100vh-137px)] flex">
+      <div className="flex flex-1 overflow-hidden">
         <motion.div
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className={clsx(
@@ -53,6 +53,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             isCollapsed
               ? "lg:items-center lg:!w-[80px]"
               : "xl:items-start xl:!w-[280px] px-6",
+            "sticky top-0 h-screen",
           )}
         >
           <button
@@ -64,9 +65,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             <i className="material-symbols-outlined">draft_orders</i>
             {!isCollapsed ? (
               <span className="hidden xl:inline">Drop a gist</span>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </button>
 
           <div
@@ -100,7 +99,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="flex-1 border border-green-500 overflow-y-auto"
+            className="flex-1 overflow-y-auto"
           >
             {children}
           </motion.div>

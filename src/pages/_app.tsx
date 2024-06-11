@@ -8,6 +8,7 @@ import "@/styles/globals.scss"
 import "animate.css"
 import { Layout } from "@/layouts"
 
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>

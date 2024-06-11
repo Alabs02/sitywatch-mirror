@@ -17,10 +17,10 @@ const Gists: React.FC = () => {
   const gists = gistsData.gists as Gist[]
 
   return (
-    <div className="border border-[red] px-6 grid grid-cols-12 gap-x-6">
+    <div className="px-6 grid grid-cols-12 gap-x-6">
       {gists.map((gist: Gist) => (
         <section key={gist.id} className="grid col-span-8 overflow-y-auto">
-          <div className="border border-[red] bg-gray-200 shadow-lg rounded-md p-2">
+          <div className="bg-gray-200 shadow-lg rounded-md p-2">
             <div className="flex items-center space-x-2 my-2">
               <div className="rounded-full h-16 w-16 flex justify-center items-center inset-0 border border-double border-[#F24055] bg-gradient-to-t from-[#F24055] to-[#1E7881]">
                 <img
@@ -233,9 +233,9 @@ const Gists: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="p-2">
+                {/* <div className="p-2">
                   <SearchInputPlain />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -421,7 +421,7 @@ const Gists: React.FC = () => {
           </div>
         </section>
       ))}
-      <section className="grid col-span-4 border border-[red] p-14 bg-gray-200 place-content-center">
+      <section className="grid col-span-4 p-14 bg-gray-200 place-content-center">
         <h1>CONTENT</h1>
       </section>
     </div>
