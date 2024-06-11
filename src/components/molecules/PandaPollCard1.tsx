@@ -65,7 +65,7 @@ const PandaPollCard1: React.FC = () => {
         ))}
       </div>
       {/* If I need this to be full width all i need do is remove the first wrapping div */}
-      <div className="flex justify-center my-6"> 
+      <div className="flex justify-center my-6">
         <div className="p-1 inline-flex bg-white rounded-lg shadow-md items-center justify-center">
           <Link
             href={"#"}
@@ -83,6 +83,28 @@ const PandaPollCard1: React.FC = () => {
         <span className="material-symbols-outlined">repeat</span>
         <span className="material-symbols-outlined">bookmark</span>
         <span className="material-symbols-outlined">send</span>
+      </div>
+      <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
+        <div className="flex">
+          <Image
+            src="/coreAssets/PandarUs/Poll1/panda.png"
+            alt={poll.author}
+            width={20}
+            height={20}
+            className="rounded-full mr-4"
+          />
+          <p className="text-sm">34 pandas</p>
+        </div>
+        <div className="flex">
+          <div className="flex space-x-2 items-center">
+            <span className="material-symbols-outlined">cognition</span>
+            <p>5</p>
+          </div>
+          <div className="flex space-x-2 items-center">
+            <span className="material-symbols-outlined">repeat</span>
+            <p>5</p>
+          </div>
+        </div>
       </div>
     </div>
   ))
