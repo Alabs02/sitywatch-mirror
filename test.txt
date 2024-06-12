@@ -6,3 +6,10 @@ i: Int = low
 j: Int = high
 tmp: Int
 pivot: Int = numbers[]
+
+
+// ICONS
+
+<span class="material-symbols-outlined">
+send
+</span>

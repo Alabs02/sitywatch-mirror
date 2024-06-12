@@ -3,6 +3,8 @@ import Image from "next/image"
 import PandPollContent from "@/components/molecules/PandaPollContent"
 import Link from "next/link"
 import PandaPollCard1 from "@/components/molecules/PandaPollCard1"
+import SoulPanda from "@/components/molecules/SoulPanda"
+import PandaScent from "@/components/molecules/PandaScent"
 
 const pandaSection = {
   cards: [
@@ -130,8 +132,8 @@ const PandaUs = () => {
              
             </>
           )}
-          {activeTab === "SOUL PANDA" && <div>SOUL PANDA Content</div>}
-          {activeTab === "PANDA SCENTS" && <div>PANDA SCENTS Content</div>}
+          {activeTab === "SOUL PANDA" && <div><SoulPanda /></div>}
+          {activeTab === "PANDA SCENTS" && <div><PandaScent /></div>}
         </div>
       </section>
       <section className="col-span-5 w-full h-full border border-red bg-gray-200 place-content-center">
