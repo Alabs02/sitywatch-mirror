@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import AvatarWithTextsAndIcon from "@/components/molecules/AvatarWithTexts"
 import notificationsData from "../../data.json"
+import Image from "next/image"
 
 interface Notification {
   id: number
@@ -28,7 +29,9 @@ return (
         {/* Styled buttons for tabs */}
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "All" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "All"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("All")}
         >
@@ -36,7 +39,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Satisfied" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Satisfied"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Satisfied")}
         >
@@ -44,7 +49,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Invites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Invites"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Invites")}
         >
@@ -53,7 +60,9 @@ return (
         {/* ... Add more buttons here as needed ... */}
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Pitches" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Pitches"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Pitches")}
         >
@@ -61,7 +70,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Gists" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Gists"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Gists")}
         >
@@ -69,7 +80,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Hypes" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Hypes"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Hypes")}
         >
@@ -77,7 +90,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Cites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Cites"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Cites")}
         >
@@ -85,7 +100,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Recites" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Recites"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Recites")}
         >
@@ -93,7 +110,9 @@ return (
         </button>
         <button
           className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-            activeTab === "Flows" ? "active shadow-md shadow-gray-400 bg-gray-100" : ""
+            activeTab === "Flows"
+              ? "active shadow-md shadow-gray-400 bg-gray-100"
+              : ""
           }`}
           onClick={() => handleTabClick("Flows")}
         >
@@ -105,25 +124,189 @@ return (
         className="w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]"
         style={{ scrollbarWidth: "none" }}
       >
-        {activeTab === "All" &&
-          notifications.map((notification) => (
-            <div key={notification.id} className="flex items-center">
-              {/* Avatar with texts */}
-              <div className="flex items-center w-full justify-between">
-                <div className="flex-shrink-0">
-                  <AvatarWithTextsAndIcon
-                    avatarSrc={notification.avatarSrc}
-                    textUp={notification.textUp}
-                    textDown={notification.textDown}
-                    icon={notification.icons[2]}
-                    action={notification.action[0]}
-                    iconText={""}
+        {activeTab === "All" && (
+          // notifications.map((notification) => (
+          //   <div key={notification.id} className="flex items-center">
+          //     {/* Avatar with texts */}
+          //     <div className="flex items-center w-full justify-between">
+          //       <div className="flex-shrink-0">
+          //         <AvatarWithTextsAndIcon
+          //           avatarSrc={notification.avatarSrc}
+          //           textUp={notification.textUp}
+          //           textDown={notification.textDown}
+          //           icon={notification.icons[2]}
+          //           action={notification.action[0]}
+          //           iconText={""}
+          //         />
+          //       </div>
+          //       <div className="flex-shrink">{/* Adjusted here */}</div>
+          //     </div>
+          //   </div>
+          // ))}
+          <div className="mt-4 flex flex-col gap-y-4">
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/invested.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="flex-shrink">{/* Adjusted here */}</div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
               </div>
-            </div>
-          ))}
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/afan.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/afan.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/veechic.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/yungboss.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/datbrain.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+            <article className="flex items-center justify-between">
+              {/* left */}
+              <div className="flex items-center space-x-2">
+                <div className="h-14 w-14 rounded-full overflow-hidden">
+                  <Image
+                    src="/coreAssets/Notifications/datbrain.jpeg"
+                    alt="soul image"
+                    width={50}
+                    height={50}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div>
+                  <div>Text up</div>
+                  <div>Text down</div>
+                </div>
+              </div>
+              {/* right */}
+              <div className="flex items-center space-x-2">
+                {/* <span className="inline-flex h-3 w-3 p-1 rounded-full bg-[red] m-0"></span> */}
+                <span className="material-symbols-outlined">more_vert</span>
+              </div>
+            </article>
+          </div>
+        )}
         {activeTab === "Sertified" && <div>Certified Content</div>}
         {activeTab === "Invites" && <div>Invites Content</div>}
         {/* Add more content components as needed */}
@@ -134,7 +317,7 @@ return (
     </section>
   </div>
 )
-
 }
+
 
 export default Notifications
