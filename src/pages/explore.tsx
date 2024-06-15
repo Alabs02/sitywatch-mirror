@@ -95,8 +95,17 @@ const Explore: FC<ExploreProps> = ({ children }) => {
         <section className="">
           <h1 className="font-bold">Bottom of the top</h1>
           <div className="grid grid-cols-2 gap-x-2 ">
-            <div className="col-span-1 border border-[red]">1</div>
-            <div className="col-span-1 border border-[red]">2</div>
+            <article className="col-span-1 border border-[red] flex items-center justify-between">
+              <div className="flex flex-col">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+              </div>
+              <div>
+                <span className="material-symbols-outlined">more_horiz</span>
+              </div>
+            </article>
+            <article className="col-span-1 border border-[red]">2</article>
           </div>
         </section>
       </div>
