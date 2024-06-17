@@ -3,6 +3,7 @@ import gistsData from "../../data.json"
 import Image from "next/image"
 import SearchInput from "@/components/molecules/SearchInput"
 import SearchInputPlain from "@/components/molecules/SearchInputPlain"
+import RightSideComponent from "@/components/contents/RightSideComponent"
 
 interface Gist {
   id: number
@@ -421,8 +422,8 @@ const Gists: React.FC = () => {
           </div>
         </section>
       ))}
-      <section className="grid col-span-4 p-14 bg-gray-200 place-content-center">
-        <h1>CONTENT</h1>
+      <section className="col-span-4 ">
+       <RightSideComponent />
       </section>
     </div>
   )

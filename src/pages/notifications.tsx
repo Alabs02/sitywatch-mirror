@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import AvatarWithTextsAndIcon from "@/components/molecules/AvatarWithTexts"
 import notificationsData from "../../data.json"
 import Image from "next/image"
+import RightSideComponent from "@/components/contents/RightSideComponent"
 
 interface Notification {
   id: number
@@ -24,7 +25,7 @@ const Notifications = () => {
   const notifications = notificationsData.notifications as Notification[]
 return (
   <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-    <section className="col-span-7 w-full h-full border border-red bg-gray-200">
+    <section className="col-span-8 w-full h-full border border-red bg-gray-200">
       <nav className="flex p-4 items-center space-x-2 overflow-x-scroll scrollbar-hidden">
         {/* Styled buttons for tabs */}
         <button
@@ -157,8 +158,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="font-semibold">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic text-sm">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -180,8 +184,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -203,8 +210,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -226,8 +236,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -249,8 +262,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -272,8 +288,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -295,8 +314,11 @@ return (
                   />
                 </div>
                 <div>
-                  <div>Text up</div>
-                  <div>Text down</div>
+                  <div className="">
+                    <span className="text-secondary">@investedsylvester </span>
+                    cited you in a gist
+                  </div>
+                  <div className="italic">14 mins ago</div>
                 </div>
               </div>
               {/* right */}
@@ -312,8 +334,8 @@ return (
         {/* Add more content components as needed */}
       </div>
     </section>
-    <section className="col-span-5 w-full h-full border border-red bg-gray-200 place-content-center">
-      <h1 className="ml-10">CONTENT</h1>
+    <section className="col-span-4 w-full h-full border border-red bg-gray-200 place-content-center">
+      <RightSideComponent />
     </section>
   </div>
 )

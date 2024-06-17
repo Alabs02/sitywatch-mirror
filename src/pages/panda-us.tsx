@@ -5,6 +5,7 @@ import Link from "next/link"
 import PandaPollCard1 from "@/components/molecules/PandaPollCard1"
 import SoulPanda from "@/components/molecules/SoulPanda"
 import PandaScent from "@/components/molecules/PandaScent"
+import RightSideComponent from "@/components/contents/RightSideComponent"
 
 const pandaSection = {
   cards: [
@@ -88,7 +89,7 @@ const PandaUs = () => {
 
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-      <section className="col-span-7 w-full h-full border border-red bg-gray-200">
+      <section className="col-span-8 w-full h-full border border-red bg-gray-200">
         <nav className="flex p-4 items-center justify-between">
           <a
             href="#"
@@ -136,8 +137,8 @@ const PandaUs = () => {
           {activeTab === "PANDA SCENTS" && <div><PandaScent /></div>}
         </div>
       </section>
-      <section className="col-span-5 w-full h-full border border-red bg-gray-200 place-content-center">
-        <h1 className="ml-10">CONTENT</h1>
+      <section className="col-span-4 ">
+        <RightSideComponent />
       </section>
     </div>
   )

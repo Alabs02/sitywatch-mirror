@@ -313,7 +313,7 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                     Hey guys, please vote our girl{" "}
                     <span className="text-secondary">@spicy_q</span> for the
                     sitywatch beauty pageant finals. Just follow the link{" "}
-                    <span className="text-[#5454ef]">
+                    <span className="text-[#5454ef] cursor-pointer">
                       https://sitywatch.com/beautypageant/ehfrhejkjei/votepanel/
                     </span>
                   </p>
@@ -375,7 +375,7 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                 <div className="flex items-center p-2">
                   <div className="flex h-16 w-16 mr-2">
                     <Image
-                      src="/coreAssets/MessagesPage/juliana.jpeg"
+                      src="/coreAssets/MessagesPage/paulajeyi.jpeg"
                       alt="Hufl"
                       width={50}
                       height={50}
@@ -386,21 +386,18 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                   </div>
                   <div className="flex flex-col my-2">
                     <div className="flex space-x-2 items-center">
-                      <span className="text-green-800 text-[12px] font-bold m-0 p-0">
-                        @HiFL
+                      <span className="text-secondary text-[12px] font-bold m-0 p-0">
+                        @paulo4real
                       </span>
-                      <span className="inline-flex h-2 w-2 p-1 rounded-full bg-yellow-500 m-0"></span>
-                      <span className="text-blue-800 text-[12px] font-bold m-0 p-0">
-                        #HiFL2023
-                      </span>
+                      {/* <span className="inline-flex h-2 w-2 p-1 rounded-full bg-yellow-500 m-0"></span> */}
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <span className="text-green-800 text-[11px] font-semibold m-0 p-0">
-                        Sports
+                      <span className="text-tertiary-400 text-[11px] font-semibold m-0 p-0">
+                        Covenant University, Ogun
                       </span>
                       <span className="inline-flex h-[3px] w-[3px] p-0 rounded-full bg-black m-0"></span>
-                      <span className="text-blue-800 text-[11px] font-semibold m-0 p-0">
-                        Football
+                      <span className="text-tertiary-400 text-[11px] font-semibold m-0 p-0">
+                        Student
                       </span>
                     </div>
                     <div className="m-0 p-0">
@@ -411,9 +408,9 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                   </div>
                 </div>
                 <div className="">
-                  <p className="text-sm px-2">
-                    #HiFL2023 N200,000 up for grabs this season for a lucky
-                    winner. All you have to do is make a cov...{" "}
+                  <p className="text-sm px-2 mb-2">
+                    Let's settle this once and for all. Covenant boys and
+                    Babcock boys, who fresh pass?
                   </p>
                   <Image
                     src="/coreAssets/GistsPage/Gist4/naijagif.gif"
@@ -469,7 +466,9 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                 </div>
               </div>
             </article>
-            <article className="col-span-1 border border-[red]">2</article>
+            <article className="col-span-1 border border-slate-400/70 shadow-inner p-2">
+             Right section
+            </article>
           </div>
         </section>
       </div>
