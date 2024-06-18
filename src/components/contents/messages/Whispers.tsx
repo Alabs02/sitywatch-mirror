@@ -11,42 +11,47 @@ interface Message {
   iconText: string
   icon: string
 }
-  // "id": 1,
-  //     "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
-  //     "full_name": "Julia James",
-  //     "handle": "@juliajames",
-  //     "first_name": "Julia",
-  //     "message": "something texted here",
-  //     "iconText": "See More",
-  //     "icon": "add_circle"
+// "id": 1,
+//     "avatarSrc": "/coreAssets/MessagesPage/juliana.jpeg",
+//     "full_name": "Julia James",
+//     "handle": "@juliajames",
+//     "first_name": "Julia",
+//     "message": "something texted here",
+//     "iconText": "See More",
+//     "icon": "add_circle"
 
 const Whispers = () => {
   const whispersData = messages.whispers as Message[]
 
   return (
-    <div className="flex flex-col justify-around px-4">
+    <div className="grid gap-y-4 p-4">
       {whispersData.map((message) => (
-        <div className="flex items-center space-y-4" key={message.id}>
-          <div className="mr-4">
-            <img
-              src={message.avatarSrc}
-              alt=""
-              className="w-10 h-10 rounded-full"
-            />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex space-x-2">
-              <div className="text-sm font-bold">{message.full_name}</div>
-              <span className="text-green-600 text-sm">{message.handle}</span>
+        <div
+          className="flex items-center justify-between border border-[red]"
+          key={message.id}
+        >
+          <div className="flex items-center">
+            <div className="mr-2">
+              <img
+                src={message.avatarSrc}
+                alt=""
+                className="w-12 h-12 rounded-full"
+              />
             </div>
-            <div className="flex space-x-2 text-sm">
-              <div className="italic font-semibold">{message.first_name}</div>
-              <span className="text-sm font-normal">{message.message}</span>
+            <div className="flex flex-col">
+              <div className="flex space-x-2">
+                <div className="text-sm font-bold">{message.full_name}</div>
+                <span className="text-secondary text-sm cursor-pointer font-semibold">{message.handle}</span>
+              </div>
+              <div className="flex space-x-2 text-sm">
+                <div className="italic font-semibold">{message.first_name}</div>
+                <span className="text-sm font-normal">{message.message}</span>
+              </div>
             </div>
           </div>
-          <div className="ml-auto flex flex-col text-sm items-center px-4">
+          <div className="text-sm border border-[red] flex items-center flex-col">
             <div className="text-sm font-medium">{message.iconText}</div>
-            <span className="material-symbols-outlined bg-[red] my-2 h-3 w-3 rounded-full"></span>
+            <span className="material-symbols-outlined bg-[red] h-3 w-3 rounded-full text-center"></span>
           </div>
         </div>
       ))}
