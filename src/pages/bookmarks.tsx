@@ -3,7 +3,6 @@ import Gists from "@/components/contents/bookmarks/Gists"
 import RightSideComponent from "@/components/contents/RightSideComponent"
 import React, { useState } from "react"
 
-
 const Bookmarks = () => {
   const [activeTab, setActiveTab] = useState("GISTS")
 
@@ -13,12 +12,12 @@ const Bookmarks = () => {
 
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-      <section className="col-span-8 w-full h-full border border-red bg-gray-200">
-        <nav className="flex px-10 items-center space-x-10 font-bold py-1">
+      <section className="col-span-8 w-full h-full flex flex-col overflow-y-auto">
+        <nav className="flex px-10 items-center space-x-10 font-bold py-1 z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit">
           <a
             href="#"
             className={`tab-link ${
-              activeTab === "GISTS" ? "active-tab text-green-600" : ""
+              activeTab === "GISTS" ? "active-tab text-secondary" : ""
             }`}
             onClick={() => handleTabClick("GISTS")}
           >
@@ -28,7 +27,7 @@ const Bookmarks = () => {
           <a
             href="#"
             className={`tab-link ${
-              activeTab === "AFFAIRS" ? "active-tab text-green-600" : ""
+              activeTab === "AFFAIRS" ? "active-tab text-secondary" : ""
             }`}
             onClick={() => handleTabClick("AFFAIRS")}
           >
@@ -36,7 +35,7 @@ const Bookmarks = () => {
           </a>
         </nav>
         {/* Content for each tab */}
-        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
+        <div className="flex-1 w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-y-auto">
           {activeTab === "GISTS" && (
             <div>
               <Gists />
@@ -57,7 +56,7 @@ const Bookmarks = () => {
           )}
         </div>
       </section>
-      <section className="col-span-4">
+      <section className="col-span-4 h-full overflow-y-auto">
         <RightSideComponent />
       </section>
     </div>

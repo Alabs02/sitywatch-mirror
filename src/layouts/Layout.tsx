@@ -44,11 +44,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         <motion.div
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className={clsx(
-            "fixed top-[10rem] lg:flex lg:flex-col gap-y-8  h-[calc(100vh-64px)] hidden md:flex",
-            "",
+            "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-64px)] hidden md:flex",
             isCollapsed
               ? "lg:items-center lg:w-20"
-              : "xl:items-start xl:w-72 px-6",
+              : "xl:items-start xl:w-60 px-6",
           )}
         >
           <button
@@ -87,9 +86,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={clsx(
-              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 ml-[calc(20px+20px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(288px+24px)] mt-[1.5rem] shadow-inner shadow-gray-400/75 rounded-t-[32px]",
-              isCollapsed &&
-                "ml-0 lg:ml-[20px+20px] xl:ml-[80px+24px] xl:w-full",
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mt-[1.5rem] mr-4",
+              isCollapsed
+                ? "ml-[4.5rem]" // Adjusted margin for collapsed state to prevent overlap
+                : "ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
             )}
           >
             {children}
@@ -97,7 +97,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         </AnimatePresence>
       </div>
       {/* Bottom Navigation for Small Screens */}
-      <div className="fixed bottom-0 left-0 right-0  md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 md:hidden">
         {navLinks.map((navLink) => (
           <Link key={navLink.href} href={navLink.href}>
             <div className="flex flex-col items-center">

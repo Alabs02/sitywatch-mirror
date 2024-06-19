@@ -24,12 +24,12 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [])
 
-  
+
   // shadow-inner shadow-gray-400/75 border rounded-t-[32px]
 
   return (
-    <div className="grid w-full h-full pr-5">
-      <div className="w-full h-full grid  px-5 lg:p-6">
+    <div className="grid w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[32px] p-4 overflow-y-auto">
+      <div className="w-full h-full grid ">
         <section className="h-full w-full grid grid-cols-12">
           <div className="grid col-span-8 border border-bg-[red] bg-orange-400 p-16 rounded-lg relative overflow-hidden">
             <div className="w-full h-full absolute top-0 left-0 transition-opacity">
@@ -55,7 +55,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
               ))}
             </div>
           </div>
-          <div className="col-span-4 border border-tertiary-400 bg-neutral-200 p-6 rounded-lg gap-y-4">
+          <div className="col-span-4 border border-tertiary-400  p-6 rounded-lg gap-y-4 m-1">
             <div className="flex items-center">
               <span className="material-symbols-outlined text-3xl mr-2 bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
                 add_circle
