@@ -1,12 +1,12 @@
 import Main from "./Main";
 import Header from "./Header"
-import SidePane from "./SidePane"
+// import SidePane from "./SidePane"
 
 
 const AppLayout = {
   Main,
   Header,
-  SidePane
+  // SidePane
 };
 
 export default AppLayout;

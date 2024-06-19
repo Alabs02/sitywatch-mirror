@@ -7,90 +7,52 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
+html[data-theme='dark'] {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
+  font-family: 'Inter', sans-serif;
+  background: rgb(var(--background-start-rgb)) url('/background-image.jfif') no-repeat;
+  background-size: cover;
+  background-color: rgb(var(--background-start-rgb)); /* Fallback color */
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-#__next {
-  height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: white;
+/* Hide the scrollbar but keep scrolling functionality */
+body {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: transparent transparent; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+body::-webkit-scrollbar {
+  width: 0; /* Chrome, Safari, Opera */
 }
 
-nav {
-  overflow: auto;
+h1 {
+  font-family: 'Inter', sans-serif;
 }
 
-nav::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
-}
-
-.text-gradient {
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  transition: background-image 0.7s ease-in-out;
-}
-
-.h1-with-border::before {
-  content: "411 "; /* Add space after 411 */
+h1.h1-with-border {
   display: inline-block;
-  margin-right: 10px; /* Adjust margin as needed */
-  border-right: 3px solid gray; /* Define border style */
-  padding-right: 5px; /* Add padding after the border */
+  position: relative;
 }
 
-.text-gradient {
-  background-clip: text;
-  background-color: linear-gradient(to bottom, #f24055, #1e7881);
-}
-
-.tab-link {
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.img-with-ring {
-  border-radius: 50%; 
-}
-
-.img-with-ring::after {
-  content: ""; 
+h1.h1-with-border::before {
+  content: '';
+  display: block;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 0 0 0 4px linear-gradient(to bottom, #f24055, #1e7881);
+  height: 1px;
+  background-color: #000;
 }

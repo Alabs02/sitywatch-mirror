@@ -24,9 +24,12 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [])
 
+  
+  // shadow-inner shadow-gray-400/75 border rounded-t-[32px]
+
   return (
     <div className="grid w-full h-full pr-5">
-      <div className="w-full h-full grid shadow-inner shadow-gray-400/75 border rounded-t-[32px] px-5 lg:p-6">
+      <div className="w-full h-full grid  px-5 lg:p-6">
         <section className="h-full w-full grid grid-cols-12">
           <div className="grid col-span-8 border border-bg-[red] bg-orange-400 p-16 rounded-lg relative overflow-hidden">
             <div className="w-full h-full absolute top-0 left-0 transition-opacity">

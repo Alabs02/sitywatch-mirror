@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useState, useEffect } from "react"
+import React, { ReactNode, FC } from "react"
 import Link from "next/link"
 import Header from "./app/Header"
 import clsx from "clsx"
@@ -17,7 +17,7 @@ interface LayoutProps {
 }
 
 const navLinks: NavLink[] = [
-  { href: "/", label: "Home", icon: "home_app_logo" },
+  { href: "/", label: "Home", icon: "home" },
   { href: "/gists", label: "Gists", icon: "diversity_3" },
   { href: "/panda-us", label: "Panda-us", icon: "support_agent" },
   { href: "/notifications", label: "Notifications", icon: "notifications" },
@@ -37,23 +37,18 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     isCollapsedFromQuery ||
     collapsedList.includes(asPath)
 
-  useEffect(() => {
-    console.log({ isCollapsed })
-  }, [isCollapsed])
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-
-      <div className="flex flex-1 overflow-hidden">
+    <div className="min-h-screen flex flex-col relative">
+      <Header className="" />
+      <div className="flex flex-1 overflow-hidden relative">
         <motion.div
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className={clsx(
-            "hidden lg:flex lg:flex-col gap-y-8 shadow",
+            "fixed top-[10rem] lg:flex lg:flex-col gap-y-8  h-[calc(100vh-64px)] hidden md:flex",
+            "",
             isCollapsed
-              ? "lg:items-center lg:!w-[80px]"
-              : "xl:items-start xl:!w-[280px] px-6",
-            "sticky top-0 h-screen",
+              ? "lg:items-center lg:w-20"
+              : "xl:items-start xl:w-72 px-6",
           )}
         >
           <button
@@ -68,30 +63,22 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             ) : null}
           </button>
 
-          <div
-            className={clsx(
-              "flex flex-col gap-y-8",
-              isCollapsed ? "items-center" : "items-start",
-            )}
-          >
-            {navLinks.map((navLink) => (
-              <Link key={navLink.href} href={navLink.href}>
-                <div
-                  className={clsx(
-                    "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
-                    !isCollapsed && "xl:space-x-3",
-                  )}
-                >
-                  <i className="material-symbols-outlined">{navLink.icon}</i>
-                  {!isCollapsed && (
-                    <span className="hidden xl:inline">{navLink.label}</span>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
+          {navLinks.map((navLink) => (
+            <Link key={navLink.href} href={navLink.href}>
+              <div
+                className={clsx(
+                  "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
+                  !isCollapsed && "xl:space-x-3",
+                )}
+              >
+                <i className="material-symbols-outlined">{navLink.icon}</i>
+                {!isCollapsed && (
+                  <span className="hidden xl:inline">{navLink.label}</span>
+                )}
+              </div>
+            </Link>
+          ))}
         </motion.div>
-
         <AnimatePresence mode="wait">
           <motion.div
             key={asPath}
@@ -99,11 +86,26 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="flex-1 overflow-y-auto"
+            className={clsx(
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 ml-[calc(20px+20px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(288px+24px)] mt-[1.5rem] bg-white shadow-inner shadow-gray-400/75 rounded-t-[32px]",
+              isCollapsed &&
+                "ml-0 lg:ml-[20px+20px] xl:ml-[80px+24px] xl:w-full",
+            )}
           >
             {children}
           </motion.div>
         </AnimatePresence>
+      </div>
+      {/* Bottom Navigation for Small Screens */}
+      <div className="fixed bottom-0 left-0 right-0  md:hidden">
+        {navLinks.map((navLink) => (
+          <Link key={navLink.href} href={navLink.href}>
+            <div className="flex flex-col items-center">
+              <i className="material-symbols-outlined">{navLink.icon}</i>
+              <span className="text-xs">{navLink.label}</span>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   )

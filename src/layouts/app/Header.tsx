@@ -6,6 +6,7 @@ import HomeIcon from "@/components/atoms/HomeIcon"
 interface HeaderProps {
   children?: React.ReactNode
   className?: string
+  style?: React.CSSProperties
 }
 
 const texts = [
@@ -15,7 +16,7 @@ const texts = [
   "This is the fourth sentence.",
 ]
 
-const Header: FC<HeaderProps> = ({ children, className }) => {
+const Header: FC<HeaderProps> = ({ children, className, style }) => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
@@ -38,9 +39,10 @@ const Header: FC<HeaderProps> = ({ children, className }) => {
     <Fragment>
       <header
         className={clsx(
-          "h-[137px] w-full px-2 md:px-6 sticky",
+          "h-[137px] w-full px-2 md:px-6 sticky top-0 z-10",
           className,
         )}
+        // style={{ backgroundImage: "url('/background-image.jfif')", ...style }}
       >
         <div className="flex h-full items-center justify-between">
           <Link href={"/"} className="">
