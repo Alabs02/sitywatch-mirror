@@ -87,7 +87,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={clsx(
-              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 ml-[calc(20px+20px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(288px+24px)] mt-[1.5rem] bg-white shadow-inner shadow-gray-400/75 rounded-t-[32px]",
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 ml-[calc(20px+20px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(288px+24px)] mt-[1.5rem] shadow-inner shadow-gray-400/75 rounded-t-[32px]",
               isCollapsed &&
                 "ml-0 lg:ml-[20px+20px] xl:ml-[80px+24px] xl:w-full",
             )}
