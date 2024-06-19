@@ -24,7 +24,7 @@ const Whispers = () => {
   const whispersData = messages.whispers as Message[]
 
   return (
-    <div className="grid gap-y-4 p-4">
+    <div className="grid gap-y-4 p-4 w-full h-full">
       {whispersData.map((message) => (
         <div
           className="flex items-center justify-between border border-[red]"
@@ -41,7 +41,7 @@ const Whispers = () => {
             <div className="flex flex-col">
               <div className="flex space-x-2">
                 <div className="text-sm font-bold">{message.full_name}</div>
-                <span className="text-secondary text-sm cursor-pointer font-semibold">{message.handle}</span>
+                <span className="text-secondary text-sm cursor-pointer font-bold">{message.handle}</span>
               </div>
               <div className="flex space-x-2 text-sm">
                 <div className="italic font-semibold">{message.first_name}</div>

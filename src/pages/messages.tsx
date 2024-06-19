@@ -16,12 +16,12 @@ const message = () => {
     <div className="h-full w-full shadow-inner shadow-tertiary-400/30 rounded-t-[10px] p-1">
       <div className="grid grid-cols-2 h-full w-ful px-2]">
         <section className="bg-tertiary-100 col-span-1">
-          <nav className="flex p-4 items-center space-x-4 flex-col">
-            <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto border-b-2 border-gray-400 ">
-              <div className="flex">
+          <nav className="flex p-[5%] items-center space-x-4 flex-col">
+            <div className="flex flex-col md:flex-row items-center border-b-2 border-gray-400 w-full">
+              <div className="flex items-center">
                 <span className="material-symbols-outlined">edit_square</span>
                 <button
-                  className={`tab-link mr-2 border-r-2 border-gray-400 px-3 w-full md:w-auto text-center md:text-left ${
+                  className={`tab-link mr-2 border-r-2 border-gray-400 py-2 px-3 w-full md:w-auto text-center md:text-left ${
                     activeTab === "" ? "active-tab text-green-600" : ""
                   }`}
                   onClick={() => handleTabClick("nothing")}
@@ -29,23 +29,23 @@ const message = () => {
                   SEND A NEW MESSAGE
                 </button>
               </div>
-              <div>
+              <div className="flex items-center">
                 <span className="material-symbols-outlined">manage_search</span>
-              <button
-                className={`tab-link px-3 w-full md:w-auto text-center md:text-left ${
-                  activeTab === "" ? "active-tab text-green-600" : ""
-                }`}
-                onClick={() => handleTabClick("Nothing")}
-              >
-                SEARCH MESSAGE
-              </button>
+                <button
+                  className={`tab-link px-3 w-full md:w-auto text-center md:text-left ${
+                    activeTab === "" ? "active-tab text-secondary" : ""
+                  }`}
+                  onClick={() => handleTabClick("Nothing")}
+                >
+                  SEARCH MESSAGE
+                </button>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row items-center mt-4 md:mt-0">
+            <div className="flex flex-col md:flex-row items-center justify-between mt-4 md:mt-0">
               <button
                 className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
                   // Add padding and borders
-                  activeTab === "WHISPERS" ? "active-tab text-green-600" : ""
+                  activeTab === "WHISPERS" ? "active-tab text-secondary" : ""
                 }`}
                 onClick={() => handleTabClick("WHISPERS")}
               >
@@ -54,7 +54,7 @@ const message = () => {
               <button
                 className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
                   // Add padding and borders
-                  activeTab === "INVITES" ? "active-tab text-green-600" : ""
+                  activeTab === "INVITES" ? "active-tab text-secondary" : ""
                 }`}
                 onClick={() => handleTabClick("INVITES")}
               >
@@ -63,7 +63,7 @@ const message = () => {
               <button
                 className={`tab-link px-3 py-2 mr-2 border-r-2 border-gray-400 ${
                   // Add padding and borders
-                  activeTab === "DISPATCHES" ? "active-tab text-green-600" : ""
+                  activeTab === "DISPATCHES" ? "active-tab text-secondary" : ""
                 }`}
                 onClick={() => handleTabClick("DISPATCHES")}
               >
@@ -72,7 +72,7 @@ const message = () => {
               <button
                 className={`tab-link px-3 py-2 ${
                   // Add padding, remove right border
-                  activeTab === "PLUGS" ? "active-tab text-green-600" : ""
+                  activeTab === "PLUGS" ? "active-tab text-secondary" : ""
                 }`}
                 onClick={() => handleTabClick("PLUGS")}
               >
