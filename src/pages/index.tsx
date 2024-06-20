@@ -85,7 +85,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           <h1 className="font-bold my-4">
             Suggested Tourneys That Might Interest You
           </h1>
-          <div className="grid grid-cols-12 w-full gap-4 bg-white">
+          <div className="grid grid-cols-12 w-full gap-4">
             {tourneysData.rightSection.bottomCards.map((bottomCard) => (
               <div
                 key={bottomCard.id}

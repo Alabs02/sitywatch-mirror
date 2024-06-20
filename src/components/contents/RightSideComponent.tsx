@@ -3,7 +3,7 @@ import React from 'react'
 
 const RightSideComponent = () => {
   return (
-    <div className="overflow-y-auto">
+    <div className="h-screen">
       <div className="p-4 bg-neutral-200 rounded-sm">
         <div className="flex justify-end space-x-14 mx-2">
           <h3 className="font-bold">Your Sitadels</h3>

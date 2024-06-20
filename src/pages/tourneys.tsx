@@ -5,7 +5,7 @@ import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
 
 const LeftSide: React.FC = () => {
   return (
-    <div className="flex-1 overflow-y-auto h-screen p-2">
+    <section className="overflow-y-auto h-full p-2">
       <div>
         <img src="/tourneys-banner.png" alt="tourneys-banner" />
       </div>
@@ -39,13 +39,11 @@ const LeftSide: React.FC = () => {
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
         <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[3px]"></span>
-
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
         <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[3px]"></span>
-
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
@@ -65,13 +63,13 @@ const LeftSide: React.FC = () => {
       <span className="flex justify-end mt-2 text-green-700 text-sm font-semibold">
         #SWPA_SC2023
       </span>
-    </div>
+    </section>
   )
 }
 
 const RightSide: React.FC = () => {
   return (
-    <div className="flex-1 bg-gray-200  shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[10px] overflow-y-auto">
+    <section className="bg-gray-200 shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[10px] overflow-y-auto h-full">
       <h1 className="flex justify-center mt-2 text-sm font-bold">
         STUDENT COMPETITION
       </h1>
@@ -139,7 +137,7 @@ const RightSide: React.FC = () => {
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel, at!
         </li>
       </ul>
-    </div>
+    </section>
   )
 }
 
@@ -152,7 +150,7 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="flex bg-gray-100 shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px]">
+    <div className="grid grid-cols-2 gap-2 bg-gray-100 shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
       <LeftSide />
       <RightSide />
     </div>

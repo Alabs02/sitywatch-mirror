@@ -32,9 +32,9 @@ const Notifications = () => {
         <nav className="flex p-4 items-center space-x-2 overflow-x-scroll scrollbar-hidden z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit">
           {/* Styled buttons for tabs */}
           <button
-            className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+            className={`btn px-3 py-2 rounded-lg border border-tertiary-200 text-tertiary-500 hover:bg-gray-200 ${
               activeTab === "All"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("All")}
@@ -44,7 +44,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Satisfied"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Satisfied")}
@@ -54,7 +54,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Invites"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Invites")}
@@ -65,7 +65,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Pitches"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Pitches")}
@@ -75,7 +75,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Gists"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Gists")}
@@ -85,7 +85,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Hypes"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Hypes")}
@@ -95,7 +95,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Cites"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Cites")}
@@ -105,7 +105,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Recites"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Recites")}
@@ -115,7 +115,7 @@ const Notifications = () => {
           <button
             className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
               activeTab === "Flows"
-                ? "active shadow-md shadow-gray-400 bg-gray-100"
+                ? "active shadow-md shadow-gray-400 "
                 : ""
             }`}
             onClick={() => handleTabClick("Flows")}
