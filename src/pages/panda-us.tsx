@@ -80,7 +80,6 @@ const PandaUs = () => {
               className="mr-2"
             />
             <label htmlFor={`option-${index}`}>{option}</label>
-           
           </div>
         ))}
       </div>
@@ -89,8 +88,8 @@ const PandaUs = () => {
 
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-      <section className="col-span-8 w-full h-full border border-red bg-gray-200">
-        <nav className="flex p-4 items-center justify-between">
+      <section className="col-span-8 w-full h-full sticky top-0 z-20 overflow-hidden">
+        <nav className="flex p-4 items-center justify-between sticky top-0 z-20 bg-inherit">
           <a
             href="#"
             className={`tab-link ${
@@ -121,23 +120,32 @@ const PandaUs = () => {
             PANDA SCENTS
           </a>
         </nav>
-        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px]">
-          <span className="flex items-center justify-center p-1 mt-2 rounded-full bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold">
+        <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-hidden">
+          <span className="flex items-center justify-center p-1 my-2 rounded-full bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-10">
             All polls are taken in anonymous panda mode
           </span>
-          {activeTab === "PANDA POLLS" && (
-            <>
-              {renderPandaCard()}
-              {/* {renderPollCard()} */}
-              <PandaPollCard1 />
-             
-            </>
-          )}
-          {activeTab === "SOUL PANDA" && <div><SoulPanda /></div>}
-          {activeTab === "PANDA SCENTS" && <div><PandaScent /></div>}
+          <div className="overflow-y-auto h-full">
+            {activeTab === "PANDA POLLS" && (
+              <div className="overflow-y-auto h-full">
+                {renderPandaCard()}
+                {/* {renderPollCard()} */}
+                <PandaPollCard1 />
+              </div>
+            )}
+            {activeTab === "SOUL PANDA" && (
+              <div>
+                <SoulPanda />
+              </div>
+            )}
+            {activeTab === "PANDA SCENTS" && (
+              <div>
+                <PandaScent />
+              </div>
+            )}
+          </div>
         </div>
       </section>
-      <section className="col-span-4 ">
+      <section className="col-span-4 h-full overflow-y-auto">
         <RightSideComponent />
       </section>
     </div>

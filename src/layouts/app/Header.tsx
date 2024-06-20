@@ -79,33 +79,75 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           onClick={handleAvatarClick}
         >
           <div
-            className="bg-white w-64 p-4 rounded shadow-lg transition-transform duration-1000 transform translate-y-0 opacity-100"
+            className="bg-white w-80 h-[70%] p-4 rounded shadow-lg transition-transform duration-300 transform translate-y-0 opacity-100"
             onClick={(e) => e.stopPropagation()}
           >
             <ul>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">link</span>
-                <Link href="/" className="ml-2">
-                  Home
-                </Link>
+              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
+                <span className="material-symbols-outlined">
+                  account_circle
+                </span>
+                <span className="ml-2">View my look</span>
+              </li>
+              <li className="p-2  cursor-pointer border-b border-gray-200">
+                <div className="flex items-center mb-2 hover:bg-gray-100">
+                  <img
+                    src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
+                    alt="Nasir Monopoly Game Club"
+                    className="w-8 h-8 rounded-full mr-2"
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-[12px]">
+                      Nasir Monopoly Game Club
+                    </span>
+                    <span className="text-[12px] text-blue-900">@NasirMGC</span>
+                  </div>
+                </div>
+                <div className="flex items-center hover:bg-gray-100">
+                  <img
+                    src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
+                    alt="Nasir Kingly Touch Photography"
+                    className="w-8 h-8 rounded-full mr-2"
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-[12px]">
+                      Nasir Kingly Touch Photography
+                    </span>
+                    <span className="text-[12px] text-blue-900">
+                      @NKTPhotography
+                    </span>
+                  </div>
+                </div>
               </li>
               <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">link</span>
-                <Link href="/profile" className="ml-2">
-                  Profile
-                </Link>
+                <span className="material-symbols-outlined">login</span>
+                <span className="ml-2 font-bold text-sm">
+                  Log into another look
+                </span>
+              </li>
+              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer ">
+                <span className="material-symbols-outlined">add</span>
+                <span className="ml-2 font-bold text-sm">
+                  Create a new look
+                </span>
+              </li>
+              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
+                <span className="material-symbols-outlined">add</span>
+                <span className="ml-2 font-bold text-sm">
+                  Build a new sitadel
+                </span>
               </li>
               <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">link</span>
-                <Link href="/settings" className="ml-2">
-                  Settings
-                </Link>
+                <span className="material-symbols-outlined">settings</span>
+                <span className="ml-2 font-bold text-sm">Settings</span>
               </li>
               <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">link</span>
-                <Link href="/logout" className="ml-2">
-                  Logout
-                </Link>
+                <span className="material-symbols-outlined">help</span>
+                <span className="ml-2 font-bold text-sm">Help</span>
+              </li>
+              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined">logout</span>
+                <span className="ml-2 font-bold text-sm">Logout</span>
               </li>
             </ul>
           </div>
