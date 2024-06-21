@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import PandaPollOverlay from "./PandaPollOverlay"
 
 const pandaSection = {
   cards: [
@@ -25,177 +26,107 @@ const pandaSection = {
 }
 
 const PandaPollCard1: React.FC = () => {
-  return pandaSection.polls.map((poll) => (
-    <><div
+  const [showOverlay, setShowOverlay] = useState(false)
+
+  const toggleOverlay = () => {
+    setShowOverlay(!showOverlay)
+  }
+
+  return (
+    <>
+      {pandaSection.polls.map((poll) => (
+        <div
           key={poll.id}
-          className="border rounded-lg p-4 bg-neutral-100 shadow-md my-4"
-      >
+          className="border rounded-lg p-4 bg-neutral-400 shadow-md my-4"
+        >
           <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                  <Image
-                      src="/coreAssets/PandarUs/panda.gif"
-                      alt={poll.author}
-                      width={70}
-                      height={70}
-                      className="rounded-full mr-4" />
-                  <div className="flex-grow">
-                      {" "}
-                      {/* Allow content to fill remaining space */}
-                      <p className="font-bold font-sm">{poll.author}</p>
-                      <p className="text-gray-800 text-[14px]">{poll.remainingTime}</p>
-                  </div>
+            <div className="flex items-center">
+              <Image
+                src="/coreAssets/PandarUs/panda.gif"
+                alt={poll.author}
+                width={70}
+                height={70}
+                className="rounded-full mr-4"
+              />
+              <div className="flex-grow">
+                <p className="font-bold font-sm">{poll.author}</p>
+                <p className="text-gray-800 text-[14px]">
+                  {poll.remainingTime}
+                </p>
               </div>
-              <span className="material-symbols-outlined">more_horiz</span>
+            </div>
+            <span
+              className="material-symbols-outlined cursor-pointer"
+              onClick={toggleOverlay}
+            >
+              more_horiz
+            </span>
           </div>
           <p className="mb-4 text-lg font-semibold">{poll.question}</p>
           <div className="flex flex-col space-y-2 items-center">
-              {" "}
-              {/* Use flexbox for options */}
-              {poll.options.map((option, index) => (
-                  <div key={index} className="flex items-center">
-                      <input
-                          type="radio"
-                          id={`option-${index}`}
-                          name={`poll-${poll.id}`}
-                          className="mr-2" />
-                      <label htmlFor={`option-${index}`}>{option}</label>
-                  </div>
-              ))}
-          </div>
-          {/* If I need this to be full width all i need do is remove the first wrapping div */}
-          <div className="flex justify-center my-6">
-              <div className="p-1 inline-flex bg-white rounded-lg shadow-md items-center justify-center">
-                  <Link
-                      href={"#"}
-                      className="text-sm text-green-700 flex items-center justify-center"
-                  >
-                      This pandar poll has three stations, see all stations{" "}
-                      <span className="material-symbols-outlined ml-2">
-                          arrow_circle_down
-                      </span>
-                  </Link>
+            {poll.options.map((option, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  type="radio"
+                  id={`option-${index}`}
+                  name={`poll-${poll.id}`}
+                  className="mr-2"
+                />
+                <label htmlFor={`option-${index}`}>{option}</label>
               </div>
+            ))}
           </div>
-          <div className="flex  items-center justify-center space-x-4">
-              <span className="material-symbols-outlined">cognition</span>
-              <span className="material-symbols-outlined">repeat</span>
-              <span className="material-symbols-outlined">bookmark</span>
-              <span className="material-symbols-outlined">send</span>
+          <div className="flex justify-center my-6">
+            <div className="p-1 inline-flex bg-neutral-300 rounded-lg shadow-md items-center justify-center w-full">
+              <Link
+                href="#"
+                className="text-sm text-secondary flex items-center justify-center"
+              >
+                This pandar poll has three stations, see all stations{" "}
+                <span className="material-symbols-outlined ml-2">
+                  arrow_circle_down
+                </span>
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center justify-center space-x-4">
+            <span className="material-symbols-outlined">cognition</span>
+            <span className="material-symbols-outlined">repeat</span>
+            <span className="material-symbols-outlined">bookmark</span>
+            <span className="material-symbols-outlined">send</span>
           </div>
           <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
-              <div className="flex">
-                  <Image
-                      src="/coreAssets/PandarUs/Poll1/panda.png"
-                      alt={poll.author}
-                      width={20}
-                      height={20}
-                      className="rounded-full mr-4" />
-                  <p className="text-sm">34 pandas</p>
+            <div className="flex">
+              <Image
+                src="/coreAssets/PandarUs/Poll1/panda.png"
+                alt={poll.author}
+                width={20}
+                height={20}
+                className="rounded-full mr-4"
+              />
+              <p className="text-sm">34 pandas</p>
+            </div>
+            <div className="flex gap-x-2">
+              <div className="flex items-center">
+                <span className="material-symbols-outlined">cognition</span>
+                <p>5</p>
               </div>
-              <div className="flex gap-x-2">
-                  <div className="flex items-center">
-                      <span className="material-symbols-outlined">cognition</span>
-                      <p>5</p>
-                  </div>
-                  <div className="flex items-center">
-                      <span className="material-symbols-outlined">repeat</span>
-                      <p>5</p>
-                  </div>
+              <div className="flex items-center">
+                <span className="material-symbols-outlined">repeat</span>
+                <p>5</p>
               </div>
+            </div>
           </div>
           <div className="flex w-full mx-auto items-center place-content-center">
-              <button
-                  className={`rounded-full text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4 text-neutral-100 font-semibold`}
-              >
-                  PANDAR
-              </button>
+            <button className="rounded-full text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4 text-neutral-100 font-semibold">
+              PANDAR
+            </button>
           </div>
-      </div><div
-          key={poll.id}
-          className="border rounded-lg p-4 bg-neutral-100 shadow-md my-4"
-      >
-              <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                      <Image
-                          src="/coreAssets/PandarUs/panda.gif"
-                          alt={poll.author}
-                          width={70}
-                          height={70}
-                          className="rounded-full mr-4" />
-                      <div className="flex-grow">
-                          {" "}
-                          {/* Allow content to fill remaining space */}
-                          <p className="font-bold font-sm">{poll.author}</p>
-                          <p className="text-gray-800 text-[14px]">{poll.remainingTime}</p>
-                      </div>
-                  </div>
-                  <span className="material-symbols-outlined">more_horiz</span>
-              </div>
-              <p className="mb-4 text-lg font-semibold">{poll.question}</p>
-              <div className="flex flex-col space-y-2 items-center">
-                  {" "}
-                  {/* Use flexbox for options */}
-                  {poll.options.map((option, index) => (
-                      <div key={index} className="flex items-center">
-                          <input
-                              type="radio"
-                              id={`option-${index}`}
-                              name={`poll-${poll.id}`}
-                              className="mr-2" />
-                          <label htmlFor={`option-${index}`}>{option}</label>
-                      </div>
-                  ))}
-              </div>
-              {/* If I need this to be full width all i need do is remove the first wrapping div */}
-              <div className="flex justify-center my-6">
-                  <div className="p-1 inline-flex bg-white rounded-lg shadow-md items-center justify-center">
-                      <Link
-                          href={"#"}
-                          className="text-sm text-green-700 flex items-center justify-center"
-                      >
-                          This pandar poll has three stations, see all stations{" "}
-                          <span className="material-symbols-outlined ml-2">
-                              arrow_circle_down
-                          </span>
-                      </Link>
-                  </div>
-              </div>
-              <div className="flex  items-center justify-center space-x-4">
-                  <span className="material-symbols-outlined">cognition</span>
-                  <span className="material-symbols-outlined">repeat</span>
-                  <span className="material-symbols-outlined">bookmark</span>
-                  <span className="material-symbols-outlined">send</span>
-              </div>
-              <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
-                  <div className="flex">
-                      <Image
-                          src="/coreAssets/PandarUs/Poll1/panda.png"
-                          alt={poll.author}
-                          width={20}
-                          height={20}
-                          className="rounded-full mr-4" />
-                      <p className="text-sm">34 pandas</p>
-                  </div>
-                  <div className="flex gap-x-2">
-                      <div className="flex items-center">
-                          <span className="material-symbols-outlined">cognition</span>
-                          <p>5</p>
-                      </div>
-                      <div className="flex items-center">
-                          <span className="material-symbols-outlined">repeat</span>
-                          <p>5</p>
-                      </div>
-                  </div>
-              </div>
-              <div className="flex w-full mx-auto items-center place-content-center">
-                  <button
-                      className={`rounded-full text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4 text-neutral-100 font-semibold`}
-                  >
-                      PANDAR
-                  </button>
-              </div>
-          </div></>
-  ))
+        </div>
+      ))}
+      {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
+    </>
+  )
 }
 
 export default PandaPollCard1

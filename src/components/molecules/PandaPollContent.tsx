@@ -14,7 +14,7 @@ const PandPollContent: React.FC<PandaCardProps> = ({
   description,
 }) => {
   return (
-    <div className="border border-tertiary-400 bg-neutral-200 p-3 rounded-lg gap-y-4 mx-12 my-4">
+    <div className="border-[1.5px] border-tertiary-400 p-3 rounded-lg gap-y-4 mx-12 my-4">
       <div className="flex items-center">
         <span className="material-symbols-outlined text-3xl mr-2 bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
           {icon}

@@ -72,6 +72,11 @@ const RightSideComponent = () => {
             </li>
           </ul>
         </article>
+        <div className="flex items-center justify-center mt-4">
+          <button className="text-white bg-red-500 rounded-full inline-flex px-4 py-2 uppercase">
+            Free 30-days trial
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -18,8 +18,8 @@ const Gists: React.FC = () => {
 
   return (
     <div className="px-6 grid grid-cols-12 gap-x-6 h-screen overflow-hidden">
-      <section className="col-span-8 h-full overflow-hidden">
-        <div className="h-full ">
+      <section className="col-span-8 h-full overflow-y-auto">
+        <div className="">
           {gists.map((gist: Gist) => (
             <div key={gist.id} className="h-full mb-8 overflow-y-auto">
               <div className="bg-neutral-300 shadow-md rounded-md p-2">

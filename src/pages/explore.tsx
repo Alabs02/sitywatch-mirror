@@ -14,7 +14,7 @@ const Explore: FC<ExploreProps> = ({ children }) => {
   }
   return (
     <div className="grid w-full h-full pr-5 ">
-      <div className="w-full h-full grid shadow-inner shadow-gray-400/75 border rounded-t-[32px] px-5 lg:p-6">
+      <div className="w-full h-full grid shadow-inner shadow-gray-400/75 border rounded-t-[32px] px-5 lg:p-6 overflow-y-auto">
         <section className="h-full w-full mb-1 sm:mb-8">
           <div className="flex justify-center">
             <SearchInput />

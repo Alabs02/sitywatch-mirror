@@ -52,7 +52,7 @@ const PandaUs = () => {
     return pandaSection.polls.map((poll) => (
       <div
         key={poll.id}
-        className="border rounded-lg p-4 bg-white shadow-md my-4"
+        className="border rounded-lg p-4 shadow-md my-4"
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">

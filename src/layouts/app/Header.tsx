@@ -55,19 +55,25 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           </div>
 
           {/* Right Section: Search Icon, Avatar, Dropdown */}
-          <div className="relative flex items-center ml-4">
-            <img
-              src="/header-images/search.svg"
-              alt="Search"
-              className="w-6 h-6 mr-4 cursor-pointer object-cover"
-            />
-            <img
-              src="/header-images/avatar.jpg"
-              alt="Avatar"
-              className="w-8 h-8 rounded-full mr-4 cursor-pointer object-cover"
-              onClick={handleAvatarClick}
-            />
-            <span className="material-symbols-outlined">list</span>
+          <div className="flex items-center mx-1 sm:mx-4">
+            <div className="h-10 w-10">
+              <img
+                src="/header-images/search.svg"
+                alt="Search"
+                className="w-6 h-6 mr-4 cursor-pointer object-cover"
+              />
+            </div>
+            <div className="h-10 w-10">
+              <img
+                src="/header-images/avatar.jpg"
+                alt="Avatar"
+                className="w-8 h-8 rounded-full mr-4 cursor-pointer object-cover"
+                onClick={handleAvatarClick}
+              />
+            </div>
+            <div className="h-10 w-10">
+              <span className="material-symbols-outlined">list</span>
+            </div>
           </div>
         </div>
       </header>
