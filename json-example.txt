@@ -103,3 +103,39 @@ help
 <span class="material-symbols-outlined">
 logout
 </span>
+
+--------------------------------------------
+<span class="material-symbols-outlined">
+delete_sweep
+</span>
+<span class="material-symbols-outlined">
+mystery
+</span>
+<span class="material-symbols-outlined">
+swap_vert
+</span>
+<span class="material-symbols-outlined">
+blind
+</span>
+<span class="material-symbols-outlined">
+healing
+</span>
+<span class="material-symbols-outlined">
+flag
+</span>
+-----------------------------------------
+<span class="material-symbols-outlined">
+table_rows
+</span>
+<span class="material-symbols-outlined">
+video_library
+</span>
+<span class="material-symbols-outlined">
+military_tech
+</span>
+<span class="material-symbols-outlined">
+error
+</span>
+<span class="material-symbols-outlined">
+diversity_3
+</span>
