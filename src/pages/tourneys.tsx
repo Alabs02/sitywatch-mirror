@@ -13,7 +13,7 @@ const LeftSide: React.FC = () => {
       <div>
         <img src="/tourneys-banner.png" alt="tourneys-banner" />
       </div>
-      <h1 className="flex justify-center mt-2 text-green-700 text-sm font-semibold">
+      <h1 className="flex justify-center mt-2 text-secondary text-sm font-semibold">
         #SWPA_SC2023
       </h1>
       <div className="flex space-x-4 items-center justify-center">
@@ -21,13 +21,19 @@ const LeftSide: React.FC = () => {
         <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[2px] mt-2"></span>
         <span>Photography</span>
       </div>
-      <h3 className="flex justify-center mt-2 text-center text-sm tracking-tight">
+      <h3 className="flex justify-center mt-2 text-center text-sm tracking-tight italic">
         Providing a platform for photography students worldwide - first prize is
         top Sony digital imaging equipment.
       </h3>
       <div className="flex justify-between items-center mt-2 px-4">
         <div>
-          <Btn isCollapsed={false} />
+          <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
+            <span className="hidden">Drop a Gist</span>
+            <span className="material-symbols-outlined text-[26px] lg:text-inherit">
+              data_table
+            </span>
+            <span className="text-content lg:inline">Register</span>
+          </button>
         </div>
         <div className="flex space-x-4">
           <span className="material-symbols-outlined">preview</span>
@@ -64,7 +70,7 @@ const LeftSide: React.FC = () => {
           ]}
         />
       </div>
-      <span className="flex justify-end mt-2 text-green-700 text-sm font-semibold">
+      <span className="flex justify-end mt-2 text-secondary text-sm font-semibold">
         #SWPA_SC2023
       </span>
     </section>
@@ -72,7 +78,7 @@ const LeftSide: React.FC = () => {
 }
 
 const RightSide: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("Events")
+  const [activeTab, setActiveTab] = useState("StudentCompetetion")
 
   const renderActiveComponent = () => {
     switch (activeTab) {
@@ -85,13 +91,13 @@ const RightSide: React.FC = () => {
       case "OrganizersAndPartners":
         return <OrganizersAndPartners />
       default:
-        return <Events />
+        return <StudentCompetetion />
     }
   }
 
   return (
     <div className="overflow-hidden h-full">
-      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300  sticky top-0 z-10">
+      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
         <span
           className={`material-symbols-outlined cursor-pointer ${
             activeTab === "Events" ? "text-secondary" : ""
