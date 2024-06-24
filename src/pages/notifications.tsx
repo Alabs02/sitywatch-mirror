@@ -29,7 +29,7 @@ const Notifications = () => {
       // style={{ backgroundImage: "url('/background-image.jfif')" }}
     >
       <section className="col-span-8 w-full h-full flex flex-col overflow-y-auto">
-        <nav className="flex p-4 items-center space-x-2 overflow-x-scroll scrollbar-hidden z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit">
+        <nav className="flex p-2 items-center space-x-2 overflow-x-scroll scrollbar-hidden z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit">
           {/* Styled buttons for tabs */}
           <button
             className={`btn px-3 py-2 rounded-lg border border-tertiary-200 text-tertiary-500 hover:bg-gray-200 ${

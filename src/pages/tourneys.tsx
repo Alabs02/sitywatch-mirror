@@ -6,6 +6,7 @@ import Events from "@/components/contents/tourneys-components/Events"
 import Posts from "@/components/contents/tourneys-components/Posts"
 import StudentCompetetion from "@/components/contents/tourneys-components/StudentCompetition"
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
+import Group from "@/components/contents/tourneys-components/Group"
 
 const LeftSide: React.FC = () => {
   return (
@@ -30,7 +31,7 @@ const LeftSide: React.FC = () => {
           <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
             <span className="hidden">Drop a Gist</span>
             <span className="material-symbols-outlined text-[26px] lg:text-inherit">
-              data_table
+              export_notes
             </span>
             <span className="text-content lg:inline">Register</span>
           </button>
@@ -90,6 +91,8 @@ const RightSide: React.FC = () => {
         return <StudentCompetetion />
       case "OrganizersAndPartners":
         return <OrganizersAndPartners />
+      case "Group":
+        return <Group />
       default:
         return <StudentCompetetion />
     }
@@ -116,6 +119,14 @@ const RightSide: React.FC = () => {
         </span>
         <span
           className={`material-symbols-outlined cursor-pointer ${
+            activeTab === "OrganizersAndPartners" ? "text-secondary" : ""
+          }`}
+          onClick={() => setActiveTab("OrganizersAndPartners")}
+        >
+          military_tech
+        </span>
+        <span
+          className={`material-symbols-outlined cursor-pointer ${
             activeTab === "StudentCompetetion" ? "text-secondary" : ""
           }`}
           onClick={() => setActiveTab("StudentCompetetion")}
@@ -124,11 +135,11 @@ const RightSide: React.FC = () => {
         </span>
         <span
           className={`material-symbols-outlined cursor-pointer ${
-            activeTab === "OrganizersAndPartners" ? "text-secondary" : ""
+            activeTab === "Group" ? "text-secondary" : ""
           }`}
-          onClick={() => setActiveTab("OrganizersAndPartners")}
+          onClick={() => setActiveTab("Group")}
         >
-          military_tech
+          diversity_3
         </span>
       </nav>
       <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-y-auto h-full">

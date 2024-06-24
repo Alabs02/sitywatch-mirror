@@ -1,11 +1,11 @@
-import React from "react"
+import React from 'react'
 
-const OrganizersAndPartners = () => {
+const Group = () => {
   return (
-    <div className="p-2">
+    <div>
       <section className="">
         <h1 className="flex justify-center mt-2 text-sm font-bold uppercase">
-          Royals
+          Organizers and Partners
         </h1>
 
         <h3 className="font-bold text-sm mt-2 px-2 capitalize">
@@ -145,4 +145,4 @@ const OrganizersAndPartners = () => {
   )
 }
 
-export default OrganizersAndPartners
+export default Group

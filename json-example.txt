@@ -139,3 +139,10 @@ error
 <span class="material-symbols-outlined">
 diversity_3
 </span>
+<span class="material-symbols-outlined">
+export_notes
+</span>
+---------------------------------------
+<span class="material-symbols-outlined">
+folded_hands
+</span>
