@@ -17,7 +17,7 @@ const Gists: React.FC = () => {
   const gists = gistsData.gists as Gist[]
 
   return (
-    <div className="px-6 grid grid-cols-12 gap-x-6 h-screen overflow-hidden">
+    <div className="grid grid-cols-12 gap-x-6 h-screen overflow-hidden">
       <section className="col-span-8 h-full overflow-y-auto">
         <div className="">
           {gists.map((gist: Gist) => (

@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     <Fragment>
       <header
         className={clsx(
-          "h-[137px] w-full px-2 md:px-6 sticky top-0 z-10",
+          "h-[100px] w-full px-2 md:px-4 sticky top-0 z-10",
           className,
         )}
         // style={{ backgroundImage: "url('/background-image.jfif')", ...style }}
@@ -85,7 +85,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           onClick={handleAvatarClick}
         >
           <div
-            className="bg-white w-80 h-[70%] p-4 rounded shadow-lg transition-transform duration-300 transform translate-y-0 opacity-100"
+            className="bg-white w-80 h-full md:h-[70%] p-4 rounded shadow-lg transition-transform duration-300 transform translate-y-0 opacity-100"
             onClick={(e) => e.stopPropagation()}
           >
             <ul>

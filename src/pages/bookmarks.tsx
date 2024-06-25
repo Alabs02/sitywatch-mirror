@@ -56,7 +56,7 @@ const Bookmarks = () => {
           )}
         </div>
       </section>
-      <section className="col-span-4 h-full overflow-y-auto">
+      <section className="col-span-4 h-full overflow-y-auto hidden sm:block">
         <RightSideComponent />
       </section>
     </div>
