@@ -46,8 +46,8 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
           className={clsx(
             "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-10.1rem)] hidden",
             isCollapsed
-              ? "lg:items-center lg:w-20"
-              : "xl:items-start xl:w-60 px-6",
+              ? "lg:items-center lg:w-20 justify-between"
+              : "xl:items-start xl:w-60 px-6 justify-between",
             "bottom-0 md:top-[8.1rem] md:bottom-auto", // Position at the bottom on mobile
           )}
         >
