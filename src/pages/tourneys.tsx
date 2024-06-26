@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import useScrollCollapse from "../../hooks/useScrollCollapse"
 import Btn from "@/components/molecules/Btn"
 import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
 import Events from "@/components/contents/tourneys-components/Events"
@@ -8,32 +9,40 @@ import StudentCompetetion from "@/components/contents/tourneys-components/Studen
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
 import Group from "@/components/contents/tourneys-components/Group"
 
-const LeftSide: React.FC = () => {
+const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
-    <section className="overflow-y-auto h-full p-2">
+    <section
+      className={`overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 ${
+        isCollapsed ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div>
-        <img src="/tourneys-banner.png" alt="tourneys-banner" />
+        <img
+          src="/tourneys-banner.png"
+          alt="tourneys-banner"
+          className="w-full"
+        />
       </div>
-      <h1 className="flex justify-center mt-2 text-secondary text-sm font-semibold">
+      <h1 className="flex justify-center mt-2 text-secondary text-sm lg:text-base font-semibold">
         #SWPA_SC2023
       </h1>
-      <div className="flex space-x-4 items-center justify-center">
+      <div className="flex space-x-4 items-center justify-center mt-2">
         <span>Media</span>
-        <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[2px] mt-2"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-2 mt-2"></span>
         <span>Photography</span>
       </div>
-      <h3 className="flex justify-center mt-2 text-center text-sm tracking-tight italic">
+      <h3 className="flex justify-center mt-2 text-center text-sm lg:text-base tracking-tight italic">
         Providing a platform for photography students worldwide - first prize is
         top Sony digital imaging equipment.
       </h3>
-      <div className="flex justify-between items-center mt-2 px-4">
+      <div className="flex justify-between items-center mt-4 px-4">
         <div>
-          <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow">
-            <span className="hidden">Drop a Gist</span>
-            <span className="material-symbols-outlined text-[26px] lg:text-inherit">
+          <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-sm lg:text-base flex items-center gap-x-2 shadow">
+            <span className="hidden lg:inline">Drop a Gist</span>
+            <span className="material-symbols-outlined text-2xl lg:text-inherit">
               export_notes
             </span>
-            <span className="text-content lg:inline">Register</span>
+            <span className="lg:inline">Register</span>
           </button>
         </div>
         <div className="flex space-x-4">
@@ -44,19 +53,19 @@ const LeftSide: React.FC = () => {
           <span className="material-symbols-outlined">more_vert</span>
         </div>
       </div>
-      <div className="flex items-center justify-center space-x-12 mt-2">
+      <div className="flex items-center justify-center space-x-12 mt-4">
         <div className="flex flex-col space-y-1 items-center">
-          <h2 className="font-bold text-sm">199</h2>
+          <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[3px]"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-3"></span>
         <div className="flex flex-col space-y-1 items-center">
-          <h2 className="font-bold text-sm">199</h2>
+          <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-[1px] w-[1px] bg-black rounded-full p-[3px]"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-3"></span>
         <div className="flex flex-col space-y-1 items-center">
-          <h2 className="font-bold text-sm">199</h2>
+          <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
       </div>
@@ -99,7 +108,7 @@ const RightSide: React.FC = () => {
   }
 
   return (
-    <div className="overflow-hidden h-full">
+    <div id="rightSide" className="overflow-auto h-full">
       <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
         <span
           className={`material-symbols-outlined cursor-pointer ${
@@ -151,6 +160,7 @@ const RightSide: React.FC = () => {
 
 const Tourneys: React.FC = () => {
   const router = useRouter()
+  const isCollapsed = useScrollCollapse()
 
   useEffect(() => {
     const query = { collapsed: true }
@@ -158,8 +168,8 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="grid grid-cols-2 gap-2 shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
-      <LeftSide />
+    <div className="grid lg:grid-cols-2 gap-2 shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
+      <LeftSide isCollapsed={isCollapsed} />
       <RightSide />
     </div>
   )

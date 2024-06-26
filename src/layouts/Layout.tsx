@@ -38,13 +38,13 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     collapsedList.includes(asPath)
 
   return (
-    <div className="min-h-screen flex flex-col relative px-8">
+    <div className="min-h-screen flex flex-col relative px-4 lg:px-8">
       <Header className="" />
       <div className="flex flex-1 overflow-hidden relative">
         <motion.div
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className={clsx(
-            "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-100px)] hidden",
+            "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-10.1rem)] hidden",
             isCollapsed
               ? "lg:items-center lg:w-20"
               : "xl:items-start xl:w-60 px-6",
@@ -87,10 +87,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={clsx(
-              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mt-[1.5rem] mr-4",
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mt-[1.5rem] mr-0", // Reduced right margin for mobile screens
               isCollapsed
-                ? "ml-2 md:ml-[4.5rem]" // Adjusted margin for collapsed state to prevent overlap
-                : "ml-2 md:ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
+                ? "ml-0 md:ml-[4.5rem]" // Adjusted margin for collapsed state to prevent overlap
+                : "ml-0 md:ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
             )}
           >
             {children}
