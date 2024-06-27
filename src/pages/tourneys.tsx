@@ -28,7 +28,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
       </h1>
       <div className="flex space-x-4 items-center justify-center mt-2">
         <span>Media</span>
-        <span className="inline-block h-1 w-1 bg-black rounded-full p-2 mt-2"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <span>Photography</span>
       </div>
       <h3 className="flex justify-center mt-2 text-center text-sm lg:text-base tracking-tight italic">
@@ -37,8 +37,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
       </h3>
       <div className="flex justify-between items-center mt-4 px-4">
         <div>
-          <button className="p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-sm lg:text-base flex items-center gap-x-2 shadow">
-            <span className="hidden lg:inline">Drop a Gist</span>
+          <button className="py-1 px-3 md:px-4 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow">
             <span className="material-symbols-outlined text-2xl lg:text-inherit">
               export_notes
             </span>
@@ -58,12 +57,12 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-1 w-1 bg-black rounded-full p-3"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-1 w-1 bg-black rounded-full p-3"></span>
+        <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
@@ -151,7 +150,7 @@ const RightSide: React.FC = () => {
           diversity_3
         </span>
       </nav>
-      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-y-auto h-full">
+      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-y-auto h-full my-1 md:my-2">
         {renderActiveComponent()}
       </article>
     </div>

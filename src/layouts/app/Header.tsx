@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     <Fragment>
       <header
         className={clsx(
-          "h-[100px] w-full px-2 md:px-4 sticky top-0 z-10",
+          "h-[100px] w-full px-2 md:px-4 sticky top-0 z-10  shadow-md md:shadow-none",
           className,
         )}
         // style={{ backgroundImage: "url('/background-image.jfif')", ...style }}
@@ -50,28 +50,30 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           </Link>
 
           {/* Center Section: Dynamic Text */}
-          <div className="text-center pl-4">
-            <h1 className="h1-with-border">{currentText}</h1>
+          <div className="md:flex  text-center hidden">
+            <div className="text-center">
+              <h1 className="h1-with-border">{currentText}</h1>
+            </div>
           </div>
 
           {/* Right Section: Search Icon, Avatar, Dropdown */}
-          <div className="flex items-center mx-1 sm:mx-4">
-            <div className="h-10 w-10">
+          <div className="flex items-center  space-x-4">
+            <div className="h-6 md:h-10 w-6 md:w-10 inline-flex">
               <img
                 src="/header-images/search.svg"
                 alt="Search"
-                className="w-6 h-6 mr-4 cursor-pointer object-cover"
+                className="w-6 h-6 cursor-pointer object-cover"
               />
             </div>
-            <div className="h-10 w-10">
+            <div className="h-6 md:h-10 w-6 md:w-10">
               <img
                 src="/header-images/avatar.jpg"
                 alt="Avatar"
-                className="w-8 h-8 rounded-full mr-4 cursor-pointer object-cover"
+                className="w-full h-full rounded-full mr-4 cursor-pointer object-cover inline-flex"
                 onClick={handleAvatarClick}
               />
             </div>
-            <div className="h-10 w-10">
+            <div className="h-6 md:h-10 w-6 md:w-10 inline-flex">
               <span className="material-symbols-outlined">list</span>
             </div>
           </div>

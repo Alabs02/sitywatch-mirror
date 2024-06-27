@@ -38,7 +38,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     collapsedList.includes(asPath)
 
   return (
-    <div className="min-h-screen flex flex-col relative px-4 lg:px-8">
+    <div className="min-h-screen flex flex-col relative px-0 lg:px-8">
       <Header className="" />
       <div className="flex flex-1 overflow-hidden relative">
         <motion.div
@@ -98,7 +98,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         </AnimatePresence>
       </div>
       {/* Bottom Navigation for Small Screens */}
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around bg-white p-2 shadow-md">
+      <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around bg-white p-2 shadow-md z-50">
         {navLinks.map((navLink) => (
           <Link key={navLink.href} href={navLink.href}>
             <div className="flex flex-col items-center">

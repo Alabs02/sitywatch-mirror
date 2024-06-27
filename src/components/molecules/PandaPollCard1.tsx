@@ -37,7 +37,7 @@ const PandaPollCard1: React.FC = () => {
       {pandaSection.polls.map((poll) => (
         <div
           key={poll.id}
-          className="border rounded-lg p-4 bg-neutral-400 shadow-md my-4"
+          className="border rounded-lg p-4 bg-neutral-400 shadow-md my-4 text-sm md:text-base"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
@@ -49,8 +49,8 @@ const PandaPollCard1: React.FC = () => {
                 className="rounded-full mr-4"
               />
               <div className="flex-grow">
-                <p className="font-bold font-sm">{poll.author}</p>
-                <p className="text-gray-800 text-[14px]">
+                <p className="font-bold text-sm md:text-base">{poll.author}</p>
+                <p className="text-gray-800 text-xs md:text-sm">
                   {poll.remainingTime}
                 </p>
               </div>
@@ -62,7 +62,9 @@ const PandaPollCard1: React.FC = () => {
               more_horiz
             </span>
           </div>
-          <p className="mb-4 text-lg font-semibold">{poll.question}</p>
+          <p className="mb-4 text-sm md:text-lg font-semibold">
+            {poll.question}
+          </p>
           <div className="flex flex-col space-y-2 items-center">
             {poll.options.map((option, index) => (
               <div key={index} className="flex items-center">
@@ -72,7 +74,12 @@ const PandaPollCard1: React.FC = () => {
                   name={`poll-${poll.id}`}
                   className="mr-2"
                 />
-                <label htmlFor={`option-${index}`}>{option}</label>
+                <label
+                  htmlFor={`option-${index}`}
+                  className="text-xs md:text-sm"
+                >
+                  {option}
+                </label>
               </div>
             ))}
           </div>
@@ -80,7 +87,7 @@ const PandaPollCard1: React.FC = () => {
             <div className="p-1 inline-flex bg-neutral-300 rounded-lg shadow-md items-center justify-center w-full">
               <Link
                 href="#"
-                className="text-sm text-secondary flex items-center justify-center"
+                className="text-xs md:text-sm text-secondary flex items-center justify-center"
               >
                 This pandar poll has three stations, see all stations{" "}
                 <span className="material-symbols-outlined ml-2">
@@ -104,21 +111,21 @@ const PandaPollCard1: React.FC = () => {
                 height={20}
                 className="rounded-full mr-4"
               />
-              <p className="text-sm">34 pandas</p>
+              <p className="text-xs md:text-sm">34 pandas</p>
             </div>
             <div className="flex gap-x-2">
               <div className="flex items-center">
                 <span className="material-symbols-outlined">cognition</span>
-                <p>5</p>
+                <p className="text-xs md:text-sm">5</p>
               </div>
               <div className="flex items-center">
                 <span className="material-symbols-outlined">repeat</span>
-                <p>5</p>
+                <p className="text-xs md:text-sm">5</p>
               </div>
             </div>
           </div>
           <div className="flex w-full mx-auto items-center place-content-center">
-            <button className="rounded-full text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4 text-neutral-100 font-semibold">
+            <button className="rounded-full text-xs md:text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] flex items-center mb-4 text-neutral-100 font-semibold">
               PANDAR
             </button>
           </div>

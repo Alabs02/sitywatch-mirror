@@ -58,3 +58,4 @@ const Notifications = () => {
   }
 
 const notifications = notificationsData.notifications as Notification[]
+h-[32px] bg-neutral-100 md:bg-inherit border-b md:border-none  shadow-md md:shadow-none lg:h-[100px]

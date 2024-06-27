@@ -9,7 +9,7 @@ interface MainProps {
 const Main: FC<MainProps> = ({ children, className }) => {
   return (
     <Fragment>
-      <main className={clsx("flex-1 p-4 overflow-auto", className)}>
+      <main className={clsx("flex-1 p-2 md:p-4 overflow-auto", className)}>
         {children}
       </main>
     </Fragment>

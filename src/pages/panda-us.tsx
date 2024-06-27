@@ -50,10 +50,7 @@ const PandaUs = () => {
 
   const renderPollCard = () => {
     return pandaSection.polls.map((poll) => (
-      <div
-        key={poll.id}
-        className="border rounded-lg p-4 shadow-md my-4"
-      >
+      <div key={poll.id} className="border rounded-lg p-4 shadow-md my-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Image
@@ -87,13 +84,13 @@ const PandaUs = () => {
   }
 
   return (
-    <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-      <section className="col-span-8 w-full h-full sticky top-0 z-20 overflow-hidden">
-        <nav className="flex p-4 items-center justify-between sticky top-0 z-20 bg-inherit">
+    <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4 md:px-2 sm:px-1">
+      <section className="col-span-12 lg:col-span-8 w-full h-full sticky top-0 z-20 overflow-hidden">
+        <nav className="flex p-1 md:p-4 items-center justify-around md:justify-between sticky top-0 z-20 bg-inherit text-[10px] md:text-sm lg:text-lg xl:text-xl font-bold">
           <a
             href="#"
             className={`tab-link ${
-              activeTab === "PANDA POLLS" ? "active-tab text-green-600" : ""
+              activeTab === "PANDA POLLS" ? "active-tab text-secondary" : ""
             }`}
             onClick={() => handleTabClick("PANDA POLLS")}
           >
@@ -103,7 +100,7 @@ const PandaUs = () => {
           <a
             href="#"
             className={`tab-link ${
-              activeTab === "SOUL PANDA" ? "active-tab text-green-600" : ""
+              activeTab === "SOUL PANDA" ? "active-tab text-secondary" : ""
             }`}
             onClick={() => handleTabClick("SOUL PANDA")}
           >
@@ -113,7 +110,7 @@ const PandaUs = () => {
           <a
             href="#"
             className={`tab-link ${
-              activeTab === "PANDA SCENTS" ? "active-tab text-green-600" : ""
+              activeTab === "PANDA SCENTS" ? "active-tab text-secondary" : ""
             }`}
             onClick={() => handleTabClick("PANDA SCENTS")}
           >
@@ -121,7 +118,7 @@ const PandaUs = () => {
           </a>
         </nav>
         <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-hidden">
-          <span className="flex items-center justify-center p-1 my-2 rounded-full bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-10">
+          <span className="flex items-center justify-center p-1 my-1 md:my-2 rounded-full bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-10 text-[10px] md:text-sm lg:text-lg xl:text-xl ">
             All polls are taken in anonymous panda mode
           </span>
           <div className="overflow-y-auto h-full">
@@ -145,7 +142,7 @@ const PandaUs = () => {
           </div>
         </div>
       </section>
-      <section className="col-span-4 h-full overflow-y-auto">
+      <section className="hidden lg:block col-span-4 h-full overflow-y-auto">
         <RightSideComponent />
       </section>
     </div>
