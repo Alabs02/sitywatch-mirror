@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     <Fragment>
       <header
         className={clsx(
-          "h-[100px] w-full px-2 md:px-4 sticky top-0 z-10  shadow-md md:shadow-none",
+          "h-[70px] lg:h-[100px] w-full px-2 md:px-4 sticky top-0 z-10  shadow-md md:shadow-none",
           className,
         )}
         // style={{ backgroundImage: "url('/background-image.jfif')", ...style }}

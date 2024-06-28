@@ -1,10 +1,13 @@
 import React, { FC, ReactNode, useEffect, useState } from "react"
+import Image from "next/image"
 import tourneysData from "../../data.json"
 import { useRouter } from "next/router"
+import SkeletonLoader from "@/components/molecules/SkeletonLoader"
 
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter()
   const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   const handleBottomCardClick = (cardId: number) => {
     router.push(`/tourneys?cardId=${cardId}`)
@@ -24,27 +27,36 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [])
 
+  const handleImageLoad = () => {
+    setLoading(false)
+  }
+
   return (
-    <div className="grid w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 overflow-y-auto">
+    <div className="grid w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 overflow-y-auto">
       <div className="w-full h-full grid">
         <section className="w-full grid grid-cols-12 gap-2">
-          <div className="h-[12rem] grid col-span-12 lg:col-span-8 border bg-orange-400 p-4 rounded-lg relative overflow-hidden">
+          <div className="h-[90%] md:h-[100%] grid col-span-8 md:col-span-9 p-2 md:p-4 rounded-lg relative overflow-hidden">
             <div className="w-full h-full absolute top-0 left-0 transition-opacity">
               {tourneysData.leftSection.tourneys.map((tourney, index) => (
                 <div
                   key={tourney.id}
-                  className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity ${
+                  className={`absolute top-0 left-0 h-full w-full transition-opacity ${
                     index === currentTourneyIndex ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  <img
+                  {loading && <SkeletonLoader className="absolute inset-0" />}
+                  <Image
                     src={tourney.image}
                     alt={tourney.title}
-                    className="w-full h-full object-cover"
+                    layout="fill"
+                    objectFit="cover"
+                    onLoadingComplete={handleImageLoad}
+                    placeholder="blur"
+                    blurDataURL="/path/to/placeholder.png" // Adjust this path accordingly
                   />
-                  <div className="absolute bottom-0 left-0 p-2 text-white">
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>
-                    <p className="text-xs tracking-tight w-0 md:w-[60%]">
+                    <p className="text-xs md:text-sm tracking-tight w-full md:w-[60%]">
                       {tourney.description}
                     </p>
                   </div>
@@ -52,25 +64,34 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
               ))}
             </div>
           </div>
-          <div className="inline-flex flex-col h-[12rem] col-span-12 lg:col-span-4 border border-tertiary-400 rounded-lg gap-y-2 m-1 p-2">
+          <div className="inline-flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
             <div className="flex items-center">
-              <span className="material-symbols-outlined text-xl mr-1 bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
+              <span className="material-symbols-outlined text-xl  bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
                 add_circle
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-y-1 overflow-hidden w-full">
-              <div className="rounded-full shadow-md overflow-hidden w-[40px] h-[40px]">
-                <img
+              <div className="rounded-full shadow-lg overflow-hidden w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] relative bg-white p-2">
+                {loading && (
+                  <SkeletonLoader className="absolute inset-0 rounded-full" />
+                )}
+                <Image
                   src={tourneysData.rightSection.cards[0].image}
                   alt={tourneysData.rightSection.cards[0].title}
-                  className="w-full h-full object-cover rounded-full"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                  onLoadingComplete={handleImageLoad}
+                  placeholder="blur"
+                  blurDataURL="/path/to/placeholder.png"
                 />
               </div>
+
               <div className="flex flex-col place-content-center text-center">
                 <h3 className="text-xs font-bold">
                   {tourneysData.rightSection.cards[0].title}
                 </h3>
-                <p className="text-xs">
+                <p className="text-[10px] hidden md:flex">
                   {tourneysData.rightSection.cards[0].description}
                 </p>
               </div>
@@ -78,23 +99,30 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </section>
         {/* Bottom Cards */}
-        <section className="mt-4">
-          <h1 className="font-bold my-2 text-base">
+        <section className="">
+          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
             Suggested Tourneys That Might Interest You
           </h1>
-          <div className="grid grid-cols-12 w-full gap-2">
+          <div className="grid grid-cols-12 w-full gap-x-2 md:gap-x-8 gap-y-4">
             {tourneysData.rightSection.bottomCards.map((bottomCard) => (
               <div
                 key={bottomCard.id}
-                className="grid col-span-12 sm:col-span-6 md:col-span-4 shadow-sm cursor-pointer"
+                className="grid col-span-6 sm:col-span-6 md:col-span-4 shadow-sm cursor-pointer bg-white rounded-md"
                 onClick={() => handleBottomCardClick(bottomCard.id)}
               >
                 <div className="relative">
                   <div className="shadow-lg border border-b border-tertiary-100">
-                    <img
+                    {loading && <SkeletonLoader className="absolute inset-0" />}
+                    <Image
                       src={bottomCard.image}
                       alt={bottomCard.title}
-                      className="object-contain w-full h-full"
+                      layout="responsive"
+                      width={400}
+                      height={400}
+                      objectFit="cover"
+                      onLoadingComplete={handleImageLoad}
+                      placeholder="blur"
+                      blurDataURL="/path/to/placeholder.png"
                     />
                   </div>
                   <div className="">

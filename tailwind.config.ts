@@ -4,7 +4,7 @@ const colors = {
   transparent: "transparent",
   primary: {
     DEFAULT: "#F24055",
-    content: "#fef4f5",
+    50: "#fef4f5",
     100: "#fcd9dd",
     200: "#fab3bb",
     300: "#f78c99",

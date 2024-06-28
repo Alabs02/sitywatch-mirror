@@ -77,7 +77,9 @@ const Events = () => {
                       />
                     </span>
 
-                    <p className="text-[8px] md:text-[10px] align-super ml-1">647</p>
+                    <p className="text-[8px] md:text-[10px] align-super ml-1">
+                      647
+                    </p>
                   </div>
                 </div>
               </div>
@@ -164,7 +166,7 @@ const Events = () => {
                 alt="Hufl"
                 className="object-cover w-full h-full"
               />
-              <p className="text-sm px-2 my-2">
+              <p className="text-[10px] md:text-sm px-2 my-2">
                 Watch the briefing of the student competition category to know
                 all about the eligible criteris...{" "}
                 <span className="text-tertiary-300 font-bold">see more</span>
@@ -173,20 +175,20 @@ const Events = () => {
                 <div className="flex items-center space-x-2">
                   {/* <span className="material-symbols-outlined">grade</span>
                    */}
-                  <span className="h-4 w-4">
+                  <span className="h-3  md:h-4   w-3 md:w-4">
                     <img
                       src="/sw-img/star.svg"
                       alt="start"
                       className="object-cover"
                     />
                   </span>
-                  <span className="text-sm italic">
+                  <span className="text-[10px] md:text-sm italic">
                     you and 2.4k sitizens support this column
                   </span>
                 </div>
                 <div className="inline-flex items-center space-x-4">
-                  <div className="flex items-center p-1 space-x-2">
-                    <span className="h-4 w-4">
+                  <div className="flex items-center p-1 ">
+                    <span className="h-3  md:h-4   w-3 md:w-4">
                       <img
                         src="/sw-img/thought.svg"
                         alt="start"
@@ -194,7 +196,9 @@ const Events = () => {
                       />
                     </span>
 
-                    <p className="text-[10px] ml-1">647</p>
+                    <p className="text-[8px] md:text-[10px] align-super ml-1">
+                      647
+                    </p>
                   </div>
                 </div>
               </div>

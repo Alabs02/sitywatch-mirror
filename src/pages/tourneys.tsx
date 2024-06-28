@@ -31,7 +31,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
         <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <span>Photography</span>
       </div>
-      <h3 className="flex justify-center mt-2 text-center text-sm lg:text-base tracking-tight italic">
+      <h3 className="flex justify-center mt-2 text-center text-[14px] lg:text-base tracking-tight italic">
         Providing a platform for photography students worldwide - first prize is
         top Sony digital imaging equipment.
       </h3>
@@ -52,17 +52,17 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           <span className="material-symbols-outlined">more_vert</span>
         </div>
       </div>
-      <div className="flex items-center justify-center space-x-12 mt-4">
+      <div className="flex items-center justify-center space-x-6 md:space-x-12 mt-4">
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
+        <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
         </div>
-        <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
+        <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px] "></span>
         <div className="flex flex-col space-y-1 items-center">
           <h2 className="font-bold text-sm lg:text-base">199</h2>
           <p className="text-sm text-slate-500">Affiliate</p>
