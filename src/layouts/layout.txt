@@ -1,9 +1,11 @@
-import React, { ReactNode, FC } from "react"
+import React, { ReactNode, FC, useState } from "react"
 import Link from "next/link"
 import Header from "./app/Header"
 import clsx from "clsx"
 import { useRouter } from "next/router"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
+import SkeletonLoader from "@/components/molecules/SkeletonLoader"
 
 interface NavLink {
   href: string
@@ -37,6 +39,9 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     isCollapsedFromQuery ||
     collapsedList.includes(asPath)
 
+  // Image load state
+  const [imageLoaded, setImageLoaded] = useState(false)
+
   return (
     <div className="min-h-screen flex flex-col relative px-0 lg:px-8">
       <Header className="" />
@@ -53,13 +58,13 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         >
           <button
             className={clsx(
-              "flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none text-white",
+              "flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none",
               isCollapsed ? "p-1" : "space-x-3 xl:py-2 xl:px-4",
             )}
           >
-            <i className="material-symbols-outlined">draft_orders</i>
+            <i className="material-symbols-outlined text-white">draft_orders</i>
             {!isCollapsed ? (
-              <span className="hidden xl:inline">Drop a gist</span>
+              <span className="hidden xl:inline text-white">Drop a gist</span>
             ) : null}
           </button>
 
@@ -87,10 +92,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={clsx(
-              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mt-[1.5rem] mr-0", // Reduced right margin for mobile screens
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mt-[1.5rem] mx-2 lg:mx-0 mb-[2.3rem] lg:mb-1", // Reduced right margin for mobile screens
               isCollapsed
                 ? "ml-0 md:ml-[4.5rem]" // Adjusted margin for collapsed state to prevent overlap
-                : "ml-0 md:ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
+                : "ml-0 md:ml-0 lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
             )}
           >
             {children}

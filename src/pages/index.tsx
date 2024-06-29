@@ -87,7 +87,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                 />
               </div>
 
-              <div className="flex flex-col place-content-center text-center">
+              <div className="flex flex-col text-center">
                 <h3 className="text-xs font-bold">
                   {tourneysData.rightSection.cards[0].title}
                 </h3>
