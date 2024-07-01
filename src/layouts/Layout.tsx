@@ -1,9 +1,11 @@
-import React, { ReactNode, FC } from "react"
+import React, { ReactNode, FC, useState, useEffect } from "react"
 import Link from "next/link"
 import Header from "./app/Header"
 import clsx from "clsx"
 import { useRouter } from "next/router"
 import { motion, AnimatePresence } from "framer-motion"
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 
 interface NavLink {
   href: string
@@ -29,6 +31,16 @@ const navLinks: NavLink[] = [
 const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
   const router = useRouter()
   const { asPath, query } = router
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 1500) // Simulate a loading delay
+
+    return () => clearTimeout(timer)
+  }, [asPath])
 
   const collapsedList = ["/messages", "/explore"]
   const isCollapsedFromQuery = query.collapsed === "true"
@@ -63,21 +75,25 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             ) : null}
           </button>
 
-          {navLinks.map((navLink) => (
-            <Link key={navLink.href} href={navLink.href}>
-              <div
-                className={clsx(
-                  "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
-                  !isCollapsed && "xl:space-x-3",
-                )}
-              >
-                <i className="material-symbols-outlined">{navLink.icon}</i>
-                {!isCollapsed && (
-                  <span className="hidden xl:inline">{navLink.label}</span>
-                )}
-              </div>
-            </Link>
-          ))}
+          {loading ? (
+            <Skeleton count={navLinks.length} height={30} className="mt-4" />
+          ) : (
+            navLinks.map((navLink) => (
+              <Link key={navLink.href} href={navLink.href}>
+                <div
+                  className={clsx(
+                    "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
+                    !isCollapsed && "xl:space-x-3",
+                  )}
+                >
+                  <i className="material-symbols-outlined">{navLink.icon}</i>
+                  {!isCollapsed && (
+                    <span className="hidden xl:inline">{navLink.label}</span>
+                  )}
+                </div>
+              </Link>
+            ))
+          )}
         </motion.div>
         <AnimatePresence mode="wait">
           <motion.div
