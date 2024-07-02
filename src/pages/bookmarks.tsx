@@ -12,8 +12,8 @@ const Bookmarks = () => {
 
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
-      <section className="col-span-8 w-full h-full flex flex-col overflow-y-auto">
-        <nav className="flex px-10 items-center space-x-10 font-bold py-1 z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit">
+      <section className="col-span-12 lg:col-span-8 w-full h-full flex flex-col overflow-y-auto">
+        <nav className="flex px-10 items-center space-x-10 font-bold py-1 z-10 sticky top-0 backdrop-filter backdrop-blur-lg bg-opacity-50 bg-inherit justify-center md:justify-start">
           <a
             href="#"
             className={`tab-link ${

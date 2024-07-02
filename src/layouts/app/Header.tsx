@@ -105,7 +105,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
               {loading ? (
                 <Skeleton circle={true} height={24} width={24} />
               ) : (
-                <span className="material-symbols-outlined md:w-10 md:h-10 w-6 h-6">
+                <span className="material-symbols-outlined md:w-20 md:h-20 w-6 h-6">
                   list
                 </span>
               )}

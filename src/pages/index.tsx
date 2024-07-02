@@ -41,7 +41,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                 <div
                   key={tourney.id}
                   className={`absolute top-0 left-0 h-full w-full transition-opacity ${
-                    index === currentTourneyIndex ? "opacity-100" : "opacity-0"
+                    index === currentTourneyIndex ? "opacity-90" : "opacity-0"
                   }`}
                 >
                   {loading && <SkeletonLoader className="absolute inset-0" />}
@@ -56,7 +56,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>
-                    <p className="text-xs md:text-sm tracking-tight w-full md:w-[60%]">
+                    <p className="text-[10px] md:text-sm tracking-tight w-full md:w-[60%]">
                       {tourney.description}
                     </p>
                   </div>
@@ -99,7 +99,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </section>
         {/* Bottom Cards */}
-        <section className="">
+        <section className="mb-4">
           <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
             Suggested Tourneys That Might Interest You
           </h1>
@@ -131,7 +131,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     </span>
                   </div>
                 </div>
-                <div className="text-center space-y-1 py-1">
+                <div className="text-center md:space-y-2 space-y-1 py-1 px-3">
                   <h2 className="font-bold mb-1 text-sm">
                     {bottomCard.header}
                   </h2>

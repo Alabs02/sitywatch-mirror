@@ -2,7 +2,7 @@ import React from 'react'
 
 const Affairs = () => {
   return (
-    <div className='mx-36 my-4 bg-slate-100'>
+    <div className='mx-4 md:mx-36 my-8 md:my-4 bg-slate-100'>
       <div className=" shadow-sm cursor-pointer mt-4">
         <div className="relative">
           <div className="shadow-lg border border-b border-tertiary-100">

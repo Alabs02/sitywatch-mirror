@@ -70,7 +70,7 @@ const Notifications = () => {
           ))}
         </nav>
         {/* Content for each tab */}
-        <div className="flex-1 w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-y-auto space-y-4">
+        <div className="flex-1 w-full h-full tab-content p-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-y-auto space-y-4 mb-4">
           {loading ? (
             <div className="space-y-4">
               {Array.from({ length: 5 }).map((_, index) => (

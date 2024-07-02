@@ -37,7 +37,7 @@ const PandaPollCard1: React.FC = () => {
       {pandaSection.polls.map((poll) => (
         <div
           key={poll.id}
-          className="border rounded-lg p-4 bg-neutral-400 shadow-md my-4 text-sm md:text-base"
+          className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-28 md:mb-36 text-sm md:text-base"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">

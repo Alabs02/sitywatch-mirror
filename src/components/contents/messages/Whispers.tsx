@@ -28,7 +28,7 @@ const Whispers = () => {
   }
 
   return (
-    <div className="grid gap-y-4 p-1 md:p-2 w-full h-full">
+    <div className="grid gap-y-4 p-1 md:p-2 w-full h-full mb-36 md:mb-8">
       {whispersData.map((message) => (
         <div
           className="flex items-center justify-between p-2 bg-neutral-300 rounded-lg shadow-sm"

@@ -146,3 +146,82 @@ export_notes
 <span class="material-symbols-outlined">
 folded_hands
 </span>
+
+--------------------------------------
+TOURNEYS
+import React, { FC, ReactNode, useState } from "react"
+import SearchInput from "@/components/molecules/SearchInput"
+import Image from "next/image"
+import SmallScreenNav from "@/components/content/SmallScreenNav"
+
+interface ExploreProps {
+  children: ReactNode
+}
+
+interface Sitizen {
+  id: number
+  name: string
+  occupation: string
+  location: string
+  image: string
+}
+
+const sitizens: Sitizen[] = [
+  {
+    id: 1,
+    name: "Anna Fadugba",
+    occupation: "Student",
+    location: "Porthacourt",
+    image: "/coreAssets/Explore/anna.jpg",
+  },
+  {
+    id: 2,
+    name: "John Doe",
+    occupation: "Engineer",
+    location: "Lagos",
+    image: "/coreAssets/Explore/justin.jpg",
+  },
+  {
+    id: 3,
+    name: "Jane Smith",
+    occupation: "Artist",
+    location: "Abuja",
+    image: "/coreAssets/Explore/spicyq.webp",
+  },
+  {
+    id: 4,
+    name: "Mike Johnson",
+    occupation: "Doctor",
+    location: "Ibadan",
+    image: "/coreAssets/Explore/anna.jpg",
+  },
+  {
+    id: 5,
+    name: "Emily Davis",
+    occupation: "Lawyer",
+    location: "Enugu",
+    image: "/coreAssets/Explore/micahrichards.jfif",
+  },
+]
+
+const Explore: FC<ExploreProps> = ({ children }) => {
+  const [activeButton, setActiveButton] = useState("All")
+  const [activeTab, setActiveTab] = useState("All")
+
+  const handleButtonClick = (buttonName: string) => {
+    setActiveButton(buttonName) // Update active button state
+  }
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab) // Update active tab state for small screens
+  }
+
+  const tabs = [
+    "All",
+    "People",
+    "Sitadels",
+    "Tourneys",
+    "Events",
+    "Products",
+    "Services",
+  ]

@@ -12,7 +12,7 @@ import Group from "@/components/contents/tourneys-components/Group"
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
     <section
-      className={`overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 ${
+      className={`overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 mb-28 md:mb-36 ${
         isCollapsed ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -107,7 +107,7 @@ const RightSide: React.FC = () => {
   }
 
   return (
-    <div id="rightSide" className="overflow-auto h-full">
+    <div id="rightSide" className="overflow-auto h-full mb-28 md:mb-36">
       <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
         <span
           className={`material-symbols-outlined cursor-pointer ${

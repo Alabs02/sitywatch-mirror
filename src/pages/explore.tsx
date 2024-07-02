@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useState } from "react"
 import SearchInput from "@/components/molecules/SearchInput"
 import Image from "next/image"
+import SmallScreenNav from "@/components/content/SmallScreenNav"
 
 interface ExploreProps {
   children: ReactNode
@@ -53,89 +54,107 @@ const sitizens: Sitizen[] = [
 ]
 
 const Explore: FC<ExploreProps> = ({ children }) => {
-  const [activeButton, setActiveButton] = useState("All") // Initial active button
+  const [activeButton, setActiveButton] = useState("All")
+  const [activeTab, setActiveTab] = useState("All")
 
   const handleButtonClick = (buttonName: string) => {
-    setActiveButton(buttonName) // Update active button state
+    setActiveButton(buttonName) 
   }
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab) 
+  }
+
+  const tabs = [
+    "All",
+    "People",
+    "Sitadels",
+    "Tourneys",
+    "Events",
+    "Products",
+    "Services",
+  ]
+
   return (
-    <div className="grid w-full h-full pr-5 ">
+    <div className="w-full h-full hidden lg:block">
       <div className="w-full h-full grid shadow-inner shadow-gray-400/75 border rounded-t-[32px] px-5 lg:p-6 overflow-y-auto">
         <section className="h-full w-full mb-1 sm:mb-8">
-          <div className="flex justify-center">
-            <SearchInput />
-          </div>
-          <div className="flex justify-center mt-4 space-x-4">
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "All"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("All")}
-            >
-              All
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "People"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("People")}
-            >
-              People
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "Sitadels"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("Sitadels")}
-            >
-              Sitadels
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "Tourneys"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("Tourneys")}
-            >
-              Tourneys
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "Events"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("Events")}
-            >
-              Events
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "Products"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("Products")}
-            >
-              Products
-            </button>
-            <button
-              className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
-                activeButton === "Services"
-                  ? "active shadow-md shadow-gray-400 bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => handleButtonClick("Services")}
-            >
-              Services
-            </button>
+          <div className="">
+            <div className="flex justify-center">
+              <SearchInput />
+            </div>
+            <div className="flex justify-center mt-4 space-x-4">
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "All"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("All")}
+              >
+                All
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "People"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("People")}
+              >
+                People
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "Sitadels"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("Sitadels")}
+              >
+                Sitadels
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "Tourneys"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("Tourneys")}
+              >
+                Tourneys
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "Events"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("Events")}
+              >
+                Events
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "Products"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("Products")}
+              >
+                Products
+              </button>
+              <button
+                className={`btn px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-200 ${
+                  activeButton === "Services"
+                    ? "active shadow-md shadow-gray-400 bg-gray-100"
+                    : ""
+                }`}
+                onClick={() => handleButtonClick("Services")}
+              >
+                Services
+              </button>
+            </div>
           </div>
         </section>
         {/* <section className="mt-8"></section> */}
@@ -355,11 +374,11 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                   </div>
                 </div>
                 <div className="">
-                  <p className="text-sm px-2 mb-2">
+                  <p className="text-sm px-2 mb-2 ">
                     Hey guys, please vote our girl{" "}
                     <span className="text-secondary">@spicy_q</span> for the
                     sitywatch beauty pageant finals. Just follow the link{" "}
-                    <span className="text-[#5454ef] cursor-pointer">
+                    <span className="text-[#5454ef] cursor-pointer text-xs lg:text-sm">
                       https://sitywatch.com/beautypageant/ehfrhejkjei/votepanel/
                     </span>
                   </p>
@@ -572,7 +591,9 @@ const Explore: FC<ExploreProps> = ({ children }) => {
                                 <span className="material-symbols-outlined text-xs text-white">
                                   visibility
                                 </span>
-                                <span className="lg:inline text-xs text-white">Watch</span>
+                                <span className="lg:inline text-xs text-white">
+                                  Watch
+                                </span>
                               </button>
                             </div>
                           </div>
@@ -585,6 +606,9 @@ const Explore: FC<ExploreProps> = ({ children }) => {
             </article>
           </div>
         </section>
+      </div>
+      <div className="lg:hidden">
+        <SmallScreenNav />
       </div>
     </div>
   )

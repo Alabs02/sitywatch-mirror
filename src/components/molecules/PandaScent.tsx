@@ -3,7 +3,7 @@ import React from 'react'
 
 const PandaScent = () => {
   return (
-    <div className="mt-4 flex flex-col gap-y-4">
+    <div className="mt-4 flex flex-col gap-y-4 mb-28 md:mb-36">
       <article className="flex items-center justify-between">
         {/* left */}
         <div className="flex items-center space-x-2">
@@ -16,7 +16,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -39,7 +39,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -62,7 +62,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -85,7 +85,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -108,7 +108,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -131,7 +131,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
@@ -154,7 +154,7 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="text-sm md:text-base">
             <div>Text up</div>
             <div>Text down</div>
           </div>
