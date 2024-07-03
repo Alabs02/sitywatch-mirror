@@ -37,7 +37,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
       </h3>
       <div className="flex justify-between items-center mt-4 px-4">
         <div>
-          <button className="py-1 px-3 md:px-4 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow">
+          <button className="py-1 px-3 md:px-4 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
             <span className="material-symbols-outlined text-2xl lg:text-inherit">
               export_notes
             </span>

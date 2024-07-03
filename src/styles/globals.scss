@@ -83,4 +83,49 @@ h1.h1-with-border::before {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+.scrollable-cards {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollable-cards::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.card-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card-container .image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%; /* 4:3 aspect ratio (adjust as needed) */
+  overflow: hidden;
+}
+
+.card-container .image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-container .text-content {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  padding: 1rem; /* Adjust padding as needed */
+}
+
+
 

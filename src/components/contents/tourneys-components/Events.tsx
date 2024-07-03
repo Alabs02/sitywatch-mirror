@@ -43,7 +43,7 @@ const Events = () => {
             </div>
             <div className="">
               <img
-                src="/sw-img/video.jpg"
+                src="/video-pic.svg"
                 alt="Hufl"
                 className="object-cover w-full h-full"
               />
@@ -162,7 +162,7 @@ const Events = () => {
             </div>
             <div className="">
               <img
-                src="/sw-img/video.jpg"
+                src="/video-pic.svg"
                 alt="Hufl"
                 className="object-cover w-full h-full"
               />

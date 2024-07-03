@@ -7,7 +7,7 @@ const Affairs = () => {
         <div className="relative">
           <div className="shadow-lg border border-b border-tertiary-100">
             <img
-              src="CoreAssets/HomePage/PageContent/suggested-tourneys/sonyworld.jpeg"
+              src="sony-pic.svg"
               alt="Tourney's card"
               className="object-contain w-full h-full"
             />

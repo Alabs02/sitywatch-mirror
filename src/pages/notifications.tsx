@@ -109,7 +109,7 @@ const Notifications = () => {
                     />
                   </div>
                   <div className="flex flex-col ml-2">
-                    <span className="text-secondary text-sm md:text-lg xl:text-xl">
+                    <span className="text-secondary text-sm ">
                       {notification.textUp}
                     </span>
                     <span className="text-xs md:text-sm">

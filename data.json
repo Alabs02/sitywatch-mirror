@@ -51,7 +51,7 @@
       {
         "id": 2,
         "title": "Bottom Card 2",
-        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/literaryComp.jfif",
+        "image": "/bott2.svg",
         "icon": "bookmark",
         "header": "Bottom Card Header 2",
         "hashtag": "#BottomCard2Hashtag",
@@ -78,7 +78,7 @@
       {
         "id": 5,
         "title": "Bottom Card 5",
-        "image": "/coreAssets/HomePage/PageContent/suggested-tourneys/literaryComp.jfif",
+        "image": "/bott2.svg",
         "icon": "bookmark",
         "header": "Bottom Card Header 5",
         "hashtag": "#BottomCard5Hashtag",

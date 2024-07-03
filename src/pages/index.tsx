@@ -4,6 +4,21 @@ import tourneysData from "../../data.json"
 import { useRouter } from "next/router"
 import SkeletonLoader from "@/components/molecules/SkeletonLoader"
 
+interface Tourney {
+  id: number
+  title: string
+  image: string
+  description: string
+}
+
+interface BottomCard {
+  id: number
+  title: string
+  image: string
+  description: string
+  icon: string // Assuming 'icon' is a property of your bottom cards
+}
+
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter()
   const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
@@ -44,7 +59,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     index === currentTourneyIndex ? "opacity-90" : "opacity-0"
                   }`}
                 >
-                  {loading && <SkeletonLoader className="absolute inset-0" />}
+                  {loading && (
+                    <div className="absolute inset-0">
+                      <SkeletonLoader />
+                    </div>
+                  )}
                   <Image
                     src={tourney.image}
                     alt={tourney.title}
@@ -52,7 +71,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     objectFit="cover"
                     onLoadingComplete={handleImageLoad}
                     placeholder="blur"
-                    blurDataURL="/path/to/placeholder.png" // Adjust this path accordingly
+                    blurDataURL="/path/to/placeholder.png"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>
@@ -107,40 +126,45 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
             {tourneysData.rightSection.bottomCards.map((bottomCard) => (
               <div
                 key={bottomCard.id}
-                className="grid col-span-6 sm:col-span-6 md:col-span-4 shadow-sm cursor-pointer bg-white rounded-md"
+                className="grid col-span-6 sm:col-span-6 md:col-span-4 shadow-sm cursor-pointer bg-white rounded-md card-container"
                 onClick={() => handleBottomCardClick(bottomCard.id)}
               >
                 <div className="relative">
-                  <div className="shadow-lg border border-b border-tertiary-100">
+                  <div className="shadow-lg border border-b border-tertiary-100 image-wrapper">
                     {loading && <SkeletonLoader className="absolute inset-0" />}
                     <Image
                       src={bottomCard.image}
                       alt={bottomCard.title}
-                      layout="responsive"
-                      width={400}
-                      height={400}
+                      layout="fill"
                       objectFit="cover"
                       onLoadingComplete={handleImageLoad}
                       placeholder="blur"
                       blurDataURL="/path/to/placeholder.png"
                     />
                   </div>
-                  <div className="">
-                    <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
-                      {bottomCard.icon}
-                    </span>
+                  <div className="text-content">
+                    <div>
+                      <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
+                        {bottomCard.icon}
+                      </span>
+                    </div>
+                    <div className="text-center space-y-1 py-1 px-1 md:px-3">
+                      <h2 className="font-bold mb-1 text-sm">
+                        {bottomCard.header}
+                      </h2>
+                      {/* Adjust this part according to your data structure */}
+                      {/* Example if 'hashtag' is not present */}
+                      {/* <p className="text-xs text-gray-900 font-medium">
+                        {bottomCard.description}
+                      </p> */}
+                      <p className="text-xs text-blue-800 font-bold">
+                        {bottomCard.hashtag}
+                      </p>
+                      <p className="text-xs text-gray-900 font-medium">
+                        {bottomCard.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="text-center md:space-y-2 space-y-1 py-1 px-3">
-                  <h2 className="font-bold mb-1 text-sm">
-                    {bottomCard.header}
-                  </h2>
-                  <p className="text-xs text-blue-800 font-bold">
-                    {bottomCard.hashtag}
-                  </p>
-                  <p className="text-xs text-gray-900 font-medium">
-                    {bottomCard.description}
-                  </p>
                 </div>
               </div>
             ))}
