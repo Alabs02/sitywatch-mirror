@@ -135,6 +135,9 @@ const config: Config = {
         11: "44px",
         12: "48px",
       },
+      backgroundImage: {
+        "bg": "url('/background-image.webp')"
+      }
     },
   },
 

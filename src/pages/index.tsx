@@ -68,10 +68,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     src={tourney.image}
                     alt={tourney.title}
                     layout="fill"
-                    objectFit="cover"
+                    objectFit="cover" // Ensures the image covers the container
                     onLoadingComplete={handleImageLoad}
                     placeholder="blur"
                     blurDataURL="/path/to/placeholder.png"
+                    className="rounded-lg" // Add any additional styling needed
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import useScrollCollapse from "../../hooks/useScrollCollapse"
+// import useScrollCollapse from "../../hooks/useScrollCollapse"
 import Btn from "@/components/molecules/Btn"
 import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
 import Events from "@/components/contents/tourneys-components/Events"
@@ -9,12 +9,12 @@ import StudentCompetetion from "@/components/contents/tourneys-components/Studen
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
 import Group from "@/components/contents/tourneys-components/Group"
 
-const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
+const LeftSide: React.FC<{ isCollapsed: boolean }> = ({  }) => {
   return (
     <section
-      className={`overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 mb-28 md:mb-36 ${
-        isCollapsed ? "-translate-y-full" : "translate-y-0"
-      }`}
+      className="overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 mb-28 md:mb-36" 
+        // isCollapsed ? "-translate-y-full" : "translate-y-0"
+      
     >
       <div>
         <img
@@ -107,8 +107,8 @@ const RightSide: React.FC = () => {
   }
 
   return (
-    <div id="rightSide" className="overflow-auto h-full mb-28 md:mb-36">
-      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
+    <div id="rightSide" className=" h-full mb-28 md:mb-36">
+      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300">
         <span
           className={`material-symbols-outlined cursor-pointer ${
             activeTab === "Events" ? "text-secondary" : ""
@@ -150,7 +150,7 @@ const RightSide: React.FC = () => {
           diversity_3
         </span>
       </nav>
-      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-y-auto h-full my-1 md:my-2">
+      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px]  h-full my-1 md:my-2">
         {renderActiveComponent()}
       </article>
     </div>
@@ -159,7 +159,7 @@ const RightSide: React.FC = () => {
 
 const Tourneys: React.FC = () => {
   const router = useRouter()
-  const isCollapsed = useScrollCollapse()
+  // const isCollapsed = useScrollCollapse()
 
   useEffect(() => {
     const query = { collapsed: true }
@@ -167,8 +167,8 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="grid lg:grid-cols-2 gap-2 shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
-      <LeftSide isCollapsed={isCollapsed} />
+    <div className="shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
+      <LeftSide isCollapsed={false}   />
       <RightSide />
     </div>
   )
