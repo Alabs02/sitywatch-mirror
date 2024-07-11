@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useState } from "react"
 import SearchInput from "@/components/molecules/SearchInput"
 import Image from "next/image"
 import SmallScreenNav from "@/components/content/SmallScreenNav"
+import PeopleForm from "@/components/contents/forms/PeopleForm"
 
 interface ExploreProps {
   children: ReactNode
@@ -73,7 +74,7 @@ const Explore: FC<ExploreProps> = ({ children }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "People":
-        return <div>People Component</div>
+        return <div className="mx-auto py-8 w-full"><PeopleForm /></div>
       case "Sitadels":
         return <div>Sitadels Component</div>
       case "Tourneys":
@@ -114,10 +115,10 @@ const Explore: FC<ExploreProps> = ({ children }) => {
               ))}
             </nav>
           </div>
-          <div className="border-b border-gray-300 w-full mt-8  ">
+          <div className="border-b border-gray-300 w-full mt-2  ">
             {renderContent()}
           </div>
-          <div className="grid grid-cols-2 gap-x-2 mt-8">
+          <div className="grid grid-cols-2 gap-x-2 mt-4">
             <article className="col-span-1 ">
               {/* <h2 className="">HERE IS WHAT’S VIRAL TODAY</h2> */}
               <h2 className="text-[#28303F] font-bold text-center">
