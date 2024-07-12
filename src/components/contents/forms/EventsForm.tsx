@@ -190,19 +190,21 @@ const EventsForm: React.FC = () => {
 
       {overlay.type && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md shadow-md w-1/3 h-1/3">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium">Select {overlay.type}</h2>
-              <button onClick={closeOverlay} className="text-gray-400">
-                X
-              </button>
-            </div>
+          <div className="bg-white p-6 rounded-md shadow-md relative">
+            <button
+              onClick={closeOverlay}
+              className="absolute top-2 right-2 text-gray-400"
+            >
+              X
+            </button>
             {overlay.type === "happeningFrom" || overlay.type === "to" ? (
-              <DatePicker
-                selected={startDate}
-                onChange={handleDateChange}
-                inline
-              />
+              <div className="w-full">
+                <DatePicker
+                  selected={startDate}
+                  onChange={handleDateChange}
+                  inline
+                />
+              </div>
             ) : (
               <ul>
                 {overlay.options.map((option) => (
