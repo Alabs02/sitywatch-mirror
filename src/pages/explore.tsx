@@ -3,6 +3,11 @@ import SearchInput from "@/components/molecules/SearchInput"
 import Image from "next/image"
 import SmallScreenNav from "@/components/content/SmallScreenNav"
 import PeopleForm from "@/components/contents/forms/PeopleForm"
+import SitadelsForm from "@/components/contents/forms/SitadelsForm"
+import TourneysForm from "@/components/contents/forms/TourneysForm"
+import EventsForm from "@/components/contents/forms/EventsForm"
+import ProductsForm from "@/components/contents/forms/ProductsForm"
+import ServiceForm from "@/components/contents/forms/ServicesForm"
 
 interface ExploreProps {
   children: ReactNode
@@ -76,15 +81,35 @@ const Explore: FC<ExploreProps> = ({ children }) => {
       case "People":
         return <div className="mx-auto py-8 w-full"><PeopleForm /></div>
       case "Sitadels":
-        return <div>Sitadels Component</div>
+        return (
+          <div className="mx-auto py-8 w-full">
+            <SitadelsForm />
+          </div>
+        )
       case "Tourneys":
-        return <div>Tourneys Component</div>
+        return (
+          <div className="mx-auto py-8 w-full">
+            <TourneysForm />
+          </div>
+        )
       case "Events":
-        return <div>Events Component</div>
+        return (
+          <div className="mx-auto py-8 w-full">
+            <EventsForm />
+          </div>
+        )
       case "Products":
-        return <div>Products Component</div>
+        return (
+          <div className="mx-auto py-8 w-full">
+            <ProductsForm />
+          </div>
+        )
       case "Services":
-        return <div>Services Component</div>
+        return (
+          <div className="mx-auto py-8 w-full">
+            <ServiceForm />
+          </div>
+        )
       case "All":
       default:
         return null

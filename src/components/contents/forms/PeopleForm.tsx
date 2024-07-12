@@ -171,9 +171,17 @@ const PeopleForm: React.FC = () => {
 
       {overlay.type && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md shadow-md">
-            <h2 className="text-lg font-medium mb-4">Select {overlay.type}</h2>
-            <ul>
+          <div className="bg-white p-6 rounded-md shadow-md w-80 h-80 flex flex-col justify-between">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium">Select {overlay.type}</h2>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={closeOverlay}
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <ul className="flex-grow overflow-y-auto">
               {overlay.options.map((option) => (
                 <li
                   key={option}
@@ -184,12 +192,6 @@ const PeopleForm: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <button
-              className="mt-4 px-4 py-2 bg-gray-200 rounded"
-              onClick={closeOverlay}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
