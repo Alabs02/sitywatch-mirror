@@ -1,32 +1,40 @@
 import React, { useState, FormEvent } from "react"
+import TagSelector from "@/components/molecules/TagSelector"
 
 const PeopleForm: React.FC = () => {
   const [overlay, setOverlay] = useState<{
     type: string | null
     options: string[]
-  }>({ type: null, options: [] })
+    preselectedOptions: string[]
+  }>({ type: null, options: [], preselectedOptions: [] })
+
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: string
+    [key: string]: string | string[]
   }>({
     gender: "All",
     certification: "All",
-    location: "(3)",
-    school: "(2)",
-    interests: "All",
-    sideHustle: "All",
+    location: ["Location 1", "Location 2", "Location 3"],
+    school: ["School 1", "School 2"],
+    interests: [],
+    sideHustle: [],
   })
 
-  const handleSelect = (type: string, options: string[]) => {
-    setOverlay({ type, options })
+  const handleSelect = (
+    type: string,
+    options: string[],
+    preselectedOptions: string[],
+  ) => {
+    setOverlay({ type, options, preselectedOptions })
   }
 
   const closeOverlay = () => {
-    setOverlay({ type: null, options: [] })
+    setOverlay({ type: null, options: [], preselectedOptions: [] })
   }
 
-  const handleOptionClick = (option: string) => {
-    setSelectedOptions((prev) => ({ ...prev, [overlay.type!]: option }))
-    closeOverlay()
+  const handleTagChange = (tags: string[]) => {
+    if (overlay.type) {
+      setSelectedOptions((prev) => ({ ...prev, [overlay.type!]: tags }))
+    }
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -49,7 +57,9 @@ const PeopleForm: React.FC = () => {
             <button
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
-              onClick={() => handleSelect("gender", ["All", "Male", "Female"])}
+              onClick={() =>
+                handleSelect("gender", ["All", "Male", "Female"], ["All"])
+              }
             >
               <span className="truncate">{selectedOptions.gender}</span>
               <span className="material-symbols-outlined">arrow_drop_down</span>
@@ -67,11 +77,11 @@ const PeopleForm: React.FC = () => {
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
               onClick={() =>
-                handleSelect("certification", [
-                  "All",
-                  "Certification 1",
-                  "Certification 2",
-                ])
+                handleSelect(
+                  "certification",
+                  ["All", "Certification 1", "Certification 2"],
+                  ["All"],
+                )
               }
             >
               <span className="truncate">{selectedOptions.certification}</span>
@@ -90,11 +100,30 @@ const PeopleForm: React.FC = () => {
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-secondary border border-tertiary-200 text-white"
               onClick={() =>
-                handleSelect("location", ["All", "Location 1", "Location 2"])
+                handleSelect(
+                  "location",
+                  [
+                    "Location 1",
+                    "Location 2",
+                    "Location 3",
+                    "Location 4",
+                    "Location 5",
+                    "Location 6",
+                    "Location 7",
+                    "Location 8",
+                    "Location 9",
+                    "Location 10",
+                  ],
+                  selectedOptions.location as string[],
+                )
               }
             >
-              <span className="truncate">{selectedOptions.location}</span>
-              <span className="material-symbols-outlined">arrow_drop_down</span>
+              <span className="truncate">
+                ({(selectedOptions.location as string[]).length})
+              </span>
+              <span className="material-symbols-outlined text-white">
+                arrow_drop_down
+              </span>
             </button>
           </div>
 
@@ -109,10 +138,27 @@ const PeopleForm: React.FC = () => {
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-secondary border border-tertiary-200 text-white"
               onClick={() =>
-                handleSelect("school", ["All", "School 1", "School 2"])
+                handleSelect(
+                  "school",
+                  [
+                    "School 1",
+                    "School 2",
+                    "School 3",
+                    "School 4",
+                    "School 5",
+                    "School 6",
+                    "School 7",
+                    "School 8",
+                    "School 9",
+                    "School 10",
+                  ],
+                  selectedOptions.school as string[],
+                )
               }
             >
-              <span className="truncate">{selectedOptions.school}</span>
+              <span className="truncate">
+                ({(selectedOptions.school as string[]).length})
+              </span>
               <span className="material-symbols-outlined text-white">
                 arrow_drop_down
               </span>
@@ -130,10 +176,27 @@ const PeopleForm: React.FC = () => {
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
               onClick={() =>
-                handleSelect("interests", ["All", "Interest 1", "Interest 2"])
+                handleSelect(
+                  "interests",
+                  [
+                    "Interest 1",
+                    "Interest 2",
+                    "Interest 3",
+                    "Interest 4",
+                    "Interest 5",
+                    "Interest 6",
+                    "Interest 7",
+                    "Interest 8",
+                    "Interest 9",
+                    "Interest 10",
+                  ],
+                  selectedOptions.interests as string[],
+                )
               }
             >
-              <span className="truncate">{selectedOptions.interests}</span>
+              <span className="truncate">
+                ({(selectedOptions.interests as string[]).length})
+              </span>
               <span className="material-symbols-outlined">arrow_drop_down</span>
             </button>
           </div>
@@ -149,14 +212,27 @@ const PeopleForm: React.FC = () => {
               type="button"
               className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
               onClick={() =>
-                handleSelect("sideHustle", [
-                  "All",
-                  "Profession 1",
-                  "Profession 2",
-                ])
+                handleSelect(
+                  "sideHustle",
+                  [
+                    "Profession 1",
+                    "Profession 2",
+                    "Profession 3",
+                    "Profession 4",
+                    "Profession 5",
+                    "Profession 6",
+                    "Profession 7",
+                    "Profession 8",
+                    "Profession 9",
+                    "Profession 10",
+                  ],
+                  selectedOptions.sideHustle as string[],
+                )
               }
             >
-              <span className="truncate">{selectedOptions.sideHustle}</span>
+              <span className="truncate">
+                ({(selectedOptions.sideHustle as string[]).length})
+              </span>
               <span className="material-symbols-outlined">arrow_drop_down</span>
             </button>
           </div>
@@ -171,7 +247,7 @@ const PeopleForm: React.FC = () => {
 
       {overlay.type && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md shadow-md w-80 h-80 flex flex-col justify-between">
+          <div className="bg-white p-6 rounded-md shadow-md w-80 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium">Select {overlay.type}</h2>
               <button
@@ -181,17 +257,11 @@ const PeopleForm: React.FC = () => {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <ul className="flex-grow overflow-y-auto">
-              {overlay.options.map((option) => (
-                <li
-                  key={option}
-                  className="cursor-pointer hover:bg-gray-200 p-2 rounded"
-                  onClick={() => handleOptionClick(option)}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
+            <TagSelector
+              options={overlay.options}
+              preselectedOptions={overlay.preselectedOptions}
+              onChange={handleTagChange}
+            />
           </div>
         </div>
       )}

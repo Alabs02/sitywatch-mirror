@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-// import useScrollCollapse from "../../hooks/useScrollCollapse"
 import Btn from "@/components/molecules/Btn"
 import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
 import Events from "@/components/contents/tourneys-components/Events"
@@ -8,13 +7,14 @@ import Posts from "@/components/contents/tourneys-components/Posts"
 import StudentCompetetion from "@/components/contents/tourneys-components/StudentCompetition"
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
 import Group from "@/components/contents/tourneys-components/Group"
+import TourneysCarousel from "@/components/contents/images/TourneysCarousel"
 
-const LeftSide: React.FC<{ isCollapsed: boolean }> = ({  }) => {
+const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
     <section
-      className="overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 mb-28 md:mb-36" 
-        // isCollapsed ? "-translate-y-full" : "translate-y-0"
-      
+      className={`overflow-y-auto h-full p-2 lg:p-4 transition-transform duration-500 mb-28 md:mb-36 lg:mb-0 lg:w-1/2 ${
+        isCollapsed ? "-translate-y-full" : "translate-y-0"
+      }`}
     >
       <div>
         <img
@@ -107,8 +107,11 @@ const RightSide: React.FC = () => {
   }
 
   return (
-    <div id="rightSide" className=" h-full mb-28 md:mb-36">
-      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300">
+    <div
+      id="rightSide"
+      className="h-full mb-28 md:mb-36 lg:mb-0 lg:w-1/2 lg:overflow-hidden"
+    >
+      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0  z-10 border-b border-gray-200">
         <span
           className={`material-symbols-outlined cursor-pointer ${
             activeTab === "Events" ? "text-secondary" : ""
@@ -150,8 +153,8 @@ const RightSide: React.FC = () => {
           diversity_3
         </span>
       </nav>
-      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px]  h-full my-1 md:my-2">
-        {renderActiveComponent()}
+      <article className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] h-full my-1 md:my-2 overflow-y-auto">
+        <div className="h-full">{renderActiveComponent()}</div>
       </article>
     </div>
   )
@@ -167,9 +170,12 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="shadow-inner shadow-gray-400/75 py-2 px-2 rounded-t-[10px] h-full">
-      <LeftSide isCollapsed={false}   />
-      <RightSide />
+    <div className="shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] h-full overflow-y-auto">
+      <TourneysCarousel />
+      <div className="lg:flex lg:h-screen mt-4">
+        <LeftSide isCollapsed={false} />
+        <RightSide />
+      </div>
     </div>
   )
 }

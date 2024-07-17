@@ -1,0 +1,230 @@
+import React, { useState, FormEvent } from "react";
+
+const initialLocations = [
+  "Location 1", "Location 2", "Location 3", "Location 4", "Location 5",
+  "Location 6", "Location 7", "Location 8", "Location 9", "Location 10"
+];
+const initialSchools = [
+  "School 1", "School 2", "School 3", "School 4", "School 5",
+  "School 6", "School 7", "School 8", "School 9", "School 10"
+];
+const initialInterests = [
+  "Interest 1", "Interest 2", "Interest 3", "Interest 4", "Interest 5",
+  "Interest 6", "Interest 7", "Interest 8", "Interest 9", "Interest 10"
+];
+const initialSideHustles = [
+  "Profession 1", "Profession 2", "Profession 3", "Profession 4", "Profession 5",
+  "Profession 6", "Profession 7", "Profession 8", "Profession 9", "Profession 10"
+];
+
+const PeopleForm: React.FC = () => {
+  const [overlay, setOverlay] = useState<{
+    type: string | null;
+    options: string[];
+  }>({ type: null, options: [] });
+
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [selectedSchools, setSelectedSchools] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [selectedSideHustles, setSelectedSideHustles] = useState<string[]>([]);
+
+  const handleSelect = (type: string, options: string[]) => {
+    setOverlay({ type, options });
+  };
+
+  const closeOverlay = () => {
+    setOverlay({ type: null, options: [] });
+  };
+
+  const handleOptionClick = (option: string) => {
+    if (overlay.type) {
+      switch (overlay.type) {
+        case "locations":
+          handleToggleOption(option, selectedLocations, setSelectedLocations);
+          break;
+        case "schools":
+          handleToggleOption(option, selectedSchools, setSelectedSchools);
+          break;
+        case "interests":
+          handleToggleOption(option, selectedInterests, setSelectedInterests);
+          break;
+        case "sideHustles":
+          handleToggleOption(option, selectedSideHustles, setSelectedSideHustles);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  const handleToggleOption = (
+    option: string,
+    selectedOptions: string[],
+    setSelectedOptions: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions((prev) => prev.filter((item) => item !== option));
+    } else {
+      setSelectedOptions((prev) => [...prev, option]);
+    }
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("Form submitted with the following data:");
+    console.log({
+      locations: selectedLocations,
+      schools: selectedSchools,
+      interests: selectedInterests,
+      sideHustles: selectedSideHustles,
+    });
+  };
+
+  return (
+    <div className="flex justify-center items-center">
+      <form className="p-1 w-full lg:w-1/2 relative" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label
+              htmlFor="locations"
+              className="block text-sm font-light text-gray-400"
+            >
+              Locations:
+            </label>
+            <button
+              type="button"
+              className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
+              onClick={() => handleSelect("locations", initialLocations)}
+            >
+              <span className="truncate">
+                {selectedLocations.length > 0
+                  ? `${selectedLocations.length} selected`
+                  : "Select Locations"}
+              </span>
+              <span className="material-symbols-outlined">arrow_drop_down</span>
+            </button>
+          </div>
+
+          <div>
+            <label
+              htmlFor="schools"
+              className="block text-sm font-light text-gray-400"
+            >
+              Schools:
+            </label>
+            <button
+              type="button"
+              className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
+              onClick={() => handleSelect("schools", initialSchools)}
+            >
+              <span className="truncate">
+                {selectedSchools.length > 0
+                  ? `${selectedSchools.length} selected`
+                  : "Select Schools"}
+              </span>
+              <span className="material-symbols-outlined">arrow_drop_down</span>
+            </button>
+          </div>
+
+          <div>
+            <label
+              htmlFor="interests"
+              className="block text-sm font-light text-gray-400"
+            >
+              Interests:
+            </label>
+            <button
+              type="button"
+              className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
+              onClick={() => handleSelect("interests", initialInterests)}
+            >
+              <span className="truncate">
+                {selectedInterests.length > 0
+                  ? `${selectedInterests.length} selected`
+                  : "Select Interests"}
+              </span>
+              <span className="material-symbols-outlined">arrow_drop_down</span>
+            </button>
+          </div>
+
+          <div>
+            <label
+              htmlFor="sideHustles"
+              className="block text-sm font-light text-gray-400"
+            >
+              SideHustle/Profession:
+            </label>
+            <button
+              type="button"
+              className="mt-1 flex justify-between items-center w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-1 bg-transparent border border-tertiary-200 text-gray-400 font-semibold"
+              onClick={() => handleSelect("sideHustles", initialSideHustles)}
+            >
+              <span className="truncate">
+                {selectedSideHustles.length > 0
+                  ? `${selectedSideHustles.length} selected`
+                  : "Select SideHustles"}
+              </span>
+              <span className="material-symbols-outlined">arrow_drop_down</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Add any other original fields here */}
+
+        <div className="mt-6 flex justify-center">
+          <button type="submit" className="text-secondary font-bold text-base">
+            Advanced search
+          </button>
+        </div>
+      </form>
+
+      {overlay.type && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-md shadow-md max-w-md w-full h-auto overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium">
+                Select {overlay.type === "sideHustles" ? "SideHustles" : overlay.type}
+              </h2>
+              <button onClick={closeOverlay} className="text-gray-400">
+                X
+              </button>
+            </div>
+            <div className="flex flex-wrap">
+              {overlay.options.map((option) => (
+                <label key={option} className="mb-2 mr-2">
+                  <button
+                    type="button"
+                    className={`rounded-md py-1 px-2 mb-1 ${
+                      (overlay.type === "locations" && selectedLocations.includes(option)) ||
+                      (overlay.type === "schools" && selectedSchools.includes(option)) ||
+                      (overlay.type === "interests" && selectedInterests.includes(option)) ||
+                      (overlay.type === "sideHustles" && selectedSideHustles.includes(option))
+                        ? "bg-secondary text-white"
+                        : "bg-transparent text-gray-400"
+                    }`}
+                    onClick={() => handleOptionClick(option)}
+                  >
+                    {(overlay.type === "locations" && selectedLocations.includes(option)) ||
+                    (overlay.type === "schools" && selectedSchools.includes(option)) ||
+                    (overlay.type === "interests" && selectedInterests.includes(option)) ||
+                    (overlay.type === "sideHustles" && selectedSideHustles.includes(option)) ? (
+                      <>
+                        {option} <span className="text-red-500">&#10006;</span>
+                      </>
+                    ) : (
+                      <>
+                        {option} <span className="text-green-500">&#10003;</span>
+                      </>
+                    )}
+                  </button>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PeopleForm;
