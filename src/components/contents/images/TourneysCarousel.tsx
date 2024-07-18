@@ -2,11 +2,11 @@ import React, { useState } from "react"
 
 // Dummy images (replace with your own)
 const images = [
-  "https://dummyimage.com/600x400",
-  "https://dummyimage.com/600x400",
-  "https://dummyimage.com/600x400",
-  "https://dummyimage.com/600x400",
-  "https://dummyimage.com/600x400",
+  "/fireworks.svg",
+  "/sony.svg",
+  "/horse.svg",
+  "/art.svg",
+  "/hardwork.svg",
 ]
 
 const TourneysCarousel: React.FC = () => {
@@ -43,7 +43,7 @@ const TourneysCarousel: React.FC = () => {
         <img
           src={images[selectedImageIndex]}
           alt={`Image ${selectedImageIndex + 1}`}
-          className="w-1/3 rounded-lg shadow-lg z-20 transform scale-110 mx-2"
+          className="w-1/3 rounded-lg shadow-lg z-20 transform scale-100"
           style={{ position: "relative" }}
         />
         {/* Right blurred image */}
@@ -69,7 +69,7 @@ const TourneysCarousel: React.FC = () => {
         </button>
       </div>
       {/* Thumbnails */}
-      <div className="flex justify-center mt-4 space-x-4 z-20">
+      <div className="flex justify-center mt-2 md:mt-8 space-x-1 md:space-x-4 z-10">
         {images.map((image, index) => (
           <img
             key={index}
@@ -77,11 +77,14 @@ const TourneysCarousel: React.FC = () => {
             alt={`Image ${index + 1}`}
             className={`cursor-pointer rounded-lg shadow-sm transition-all duration-300 ${
               index === selectedImageIndex
-                ? "transform scale-110 border-4 border-blue-500"
+                ? "transform  border-4 border-blue-500"
                 : "opacity-50"
+            } ${
+              index === selectedImageIndex
+                ? "w-10 h-10 md:w-16 md:h-16"
+                : "w-10 h-10 md:w-14 md:h-14"
             }`}
             onClick={() => setSelectedImageIndex(index)}
-            style={{ width: "80px", height: "60px" }}
           />
         ))}
       </div>

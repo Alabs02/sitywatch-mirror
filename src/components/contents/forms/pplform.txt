@@ -228,3 +228,23 @@ const PeopleForm: React.FC = () => {
 };
 
 export default PeopleForm;
+
+ <div className="flex justify-center mt-4 space-x-2 md:space-x-4 z-20">
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Image ${index + 1}`}
+            className={`cursor-pointer rounded-lg shadow-sm transition-all duration-300 ${
+              index === selectedImageIndex
+                ? "transform scale-110 border-4 border-blue-500"
+                : "opacity-50"
+            } ${
+              index === selectedImageIndex
+                ? "w-20 h-16 md:w-32 md:h-24"
+                : "w-16 h-12 md:w-24 md:h-18"
+            }`}
+            onClick={() => setSelectedImageIndex(index)}
+          />
+        ))}
+      </div>
