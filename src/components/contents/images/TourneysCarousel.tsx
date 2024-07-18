@@ -31,7 +31,7 @@ const TourneysCarousel: React.FC = () => {
 
   return (
     <div className="max-w-full mx-auto mt-4 relative overflow-hidden px-4">
-      <div className="relative flex justify-center items-center">
+      <div className="relative flex justify-center items-center ">
         {/* Left blurred image */}
         <img
           src={images[getPreviousIndex(selectedImageIndex)]}
@@ -43,7 +43,7 @@ const TourneysCarousel: React.FC = () => {
         <img
           src={images[selectedImageIndex]}
           alt={`Image ${selectedImageIndex + 1}`}
-          className="w-1/3 rounded-lg shadow-lg z-20 transform scale-100"
+          className="w-1/3 md:w-1/4 rounded-lg shadow-lg z-20 transform scale-125"
           style={{ position: "relative" }}
         />
         {/* Right blurred image */}
@@ -69,7 +69,7 @@ const TourneysCarousel: React.FC = () => {
         </button>
       </div>
       {/* Thumbnails */}
-      <div className="flex justify-center mt-2 md:mt-8 space-x-1 md:space-x-4 z-10">
+      <div className="flex justify-center mt-6 md:mt-12 space-x-1 md:space-x-3 z-10">
         {images.map((image, index) => (
           <img
             key={index}
@@ -77,7 +77,7 @@ const TourneysCarousel: React.FC = () => {
             alt={`Image ${index + 1}`}
             className={`cursor-pointer rounded-lg shadow-sm transition-all duration-300 ${
               index === selectedImageIndex
-                ? "transform  border-4 border-blue-500"
+                ? "transform border-4 border-blue-500"
                 : "opacity-50"
             } ${
               index === selectedImageIndex
