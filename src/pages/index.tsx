@@ -16,7 +16,7 @@ interface BottomCard {
   title: string
   image: string
   description: string
-  icon: string // Assuming 'icon' is a property of your bottom cards
+  icon: string 
 }
 
 const Home: FC<{ children: ReactNode }> = ({ children }) => {
@@ -47,10 +47,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="grid w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 overflow-y-auto">
-      <div className="w-full h-full grid">
-        <section className="w-full grid grid-cols-12 gap-2">
-          <div className="h-[90%] md:h-[100%] grid col-span-8 md:col-span-9 p-2 md:p-4 rounded-lg relative overflow-hidden">
+    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 overflow-y-auto">
+      <div className="w-full h-full">
+        {/* Carousel Section */}
+        <section className="w-full grid grid-cols-12 gap-2 mb-4">
+          <div className="h-[90%] md:h-[100%] col-span-8 md:col-span-9 p-2 md:p-4 rounded-lg relative overflow-hidden">
             <div className="w-full h-full absolute top-0 left-0 transition-opacity">
               {tourneysData.leftSection.tourneys.map((tourney, index) => (
                 <div
@@ -68,11 +69,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     src={tourney.image}
                     alt={tourney.title}
                     layout="fill"
-                    objectFit="cover" // Ensures the image covers the container
+                    objectFit="cover" 
                     onLoadingComplete={handleImageLoad}
                     placeholder="blur"
                     blurDataURL="/path/to/placeholder.png"
-                    className="rounded-lg" // Add any additional styling needed
+                    className="rounded-lg" 
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>
@@ -84,7 +85,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
               ))}
             </div>
           </div>
-          <div className="inline-flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
+          <div className="flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
             <div className="flex items-center">
               <span className="material-symbols-outlined text-xl  bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
                 add_circle
@@ -118,57 +119,165 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
             </div>
           </div>
         </section>
-        {/* Bottom Cards */}
+
+        {/* Bottom Cards Section */}
         <section className="mb-4">
           <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
             Suggested Tourneys That Might Interest You
           </h1>
-          <div className="grid grid-cols-12 w-full gap-x-2 md:gap-x-8 gap-y-4">
-            {tourneysData.rightSection.bottomCards.map((bottomCard) => (
-              <div
-                key={bottomCard.id}
-                className="grid col-span-6 sm:col-span-6 md:col-span-4 shadow-sm cursor-pointer bg-white rounded-md card-container"
-                onClick={() => handleBottomCardClick(bottomCard.id)}
-              >
-                <div className="relative">
-                  <div className="shadow-lg border border-b border-tertiary-100 image-wrapper">
-                    {loading && <SkeletonLoader className="absolute inset-0" />}
-                    <Image
-                      src={bottomCard.image}
-                      alt={bottomCard.title}
-                      layout="fill"
-                      objectFit="cover"
-                      onLoadingComplete={handleImageLoad}
-                      placeholder="blur"
-                      blurDataURL="/path/to/placeholder.png"
-                    />
-                  </div>
-                  <div className="text-content">
-                    <div>
-                      <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
-                        {bottomCard.icon}
-                      </span>
+          <div className="w-full">
+            <div className="overflow-x-auto">
+              <div className="flex space-x-2 md:space-x-4">
+                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
+                  <div
+                    key={bottomCard.id}
+                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
+                    onClick={() => handleBottomCardClick(bottomCard.id)}
+                  >
+                    <div className="relative">
+                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
+                        {loading && (
+                          <SkeletonLoader className="absolute inset-0" />
+                        )}
+                        <Image
+                          src={bottomCard.image}
+                          alt={bottomCard.title}
+                          layout="fill"
+                          objectFit="cover"
+                          onLoadingComplete={handleImageLoad}
+                          placeholder="blur"
+                          blurDataURL="/path/to/placeholder.png"
+                        />
+                      </div>
+                      <div className="text-content p-2">
+                        <div>
+                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
+                            {bottomCard.icon}
+                          </span>
+                        </div>
+                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
+                          <h2 className="font-bold mb-1 text-sm">
+                            {bottomCard.header}
+                          </h2>
+                          <p className="text-xs text-blue-800 font-bold">
+                            {bottomCard.hashtag}
+                          </p>
+                          <p className="text-xs text-gray-900 font-medium">
+                            {bottomCard.description}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-center space-y-1 py-1 px-1 md:px-3">
-                      <h2 className="font-bold mb-1 text-sm">
-                        {bottomCard.header}
-                      </h2>
-                      {/* Adjust this part according to your data structure */}
-                      {/* Example if 'hashtag' is not present */}
-                      {/* <p className="text-xs text-gray-900 font-medium">
-                        {bottomCard.description}
-                      </p> */}
-                      <p className="text-xs text-blue-800 font-bold">
-                        {bottomCard.hashtag}
-                      </p>
-                      <p className="text-xs text-gray-900 font-medium">
-                        {bottomCard.description}
-                      </p>
-                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+        </section>
+        <section className="mb-4">
+          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
+            Most anticipated events
+          </h1>
+          <div className="w-full">
+            <div className="overflow-x-auto">
+              <div className="flex space-x-2 md:space-x-4">
+                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
+                  <div
+                    key={bottomCard.id}
+                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
+                    onClick={() => handleBottomCardClick(bottomCard.id)}
+                  >
+                    <div className="relative">
+                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
+                        {loading && (
+                          <SkeletonLoader className="absolute inset-0" />
+                        )}
+                        <Image
+                          src={bottomCard.image}
+                          alt={bottomCard.title}
+                          layout="fill"
+                          objectFit="cover"
+                          onLoadingComplete={handleImageLoad}
+                          placeholder="blur"
+                          blurDataURL="/path/to/placeholder.png"
+                        />
+                      </div>
+                      <div className="text-content p-2">
+                        <div>
+                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
+                            {bottomCard.icon}
+                          </span>
+                        </div>
+                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
+                          <h2 className="font-bold mb-1 text-sm">
+                            {bottomCard.header}
+                          </h2>
+                          <p className="text-xs text-blue-800 font-bold">
+                            {bottomCard.hashtag}
+                          </p>
+                          <p className="text-xs text-gray-900 font-medium">
+                            {bottomCard.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="">
+          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
+            Happening somewhere near you
+          </h1>
+          <div className="w-full">
+            <div className="overflow-x-auto">
+              <div className="flex space-x-2 md:space-x-4">
+                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
+                  <div
+                    key={bottomCard.id}
+                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
+                    onClick={() => handleBottomCardClick(bottomCard.id)}
+                  >
+                    <div className="relative">
+                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
+                        {loading && (
+                          <SkeletonLoader className="absolute inset-0" />
+                        )}
+                        <Image
+                          src={bottomCard.image}
+                          alt={bottomCard.title}
+                          layout="fill"
+                          objectFit="cover"
+                          onLoadingComplete={handleImageLoad}
+                          placeholder="blur"
+                          blurDataURL="/path/to/placeholder.png"
+                        />
+                      </div>
+                      <div className="text-content p-2">
+                        <div>
+                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
+                            {bottomCard.icon}
+                          </span>
+                        </div>
+                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
+                          <h2 className="font-bold mb-1 text-sm">
+                            {bottomCard.header}
+                          </h2>
+                          <p className="text-xs text-blue-800 font-bold">
+                            {bottomCard.hashtag}
+                          </p>
+                          <p className="text-xs text-gray-900 font-medium">
+                            {bottomCard.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </div>
