@@ -38,11 +38,11 @@ const SitadelsForm: React.FC = () => {
         className="p-1 w-full lg:w-3/4 xl:w-2/3 relative"
         onSubmit={handleSubmit}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="flex lg:grid lg:grid-cols-3 lg:gap-6 overflow-x-auto no-scrollbar space-x-6 lg:space-x-0 lg:space-y-0">
           <div>
             <label
               htmlFor="sitadelCertification"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400"
             >
               Sitadel Certification:
             </label>
@@ -67,7 +67,7 @@ const SitadelsForm: React.FC = () => {
           <div>
             <label
               htmlFor="location"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400"
             >
               Location:
             </label>
@@ -86,7 +86,7 @@ const SitadelsForm: React.FC = () => {
           <div>
             <label
               htmlFor="interests"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400"
             >
               Interests:
             </label>

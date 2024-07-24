@@ -86,7 +86,7 @@ const PandaUs = () => {
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4 md:px-2 sm:px-1">
       <section className="col-span-12 lg:col-span-8 w-full h-full sticky top-0 z-20 overflow-hidden">
-        <nav className="flex p-1 md:p-4 items-center justify-around md:justify-between sticky top-0 z-20 bg-inherit text-[10px] md:text-sm font-bold">
+        <nav className="flex p-1 md:p-2 items-center justify-around md:justify-between sticky top-0 z-20 bg-inherit text-[10px] md:text-sm font-bold">
           <a
             href="#"
             className={`tab-link ${
@@ -96,7 +96,7 @@ const PandaUs = () => {
           >
             PANDA POLLS
           </a>
-          <div className="border-l-2 border-gray-300 h-8"></div>
+          <div className="border-l-2 border-gray-300 h-6"></div>
           <a
             href="#"
             className={`tab-link ${
@@ -106,7 +106,7 @@ const PandaUs = () => {
           >
             SOUL PANDA
           </a>
-          <div className="border-l-2 border-gray-300 h-8"></div>
+          <div className="border-l-2 border-gray-300 h-6"></div>
           <a
             href="#"
             className={`tab-link ${

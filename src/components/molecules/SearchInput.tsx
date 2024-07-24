@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
 interface SearchInputProps {
-  label?: string 
+  label?: string
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ label = "Search term" }) => {
@@ -12,32 +12,32 @@ const SearchInput: React.FC<SearchInputProps> = ({ label = "Search term" }) => {
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault() 
+    event.preventDefault()
 
     console.log(`Search term: ${searchTerm}`)
     alert(`You searched for: ${searchTerm}`)
 
-    setSearchTerm("") 
+    setSearchTerm("")
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col w-3/4 mx-auto"
+      className="flex flex-col md:w-[65%] w-[90%] mx-auto px-2"
     >
       {label && (
-        <label htmlFor="search" className="mr-2 text-sm text-gray-700">
+        <label htmlFor="search" className="mr-2 text-sm text-gray-700 mb-1">
           {label}
         </label>
       )}
-      <div className="relative w-full align-middle">
+      <div className="relative w-full">
         <input
           type="text"
           id="search"
           name="search"
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full rounded-lg px-3 py-2 bg-gradient-to-r from-tertiary-100 to-neutral-100 shadow-inner shadow-gray-600/50 focus:outline-none focus:ring-1 focus:ring-blue-500 "
+          className="w-full rounded-lg px-3 py-2 bg-gradient-to-r from-tertiary-100 to-neutral-100 shadow-inner shadow-gray-600/50 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
           placeholder="Enter what you are looking for"
         />
         <button
@@ -45,7 +45,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ label = "Search term" }) => {
           className="absolute inset-y-0 right-0 px-4 bg-transparent hover:bg-gray-100 focus:outline-none"
         >
           <svg
-            className="h-5 w-5 text-gray-500 align-middle"
+            className="h-5 w-5 text-gray-500"
             viewBox="0 0 20 20"
             fill="currentColor"
           >

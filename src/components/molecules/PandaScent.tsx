@@ -3,7 +3,7 @@ import React from 'react'
 
 const PandaScent = () => {
   return (
-    <div className="mt-4 flex flex-col gap-y-4 mb-28 md:mb-36">
+    <div className="mt-4 flex flex-col gap-y-3 mb-28 md:mb-36">
       <article className="flex items-center justify-between">
         {/* left */}
         <div className="flex items-center space-x-2">
@@ -16,9 +16,13 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span className="text-secondary">@blizwizliz</span>
+              <span className="font-semibold">left</span>
+              <p>a scent</p>
+            </div>
+            <div className="text-sm italic text-tertiary-300">14 mins ago</div>
           </div>
         </div>
         {/* right */}
@@ -39,9 +43,13 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span className="text-secondary">@bgiamthril</span>
+              <span className="font-semibold">left</span>
+              <p>a scent</p>
+            </div>
+            <div className="text-sm italic text-tertiary-300">4 days ago</div>
           </div>
         </div>
         {/* right */}
@@ -62,9 +70,13 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span className="text-secondary">@casualmissy</span>
+              <span className="font-semibold">left</span>
+              <p>a scent</p>
+            </div>
+            <div className="text-sm italic text-tertiary-300">5 days ago</div>
           </div>
         </div>
         {/* right */}
@@ -85,9 +97,13 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span className="text-secondary">@freebarbie</span>
+              <span className="font-semibold">left</span>
+              <p>5 mins ago</p>
+            </div>
+            <div className="text-sm italic text-tertiary-300">14 mins ago</div>
           </div>
         </div>
         {/* right */}
@@ -108,9 +124,14 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span>you</span>{" "}
+              <span className="font-semibold space-x-1">left</span>
+              <span>a scent for</span>
+              <span className="text-secondary">@bsoftlifebestie</span>
+            </div>
+            <div className="text-sm italic text-tertiary-300">14 mins ago</div>
           </div>
         </div>
         {/* right */}
@@ -131,9 +152,13 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span className="text-secondary">@fashionqueen</span>
+              <span className="font-semibold">left</span>
+              <p>a scent</p>
+            </div>
+            <div className="text-sm italic text-tertiary-300">2 days ago</div>
           </div>
         </div>
         {/* right */}
@@ -154,9 +179,14 @@ const PandaScent = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="text-sm md:text-base">
-            <div>Text up</div>
-            <div>Text down</div>
+          <div className="text-sm md:text-base flex flex-col">
+            <div className="flex space-x-1 text-base">
+              <span>you</span>{" "}
+              <span className="font-semibold space-x-1">left</span>
+              <span>a scent for</span>
+              <span className="text-secondary">@theperksoftpearly</span>
+            </div>
+            <div className="text-sm italic text-tertiary-300">14 mins ago</div>
           </div>
         </div>
         {/* right */}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const News = () => {
+const Viral = () => {
   return (
     <div>
       <div className="flex flex-col p-4  rounded-md bg-slate-50 space-y-4 my-2 shadow-md">
@@ -67,4 +67,4 @@ const News = () => {
   )
 }
 
-export default News
+export default Viral

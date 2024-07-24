@@ -46,7 +46,7 @@ const PeopleForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center">
       <form className="p-1 w-full lg:w-1/2 relative" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="flex lg:grid lg:grid-cols-3 lg:gap-6 overflow-x-auto no-scrollbar space-x-6 lg:space-x-0 lg:space-y-0">
           <div>
             <label
               htmlFor="gender"

@@ -10,7 +10,7 @@ const images = [
 ]
 
 const TourneysCarousel: React.FC = () => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(2) // Set initial index to 2
 
   const handlePrev = () => {
     setSelectedImageIndex((prevIndex) =>

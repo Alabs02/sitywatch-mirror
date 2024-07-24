@@ -51,15 +51,15 @@ const SitezensToWatch = () => {
     <div>
       <div className="flex flex-col w-full h-full p-2 md:p-4">
         <section className="flex space-x-2">
-          <div className="h-8 md:h-14 w-8 md:w-14">
+          <div className="flex h-10 md:h-14 w-10 md:w-14">
             <img
               src="/coreAssets/Explore/micahrichards.jfif"
               alt="explore avatar"
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-cover rounded-full flex"
             />
           </div>
           <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col">
+            <div className="flex flex-col md:text-sm text-xs">
               <span>up</span>
               <span>down</span>
             </div>
