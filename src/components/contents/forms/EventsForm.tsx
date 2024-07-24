@@ -63,11 +63,11 @@ const EventsForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center">
       <form className="p-1 w-full lg:w-3/4 relative" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
+        <div className="flex lg:grid lg:grid-cols-3 lg:gap-6 overflow-x-auto no-scrollbar space-x-6 lg:space-x-0 lg:space-y-0">
+          <div className="flex flex-col">
             <label
               htmlFor="sitadelSertification"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Sitadel Sertification:
             </label>
@@ -89,10 +89,10 @@ const EventsForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="location"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Location:
             </label>
@@ -108,10 +108,10 @@ const EventsForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="category"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Category/Niche:
             </label>
@@ -127,10 +127,10 @@ const EventsForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="entryFeeStatus"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Entry fee status:
             </label>
@@ -146,10 +146,10 @@ const EventsForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="happeningFrom"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Happening from:
             </label>
@@ -163,10 +163,10 @@ const EventsForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="to"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               To:
             </label>

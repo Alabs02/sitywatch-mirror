@@ -113,11 +113,11 @@ const ServiceForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center">
       <form className="p-1 w-full lg:w-3/4 relative" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
+        <div className="flex lg:grid lg:grid-cols-3 lg:gap-6 overflow-x-auto no-scrollbar space-x-6 lg:space-x-0 lg:space-y-0">
+          <div className="flex flex-col">
             <label
               htmlFor="sitadelSertification"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Sitadel Sertification:
             </label>
@@ -137,10 +137,10 @@ const ServiceForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="location"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Location:
             </label>
@@ -156,10 +156,10 @@ const ServiceForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="category"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Category/Niche:
             </label>
@@ -175,10 +175,10 @@ const ServiceForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="deliveryService"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Delivery service:
             </label>
@@ -197,10 +197,10 @@ const ServiceForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="brand"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Brand:
             </label>
@@ -214,10 +214,10 @@ const ServiceForm: React.FC = () => {
             </button>
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label
               htmlFor="productCondition"
-              className="block text-sm font-light text-gray-400"
+              className="block md:text-sm text-xs font-light text-gray-400 h-8"
             >
               Product condition:
             </label>
