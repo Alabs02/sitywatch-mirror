@@ -47,8 +47,8 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 overflow-y-auto">
-      <div className="w-full h-full">
+    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 ">
+      <div className="w-full h-full overflow-y-auto">
         {/* Carousel Section */}
         <section className="w-full grid grid-cols-12 gap-2 mb-4">
           <div className="h-[90%] md:h-[100%] col-span-8 md:col-span-9 p-2 md:p-4 rounded-lg relative overflow-hidden">
@@ -69,11 +69,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
                     src={tourney.image}
                     alt={tourney.title}
                     layout="fill"
-                    objectFit="cover" 
+                    objectFit="cover"
                     onLoadingComplete={handleImageLoad}
                     placeholder="blur"
                     blurDataURL="/path/to/placeholder.png"
-                    className="rounded-lg" 
+                    className="rounded-lg"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
                     <h2 className="text-sm font-semibold">{tourney.title}</h2>
