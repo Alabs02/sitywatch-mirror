@@ -8,6 +8,7 @@ import StudentCompetition from "@/components/contents/tourneys-components/Studen
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
 import Group from "@/components/contents/tourneys-components/Group"
 import TourneysCarousel from "@/components/contents/images/TourneysCarousel"
+import Link from "next/link"
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
@@ -93,7 +94,7 @@ const RightSide: React.FC = () => {
 
   return (
     <div id="rightSide" className="h-full lg:mb-0 lg:w-1/2 lg:overflow-hidden">
-      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10 border-b border-gray-200">
+      <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
         <span
           className={`material-symbols-outlined cursor-pointer ${
             activeTab === "Events" ? "text-secondary" : ""
@@ -151,61 +152,73 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="h-full overflow-y-auto shadow-inner shadow-gray-400/75 rounded-t-[30px]">
-      <div className="overflow-x-auto">
-        <div className="min-w-[300px] max-w-full mx-auto">
-          <TourneysCarousel />
+    <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 rounded-t-[30px]">
+      <div className=" overflow-y-auto h-full">
+        <div className="flex items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm">
+          <Link href="/sitadel-profile">
+          <div className="ml-2">
+
+            <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
+              arrow_back
+            </span>
+          </div>
+          </Link>
         </div>
-        <div className="flex items-center justify-center flex-col space-x-2 md:space-y-4">
-          <div>
-            <div className="flex space-x-4 items-center justify-between mt-2">
-              <div className="flex flex-col lg:flex-row items-center justify-center space-x-2 lg:space-x-4">
-                <div className="flex items-center flex-col">
-                  <h1 className="text-secondary text-sm lg:text-base font-semibold">
-                    #SWPA_SC2023
-                  </h1>
-                  <div className="flex items-center space-x-2">
-                    <span>Media</span>
-                    <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
-                    <span>Photography</span>
+        <div className="overflow-x-auto">
+          <div className="min-w-[300px] max-w-full mx-auto">
+            <TourneysCarousel />
+          </div>
+          <div className="flex items-center justify-center flex-col space-x-2 md:space-y-4">
+            <div>
+              <div className="flex space-x-4 items-center justify-between mt-2">
+                <div className="flex flex-col lg:flex-row items-center justify-center space-x-2 lg:space-x-4">
+                  <div className="flex items-center flex-col">
+                    <h1 className="text-secondary text-sm lg:text-base font-semibold">
+                      #SWPA_SC2023
+                    </h1>
+                    <div className="flex items-center space-x-2">
+                      <span>Media</span>
+                      <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
+                      <span>Photography</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="mt-2 lg:mt-0">
-                <span className="material-symbols-outlined">more_vert</span>
+                <div className="mt-2 lg:mt-0">
+                  <span className="material-symbols-outlined">more_vert</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="">
-            <button className="py-1 px-3 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
-              <span className="material-symbols-outlined text-2xl lg:text-inherit">
-                export_notes
-              </span>
-              <span className="lg:inline">Register</span>
-            </button>
-          </div>
-          <div className="flex items-center justify-center space-x-6 md:space-x-12 mt-4">
-            <div className="flex flex-col space-y-1 items-center">
-              <h2 className="font-bold text-sm lg:text-base">199</h2>
-              <p className="text-sm text-slate-500">Affiliate</p>
+            <div className="">
+              <button className="py-1 px-3 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
+                <span className="material-symbols-outlined text-2xl lg:text-inherit">
+                  export_notes
+                </span>
+                <span className="lg:inline">Register</span>
+              </button>
             </div>
-            <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
-            <div className="flex flex-col space-y-1 items-center">
-              <h2 className="font-bold text-sm lg:text-base">199</h2>
-              <p className="text-sm text-slate-500">Affiliate</p>
-            </div>
-            <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
-            <div className="flex flex-col space-y-1 items-center">
-              <h2 className="font-bold text-sm lg:text-base">199</h2>
-              <p className="text-sm text-slate-500">Affiliate</p>
+            <div className="flex items-center justify-center space-x-6 md:space-x-12 mt-4">
+              <div className="flex flex-col space-y-1 items-center">
+                <h2 className="font-bold text-sm lg:text-base">199</h2>
+                <p className="text-sm text-slate-500">Affiliate</p>
+              </div>
+              <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
+              <div className="flex flex-col space-y-1 items-center">
+                <h2 className="font-bold text-sm lg:text-base">199</h2>
+                <p className="text-sm text-slate-500">Affiliate</p>
+              </div>
+              <span className="flex h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
+              <div className="flex flex-col space-y-1 items-center">
+                <h2 className="font-bold text-sm lg:text-base">199</h2>
+                <p className="text-sm text-slate-500">Affiliate</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="lg:flex lg:h-screen mt-4">
-        <LeftSide isCollapsed={false} />
-        <RightSide />
+        <div className="lg:flex lg:h-screen mt-4">
+          <LeftSide isCollapsed={false} />
+          <RightSide />
+        </div>
       </div>
     </div>
   )

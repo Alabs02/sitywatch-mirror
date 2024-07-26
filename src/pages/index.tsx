@@ -47,7 +47,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 md:p-4 ">
+    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 ">
       <div className="w-full h-full overflow-y-auto">
         {/* Carousel Section */}
         <section className="w-full grid grid-cols-12 gap-2 mb-4">

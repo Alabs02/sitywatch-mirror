@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+import type { PluginAPI } from "tailwindcss/types/config"
 
 const colors = {
   transparent: "transparent",
@@ -81,6 +82,19 @@ const colors = {
     800: "#165239",
     900: "#0b291c",
   },
+  grayRed: {
+    DEFAULT: "#a68a8a", 
+    50: "#f9f6f6",
+    100: "#f2eaea",
+    200: "#e3d4d4",
+    300: "#d4bfbf",
+    400: "#b89a9a",
+    500: "#a68a8a",
+    600: "#8f7676",
+    700: "#785f5f",
+    800: "#624848",
+    900: "#4c3838",
+  },
 }
 
 const config: Config = {
@@ -89,10 +103,13 @@ const config: Config = {
   theme: {
     extend: {
       ringWidth: {
-        DEFAULT: "4px", 
+        DEFAULT: "4px",
+      },
+      borderColor: {
+        "gradient-45": "linear-gradient(45deg, #F24055, #1E7881)",
       },
       ringOffsetWidth: {
-        DEFAULT: "2", 
+        DEFAULT: "2",
       },
       ringOffsetColor: (theme) => ({
         ...theme.colors,
@@ -136,12 +153,28 @@ const config: Config = {
         12: "48px",
       },
       backgroundImage: {
-        "bg": "url('/background-image.webp')"
-      }
+        bg: "url('/background-image.webp')",
+      },
     },
   },
 
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities(
+        {
+          ".border-gradient-45": {
+            borderImage: "linear-gradient(45deg, #F24055, #1E7881) 1",
+          },
+        },
+        {
+          // The second argument should be an options object with optional properties
+          respectPrefix: true,
+          respectImportant: true,
+        },
+      )
+    },
+  ],
 }
 
 export default config
