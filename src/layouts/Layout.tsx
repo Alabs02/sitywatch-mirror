@@ -60,7 +60,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             isCollapsed
               ? "lg:items-center lg:w-20 justify-between"
               : "xl:items-start xl:w-60 px-6 justify-between",
-            "bottom-0 md:top-[8.1rem] md:bottom-auto", // Position at the bottom on mobile
+            "bottom-0 md:top-[6.3rem] md:bottom-auto", 
           )}
         >
           <button
@@ -103,9 +103,9 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className={clsx(
-              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 my-[1.5rem] mr-0", // Reduced right margin for mobile screens
+              "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mr-0",
               isCollapsed
-                ? "ml-0 md:ml-[4.5rem]" // Adjusted margin for collapsed state to prevent overlap
+                ? "ml-0 md:ml-[4.5rem]" 
                 : "ml-0 md:ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
             )}
           >
