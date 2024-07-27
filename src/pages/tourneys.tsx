@@ -152,15 +152,16 @@ const Tourneys: React.FC = () => {
   }, [])
 
   return (
-    <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 rounded-t-[30px]">
+    <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 lg:rounded-t-[30px]">
       <div className=" overflow-y-auto h-full">
         <div className="flex items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm">
           <Link href="/sitadel-profile">
-          <div className="ml-2">
+          <div className="ml-2 flex items-center">
 
             <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
               arrow_back
             </span>
+            <span>Go to Profile</span>
           </div>
           </Link>
         </div>

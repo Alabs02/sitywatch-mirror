@@ -8,6 +8,10 @@ import StudentCompetition from "@/components/contents/tourneys-components/Studen
 import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
 import Group from "@/components/contents/tourneys-components/Group"
 import ProfileImage from "@/components/molecules/ProfileImage"
+import SearchTab from "@/components/contents/sitadel-profile-components/SearchTab"
+import ActivityTab from "@/components/contents/sitadel-profile-components/ActivityTab"
+import AboutTab from "@/components/contents/sitadel-profile-components/AboutTab"
+import AffairsTab from "@/components/contents/sitadel-profile-components/AffairsTab"
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
@@ -17,7 +21,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           isCollapsed ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <div className="relative w-full">
+        <div className="relative w-ful">
           <img
             src="/sp-banner.svg"
             alt="Placeholder"
@@ -50,20 +54,23 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
             </div>
           </div>
 
-          <div className="flex space-x-1 md:space-x-2 items-center">
+          <div className="flex  items-center justify-center w-full">
+            <div className="flex space-x-2 md:space-x-4">
+
             <button className="relative py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-transparent text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white border-2   before:rounded-full">
-              <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
+              {/* <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
                 export_notes
-              </span>
-              <span className="lg:inline text-xs md:text-lg">Register</span>
+              </span> */}
+              <span className="lg:inline text-xs md:text-lg">Sitizen</span>
             </button>
 
             <button className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
               <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
-                export_notes
+                mail
               </span>
-              <span className="lg:inline text-xs md:text-lg">Register</span>
+              <span className="lg:inline text-xs md:text-sm uppercase">dispatch</span>
             </button>
+            </div>
             <div className="flex justify-between items-center px-4">
               <div className="flex space-x-4">
                 <span className="material-symbols-outlined">preview</span>
@@ -74,7 +81,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center space-x-6 md:space-x-12 mt-4">
+          <div className="flex items-center justify-around space-x-6 mt-4 w-full">
             <div className="flex flex-col space-y-1 items-center">
               <h2 className="font-bold text-sm lg:text-base">199</h2>
               <p className="text-sm text-slate-500">Affiliate</p>
@@ -92,7 +99,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           </div>
         </div>
 
-        <div className="mt-4 ml-2">
+        <div className="mt-4">
           <CardWithWithImage
             title="Upcoming Tournaments"
             description="Join the competition and win big!"
@@ -112,71 +119,61 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 }
 
 const RightSide: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("StudentCompetition")
+  const [activeTab, setActiveTab] = useState("AffairsTab")
 
   const renderActiveComponent = () => {
     switch (activeTab) {
-      case "Events":
-        return <Events />
-      case "Posts":
-        return <Posts />
-      case "StudentCompetition":
-        return <StudentCompetition />
-      case "OrganizersAndPartners":
-        return <OrganizersAndPartners />
-      case "Group":
-        return <Group />
+      case "Search":
+        return <SearchTab />
+      case "Activity":
+        return <ActivityTab />
+      case "About":
+        return <AboutTab />
+      case "Affairs":
+        return <AffairsTab />
       default:
-        return <StudentCompetition />
+        return <AffairsTab />
     }
   }
 
   return (
-    <div className="h-full lg:mb-0 lg:w-1/2  mx-2">
-      <div id="rightSide" className="lg:overflow-hidden h-full">
+    <div className="h-full lg:mb-0 lg:w-1/2  mx-2 ">
+      <div id="rightSide" className="lg:overflow-hidden h-full mb-14">
         <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
           <span
             className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "Events" ? "text-secondary" : ""
+              activeTab === "SearchTab" ? "text-secondary" : ""
             }`}
-            onClick={() => setActiveTab("Events")}
+            onClick={() => setActiveTab("Search")}
           >
-            table_rows
+            manage_search
           </span>
           <span
-            className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "Posts" ? "text-secondary" : ""
+            className={`cursor-pointer ${
+              activeTab === "ActivityTab" ? "text-secondary" : ""
             }`}
-            onClick={() => setActiveTab("Posts")}
+            onClick={() => setActiveTab("Activity")}
           >
-            video_library
+            Activity
           </span>
           <span
-            className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "OrganizersAndPartners" ? "text-secondary" : ""
+            className={`cursor-pointer ${
+              activeTab === "AboutTab" ? "text-secondary" : ""
             }`}
-            onClick={() => setActiveTab("OrganizersAndPartners")}
+            onClick={() => setActiveTab("About")}
           >
-            military_tech
+            About
           </span>
           <span
-            className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "StudentCompetition" ? "text-secondary" : ""
+            className={`cursor-pointer ${
+              activeTab === "AffairsTab" ? "text-secondary" : ""
             }`}
-            onClick={() => setActiveTab("StudentCompetition")}
+            onClick={() => setActiveTab("Affairs")}
           >
-            error
-          </span>
-          <span
-            className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "Group" ? "text-secondary" : ""
-            }`}
-            onClick={() => setActiveTab("Group")}
-          >
-            diversity_3
+            Affairs
           </span>
         </nav>
-        <article className="h-full overflow-y-auto shadow-inner shadow-gray-400/75  rounded-t-[30px]">
+        <article className="h-full overflow-y-auto shadow-inner shadow-gray-400/75  rounded-t-[30px] p-4">
           {renderActiveComponent()}
         </article>
       </div>
@@ -193,7 +190,7 @@ const SitadelProfile: React.FC = () => {
   }, [])
 
   return (
-    <div className="h-full shadow-inner shadow-gray-400/75 rounded-t-[30px] overflow-y-auto mb-28 md:mb-36 lg:mb-0 border border-primary">
+    <div className="h-full shadow-inner shadow-gray-400/75 lg:rounded-t-[30px] overflow-y-auto mb-28 md:mb-36 lg:mb-0">
       <div className="lg:flex lg:h-screen">
         <LeftSide isCollapsed={false} />
         <RightSide />

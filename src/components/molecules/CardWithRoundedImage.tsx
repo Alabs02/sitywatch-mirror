@@ -8,7 +8,7 @@ interface CardProps {
 
 const CardWithImage: React.FC<CardProps> = ({ title, description, details }) => {
   return (
-    <div className="container max-w-md bg-white shadow-md rounded-lg overflow-hidden relative">
+    <div className="container max-w-lg bg-white shadow-md rounded-lg overflow-hidden relative mx-auto">
       <div className="xl:flex flex-col p-6">
         <h3 className="text-lg  xl:text-xl font-bold">{title}</h3>
         <p className="mt-2 text-gray-700  md:text-lg ">{description}</p>
