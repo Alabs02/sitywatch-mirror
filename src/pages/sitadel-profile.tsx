@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import Btn from "@/components/molecules/Btn"
 import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
-import Events from "@/components/contents/tourneys-components/Events"
-import Posts from "@/components/contents/tourneys-components/Posts"
-import StudentCompetition from "@/components/contents/tourneys-components/StudentCompetition"
-import OrganizersAndPartners from "@/components/contents/tourneys-components/OrganizersAndPartners"
-import Group from "@/components/contents/tourneys-components/Group"
 import ProfileImage from "@/components/molecules/ProfileImage"
 import SearchTab from "@/components/contents/sitadel-profile-components/SearchTab"
 import ActivityTab from "@/components/contents/sitadel-profile-components/ActivityTab"
@@ -15,13 +9,13 @@ import AffairsTab from "@/components/contents/sitadel-profile-components/Affairs
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
-    <div className="lg:overflow-y-hidden h-full transition-transform duration-500 lg:mb-12  lg:w-1/2">
+    <div className="lg:overflow-y-auto h-full transition-transform duration-500 lg:mb-12 lg:w-1/2">
       <section
         className={`overflow-y-auto ${
           isCollapsed ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <div className="relative w-ful">
+        <div className="relative w-full">
           <img
             src="/sp-banner.svg"
             alt="Placeholder"
@@ -39,37 +33,30 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 
         <div className="flex items-center flex-col space-x-2 md:space-y-4">
           <div className="flex space-x-4 items-center justify-between my-2">
-            <div className="flex flex-col lg:flex-row  space-x-2 lg:space-x-4">
-              <div className="flex  flex-col text-xs md:text-sm justify-center">
+            <div className="flex flex-col lg:flex-row space-x-2 lg:space-x-4">
+              <div className="flex flex-col text-xs md:text-sm justify-center">
                 <div className="flex">
                   <span>Sony World Photography Awards</span>
-                  {/* <span className="inline-block h-1 w-1 bg-black rounded-full p-[0.5px]"></span>
-                  <span>Photography</span> */}
                 </div>
-                <h1 className="text-secondary  font-semibold">#SWPA_SC2023</h1>
+                <h1 className="text-secondary font-semibold">#SWPA_SC2023</h1>
               </div>
-            </div>
-            <div className="mt-2 lg:mt-0">
-              {/* <span className="material-symbols-outlined">more_vert</span> */}
             </div>
           </div>
 
-          <div className="flex  items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full">
             <div className="flex space-x-2 md:space-x-4">
+              <button className="relative py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-transparent text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white border-2 before:rounded-full">
+                <span className="lg:inline text-xs md:text-lg">Sitizen</span>
+              </button>
 
-            <button className="relative py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-transparent text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white border-2   before:rounded-full">
-              {/* <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
-                export_notes
-              </span> */}
-              <span className="lg:inline text-xs md:text-lg">Sitizen</span>
-            </button>
-
-            <button className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
-              <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
-                mail
-              </span>
-              <span className="lg:inline text-xs md:text-sm uppercase">dispatch</span>
-            </button>
+              <button className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
+                <span className="material-symbols-outlined text-lg md:text-2xl lg:text-inherit">
+                  mail
+                </span>
+                <span className="lg:inline text-xs md:text-sm uppercase">
+                  dispatch
+                </span>
+              </button>
             </div>
             <div className="flex justify-between items-center px-4">
               <div className="flex space-x-4">
@@ -137,7 +124,7 @@ const RightSide: React.FC = () => {
   }
 
   return (
-    <div className="h-full lg:mb-0 lg:w-1/2  mx-2 ">
+    <div className="h-full lg:mb-0 lg:w-1/2 mx-2">
       <div id="rightSide" className="lg:overflow-hidden h-full mb-14">
         <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
           <span
@@ -173,7 +160,7 @@ const RightSide: React.FC = () => {
             Affairs
           </span>
         </nav>
-        <article className="h-full overflow-y-auto shadow-inner shadow-gray-400/75  rounded-t-[30px] p-4">
+        <article className="h-[calc(100vh-56px)] overflow-y-auto shadow-inner shadow-gray-400/75 rounded-t-[30px] p-4">
           {renderActiveComponent()}
         </article>
       </div>
