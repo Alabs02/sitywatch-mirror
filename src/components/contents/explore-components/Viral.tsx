@@ -3,7 +3,7 @@ import React from 'react'
 const Viral = () => {
   return (
     <div>
-      <div className="flex flex-col p-4  rounded-md bg-slate-50 space-y-4 my-2 shadow-md mb-4">
+      <div className="flex flex-col p-4  rounded-md bg-slate-50 space-y-4 my-2 shadow-md mb-8">
         <div className="flex items-center justify-between">
           <div className="flex flex-col space-y-1">
             <span className="text-sm font-normal text-[#979797]">

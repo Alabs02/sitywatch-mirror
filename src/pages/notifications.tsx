@@ -49,7 +49,7 @@ const Notifications = () => {
   ]
 
   return (
-    <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4">
+    <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4 mb-8">
       {/* Left Section */}
       <section className="col-span-12 lg:col-span-8 w-full h-full flex flex-col overflow-y-auto">
         {/* Tabs Navigation */}

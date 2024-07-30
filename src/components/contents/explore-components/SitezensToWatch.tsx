@@ -49,7 +49,7 @@ const sitizens: Sitizen[] = [
 const SitezensToWatch = () => {
   return (
     <div>
-      <div className="flex flex-col w-full h-full p-2 md:p-4">
+      <div className="flex flex-col w-full h-full p-2 md:p-4 mb-8">
         <section className="flex space-x-2">
           <div className="flex h-10 md:h-14 w-10 md:w-14">
             <img

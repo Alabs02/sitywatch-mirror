@@ -136,8 +136,11 @@ const RightSide: React.FC = () => {
           diversity_3
         </span>
       </nav>
-      <article className="h-full overflow-y-auto shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px]">
+      <article className="h-full  shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-hidden">
+        <div className="h-full overflow-y-auto m-1">
+
         {renderActiveComponent()}
+        </div>
       </article>
     </div>
   )
@@ -154,15 +157,14 @@ const Tourneys: React.FC = () => {
   return (
     <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 lg:rounded-t-[30px]">
       <div className=" overflow-y-auto h-full">
-        <div className="flex items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm">
+        <div className="items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm hidden lg:flex">
           <Link href="/sitadel-profile">
-          <div className="ml-2 flex items-center">
-
-            <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
-              arrow_back
-            </span>
-            <span>Go to Profile</span>
-          </div>
+            <div className="ml-2 flex items-center">
+              <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
+                arrow_back
+              </span>
+              <span>Go to Profile</span>
+            </div>
           </Link>
         </div>
         <div className="overflow-x-auto">
@@ -171,7 +173,13 @@ const Tourneys: React.FC = () => {
           </div>
           <div className="flex items-center justify-center flex-col space-x-2 md:space-y-4">
             <div>
-              <div className="flex space-x-4 items-center justify-between mt-2">
+              <div className="flex space-x-4 items-center justify-between mt-2 lg:hidden">
+                <Link href="/sitadel-profile">
+                  <div className="flex flex-col items-center">
+                    <span className="material-symbols-outlined ">person</span>
+                    <span className="text-xs lg:hidden">Profile</span>
+                  </div>
+                </Link>
                 <div className="flex flex-col lg:flex-row items-center justify-center space-x-2 lg:space-x-4">
                   <div className="flex items-center flex-col">
                     <h1 className="text-secondary text-sm lg:text-base font-semibold">

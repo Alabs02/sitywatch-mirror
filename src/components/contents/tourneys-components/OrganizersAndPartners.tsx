@@ -2,7 +2,7 @@ import React from "react"
 
 const OrganizersAndPartners = () => {
   return (
-    <div className="p-2">
+    <div className="p-2 mb-12">
       <section className="">
         <h1 className="flex justify-center mt-2 text-sm font-bold uppercase">
           Royals

@@ -3,7 +3,7 @@ import React from "react"
 
 const SoulPanda = () => {
   return (
-    <div className="mb-28 md:mb-36">
+    <div className="mb-32 md:mb-36">
       <div className="w-full flex flex-col items-center justify-center bg-neutral-100 p-1 md:p-2 my-4 rounded-lg text-xs md:text-sm">
         <div className="w-full flex justify-center bg-neutral-100 mt-4 rounded-lg">
           <div className="inline-flex">

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Group = () => {
   return (
-    <div>
+    <div className='mb-12'>
       <section className="">
         <h1 className="flex justify-center mt-2 text-sm font-bold uppercase">
           Organizers and Partners

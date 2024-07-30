@@ -83,12 +83,15 @@ const Message = () => {
             {activeTab === "PLUGS" && <Plugs />}
           </div>
         </section>
-        <section className="bg-neutral-300 col-span-1 overflow-y-auto h-full hidden lg:flex">
+        <section className="bg-neutral-300 col-span-1 overflow-hidden h-full hidden lg:flex">
+          <div className="h-hull overflow-y-auto m-1">
+
           <div className="w-full h-full tab-content mt-4 px-4 place-content-center">
             {activeTab === "WHISPERS" && <WTS />}
             {activeTab === "INVITES" && <Invites />}
             {activeTab === "DISPATCHES" && <Dispatches />}
             {activeTab === "PLUGS" && <Plugs />}
+          </div>
           </div>
         </section>
       </div>

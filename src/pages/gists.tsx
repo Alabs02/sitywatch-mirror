@@ -45,7 +45,7 @@ const Gists: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-x-2 lg:gap-x-6 h-screen overflow-hidden">
+    <div className="grid grid-cols-12 gap-x-2 lg:gap-x-6 h-screen overflow-hidden mb-4">
       {/* Left Section */}
       <section className="col-span-12 lg:col-span-8 h-full overflow-y-auto">
         <div className="">

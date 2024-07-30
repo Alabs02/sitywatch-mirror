@@ -3,7 +3,7 @@ import React from "react"
 
 const Events = () => {
   return (
-    <div className="">
+    <div className="mb-12">
       <div className="">
         <div className="h-full mb-8 overflow-y-auto">
           <div className="w-full h-full bg-neutral-300 mt-8 rounded-md border border-slate-200 shadow-sm">

@@ -126,6 +126,16 @@ h1.h1-with-border::before {
   justify-content: center; /* Center vertically */
   padding: 1rem; /* Adjust padding as needed */
 }
+.material-symbols-outlined {
+  transition: color 0.3s;
+}
+
+.material-symbols-outlined:hover {
+  color: transparent;
+  background-clip: text;
+  background-image: linear-gradient(to right, #F24055, #1E7881);
+}
+
 
 
 

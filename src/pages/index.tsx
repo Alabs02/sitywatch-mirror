@@ -121,7 +121,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
         </section>
 
         {/* Bottom Cards Section */}
-        <section className="mb-4">
+        <section className="">
           <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
             Suggested Tourneys That Might Interest You
           </h1>
@@ -227,7 +227,7 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
             </div>
           </div>
         </section>
-        <section className="">
+        <section className="mb-8">
           <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
             Happening somewhere near you
           </h1>

@@ -43,7 +43,7 @@ const Gists: React.FC = () => {
   }
 
   return (
-    <div className="my-8 md:my-4">
+    <div className="mb-12 md:my-4">
       {bookmarks.map((bookmark, index) => (
         <div
           className="flex flex-col space-y-1 md:space-y-2 w-full h-full mt-2 bg-neutral-400 p-1 rounded-md overflow-y-auto"

@@ -60,7 +60,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             isCollapsed
               ? "lg:items-center lg:w-20 justify-between"
               : "xl:items-start xl:w-60 px-6 justify-between",
-            "bottom-0 md:top-[6.3rem] md:bottom-auto", 
+            "bottom-0 md:top-[6.3rem] md:bottom-auto",
           )}
         >
           <button
@@ -82,7 +82,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
               <Link key={navLink.href} href={navLink.href}>
                 <div
                   className={clsx(
-                    "flex items-center bg-clip-text text-transparent bg-gradient-to-b from-black to-black hover:from-[#F24055] hover:to-[#1E7881] transition-all duration-[450ms]",
+                    "flex items-center transition-all duration-[450ms]",
+                    router.pathname === navLink.href
+                      ? "bg-clip-text text-transparent bg-gradient-to-b from-[#F24055] to-[#1E7881]"
+                      : "text-black hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-b hover:from-[#F24055] hover:to-[#1E7881]",
                     !isCollapsed && "xl:space-x-3",
                   )}
                 >
@@ -105,7 +108,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             className={clsx(
               "flex-1 overflow-y-auto absolute top-0 left-0 right-0 bottom-0 mr-0",
               isCollapsed
-                ? "ml-0 md:ml-[4.5rem]" 
+                ? "ml-0 md:ml-[4.5rem]"
                 : "ml-0 md:ml-[calc(60px+24px)] lg:ml-[calc(80px+24px)] xl:ml-[calc(215px+24px)]",
             )}
           >
@@ -114,12 +117,19 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         </AnimatePresence>
       </div>
       {/* Bottom Navigation for Small Screens */}
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around bg-white p-2 shadow-md z-50">
+      <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-md">
         {navLinks.map((navLink) => (
           <Link key={navLink.href} href={navLink.href}>
             <div className="flex flex-col items-center">
-              <i className="material-symbols-outlined">{navLink.icon}</i>
-              <span className="text-xs hidden">{navLink.label}</span>
+              <i
+                className={`material-symbols-outlined transition-colors ${
+                  router.pathname === navLink.href
+                    ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                    : ""
+                }`}
+              >
+                {navLink.icon}
+              </i>
             </div>
           </Link>
         ))}
