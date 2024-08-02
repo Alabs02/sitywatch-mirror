@@ -155,8 +155,8 @@ h1.h1-with-border::before {
 }
 
 .text-container {
-  width: 300px; /* Set a fixed width to prevent shifting */
-  text-align: center;
+  width: 400px; /* Set a fixed width to prevent shifting */
+  
   overflow: hidden;
   white-space: normal;
 }
