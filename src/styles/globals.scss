@@ -135,6 +135,32 @@ h1.h1-with-border::before {
   background-clip: text;
   background-image: linear-gradient(to right, #F24055, #1E7881);
 }
+// Header Texts  stylings
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.fade-enter {
+  animation: fadeIn 1s forwards;
+}
+
+.fade-exit {
+  animation: fadeOut 1s forwards;
+}
+
+.text-container {
+  width: 300px; /* Set a fixed width to prevent shifting */
+  text-align: center;
+  overflow: hidden;
+  white-space: normal;
+}
+
 
 
 

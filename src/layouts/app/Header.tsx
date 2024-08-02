@@ -13,16 +13,17 @@ interface HeaderProps {
 }
 
 const texts = [
-  "This is the first sentence.",
-  "This is the second sentence.",
-  "This is the third sentence.",
-  "This is the fourth sentence.",
+  "#HIFL Registration is still ongoing for higher institutions. Registration ends 20th April",
+  "Hery Oandoka has been announced as Best player of #NUGAFootbal 2024",
+  "#SitwatchBeautyPageant2023 has released the list of finalists",
+  "This would be the last in the array. #Extra.",
 ]
 
 const Header: FC<HeaderProps> = ({ children, className, style }) => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [fadeState, setFadeState] = useState("fade-enter")
 
   useEffect(() => {
     // Simulate a loading delay
@@ -30,9 +31,13 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
       setLoading(false)
     }, 2000)
 
-    // Update text index every 3 seconds
+    // Update text index every 3 seconds with fade transition
     const textInterval = setInterval(() => {
-      setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
+      setFadeState("fade-exit")
+      setTimeout(() => {
+        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
+        setFadeState("fade-enter")
+      }, 500) // Duration of fade-out
     }, 3000)
 
     return () => {
@@ -45,15 +50,24 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     setIsDropdownOpen(!isDropdownOpen)
   }
 
-  const currentText = texts[currentTextIndex]
+  const currentText = texts[currentTextIndex].split(" ").map((word, index) =>
+    word.startsWith("#") ? (
+      <span key={index} className="text-secondary">
+        {word}{" "}
+      </span>
+    ) : (
+      word + " "
+    ),
+  )
 
   return (
     <Fragment>
       <header
         className={clsx(
-          "h-[70px] lg:h-[100px] w-full px-2 md:px-4 sticky top-0 z-10 shadow-md md:shadow-none ",
+          "h-[70px] lg:h-[100px] w-full px-2 md:px-4 sticky top-0 z-10 shadow-md md:shadow-none",
           className,
         )}
+        style={style}
       >
         <div className="flex h-full items-center justify-between">
           <Link href={"/"} className="">
@@ -61,12 +75,18 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           </Link>
 
           {/* Center Section: Dynamic Text */}
-          <div className="md:flex text-center hidden">
-            <div className="text-center">
+          <div className="md:flex hidden justify-center w-full">
+            <div className="flex items-center text-container">
+              <span className="font-bold text-lg md:text-xl">411</span>
+              <div className="border-l-2 border-black mx-2 h-8"></div>
               {loading ? (
                 <Skeleton width={300} height={30} />
               ) : (
-                <h1 className="h1-with-border">{currentText}</h1>
+                <h1
+                  className={`text-sm max-w-full md:max-w-md leading-tight ${fadeState}`}
+                >
+                  {currentText}
+                </h1>
               )}
             </div>
           </div>
@@ -105,7 +125,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
               {loading ? (
                 <Skeleton circle={true} height={24} width={24} />
               ) : (
-                <span className="material-symbols-outlined md:w-20 md:h-20 w-6 h-6">
+                <span className="material-symbols-outlined md:w-10 md:h-10 w-6 h-6">
                   list
                 </span>
               )}
@@ -121,79 +141,100 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           onClick={handleAvatarClick}
         >
           <div
-            className="bg-white w-80 h-full md:h-[70%] p-4 rounded shadow-lg transition-transform duration-300 transform translate-y-0 opacity-100"
+            className="bg-white p-4 rounded shadow-lg transition-transform duration-300 transform translate-y-0 opacity-100 md:w-80 w-[70%] sm:w-[60%] sm:h-auto md:h-auto h-auto sm:top-0 top-2 sm:right-2 right-0"
             onClick={(e) => e.stopPropagation()}
+            style={{ maxHeight: "65vh", overflowY: "auto" }}
           >
-            <ul>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
-                <span className="material-symbols-outlined">
+            <ul className="text-xs sm:text-sm md:text-base">
+              <li className="flex items-center p-1 sm:p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
                   account_circle
                 </span>
-                <span className="ml-2">View my look</span>
+                <span className="ml-1 sm:ml-2">View my look</span>
               </li>
-              <li className="p-2 cursor-pointer border-b border-gray-200">
-                <div className="flex items-center mb-2 hover:bg-gray-100">
-                  <Image
-                    src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
-                    alt="Nasir Monopoly Game Club"
-                    width={32}
-                    height={32}
-                    className="rounded-full mr-2"
-                  />
+              <li className="cursor-pointer border-b border-gray-200">
+                <div className="flex items-center hover:bg-gray-100">
+                  <div className="flex items-center">
+                    <img
+                      src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
+                      alt="Nasir Monopoly Game Club"
+                      className="object-cover rounded-full mr-1 h-6 md:h-8 w-6 md:w-8"
+                    />
+                  </div>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-[12px]">
+                    <span className="font-semibold text-[10px] sm:text-[12px]">
                       Nasir Monopoly Game Club
                     </span>
-                    <span className="text-[12px] text-blue-900">@NasirMGC</span>
+                    <span className="text-[10px] sm:text-[12px] text-blue-900">
+                      @NasirMGC
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center hover:bg-gray-100">
-                  <Image
-                    src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
-                    alt="Nasir Kingly Touch Photography"
-                    width={32}
-                    height={32}
-                    className="rounded-full mr-2"
-                  />
+                  <div className="flex items-center">
+                    <img
+                      src="/coreAssets/RightSection/YourSitadelsSection/OIP.jpeg"
+                      alt="Nasir Monopoly Game Club"
+                      className="object-cover rounded-full mr-1 h-6 md:h-8 w-6 md:w-8"
+                    />
+                  </div>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-[12px]">
+                    <span className="font-semibold text-[10px] sm:text-[12px]">
                       Nasir Kingly Touch Photography
                     </span>
-                    <span className="text-[12px] text-blue-900">
+                    <span className="text-[10px] sm:text-[12px] text-blue-900">
                       @NKTPhotography
                     </span>
                   </div>
                 </div>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">login</span>
-                <span className="ml-2 font-bold text-sm">
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  login
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
                   Log into another look
                 </span>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">add</span>
-                <span className="ml-2 font-bold text-sm">
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  add
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
                   Create a new look
                 </span>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
-                <span className="material-symbols-outlined">add</span>
-                <span className="ml-2 font-bold text-sm">
+              <li className="flex items-center p-1 sm:p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  add
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
                   Build a new sitadel
                 </span>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">settings</span>
-                <span className="ml-2 font-bold text-sm">Settings</span>
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  settings
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
+                  Settings
+                </span>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">help</span>
-                <span className="ml-2 font-bold text-sm">Help</span>
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  help
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
+                  Help
+                </span>
               </li>
-              <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined">logout</span>
-                <span className="ml-2 font-bold text-sm">Logout</span>
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  logout
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm pb-1">
+                  Logout
+                </span>
               </li>
             </ul>
           </div>
