@@ -14,7 +14,7 @@ interface HeaderProps {
 
 const texts = [
   "#HIFL Registration is still ongoing for higher institutions. Registration ends 20th April",
-  "Hery Oandoka has been announced as Best player of #NUGAFootbal 2024",
+  "Henry Oandoka has been announced as Best player of #NUGAFootbal 2024",
   "#SitwatchBeautyPageant2023 has released the list of finalists",
   "This would be the last in the array. #Extra.",
 ]
@@ -29,7 +29,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     // Simulate a loading delay
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 2000)
+    }, 3000)
 
     // Update text index every 3 seconds with fade transition
     const textInterval = setInterval(() => {
@@ -37,7 +37,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
       setTimeout(() => {
         setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
         setFadeState("fade-enter")
-      }, 500) // Duration of fade-out
+      }, 700) // Duration of fade-out
     }, 3000)
 
     return () => {
