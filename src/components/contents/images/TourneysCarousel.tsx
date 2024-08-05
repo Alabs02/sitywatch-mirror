@@ -31,26 +31,26 @@ const TourneysCarousel: React.FC = () => {
 
   return (
     <div className="max-w-full mx-auto mt-4 relative overflow-hidden px-4">
-      <div className="relative flex justify-center items-center ">
+      <div className="relative flex justify-center items-center">
         {/* Left blurred image */}
         <img
           src={images[getPreviousIndex(selectedImageIndex)]}
           alt={`Image ${getPreviousIndex(selectedImageIndex) + 1}`}
-          className="w-1/4 object-cover blur-sm transform scale-90"
+          className="w-1/3 md:w-1/4 object-cover blur-sm transform scale-90"
           style={{ zIndex: 9 }}
         />
         {/* Emphasized image */}
         <img
           src={images[selectedImageIndex]}
           alt={`Image ${selectedImageIndex + 1}`}
-          className="w-1/3 md:w-1/4 rounded-lg shadow-lg z-20 transform scale-125"
+          className="w-1/2 md:w-1/4 rounded-lg shadow-lg z-20 transform scale-110 md:scale-125"
           style={{ position: "relative" }}
         />
         {/* Right blurred image */}
         <img
           src={images[getNextIndex(selectedImageIndex)]}
           alt={`Image ${getNextIndex(selectedImageIndex) + 1}`}
-          className="w-1/4 object-cover blur-sm transform scale-90"
+          className="w-1/3 md:w-1/4 object-cover blur-sm transform scale-90"
           style={{ zIndex: 9 }}
         />
         {/* Left arrow */}
@@ -81,8 +81,8 @@ const TourneysCarousel: React.FC = () => {
                 : "opacity-50"
             } ${
               index === selectedImageIndex
-                ? "w-10 h-10 md:w-16 md:h-16"
-                : "w-10 h-10 md:w-14 md:h-14"
+                ? "w-12 h-12 md:w-16 md:h-16"
+                : "w-12 h-12 md:w-14 md:h-14"
             }`}
             onClick={() => setSelectedImageIndex(index)}
           />
