@@ -49,55 +49,59 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     isCollapsedFromQuery ||
     collapsedList.includes(asPath)
 
+  const isBuildSitadelPage = asPath === "/build-sitadel"
+
   return (
     <div className="min-h-screen flex flex-col relative px-0 lg:px-8">
-      <Header className="" />
+      {!isBuildSitadelPage && <Header className="" />}
       <div className="flex flex-1 overflow-hidden relative">
-        <motion.div
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-          className={clsx(
-            "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-10.1rem)] hidden",
-            isCollapsed
-              ? "lg:items-center lg:w-20 justify-between"
-              : "xl:items-start xl:w-60 px-6 justify-between",
-            "bottom-0 md:top-[6.3rem] md:bottom-auto",
-          )}
-        >
-          <button
+        {!isBuildSitadelPage && (
+          <motion.div
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className={clsx(
-              "flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none text-white",
-              isCollapsed ? "p-1" : "space-x-3 xl:py-2 xl:px-4",
+              "fixed top-[10.1rem] lg:flex lg:flex-col gap-y-7 h-[calc(100vh-10.1rem)] hidden",
+              isCollapsed
+                ? "lg:items-center lg:w-20 justify-between"
+                : "xl:items-start xl:w-60 px-6 justify-between",
+              "bottom-0 md:top-[6.3rem] md:bottom-auto",
             )}
           >
-            <i className="material-symbols-outlined">draft_orders</i>
-            {!isCollapsed ? (
-              <span className="hidden xl:inline">Drop a gist</span>
-            ) : null}
-          </button>
+            <button
+              className={clsx(
+                "flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none text-white",
+                isCollapsed ? "p-1" : "space-x-3 xl:py-2 xl:px-4",
+              )}
+            >
+              <i className="material-symbols-outlined">draft_orders</i>
+              {!isCollapsed ? (
+                <span className="hidden xl:inline">Drop a gist</span>
+              ) : null}
+            </button>
 
-          {loading ? (
-            <Skeleton count={navLinks.length} height={30} className="mt-4" />
-          ) : (
-            navLinks.map((navLink) => (
-              <Link key={navLink.href} href={navLink.href}>
-                <div
-                  className={clsx(
-                    "flex items-center transition-all duration-[450ms]",
-                    router.pathname === navLink.href
-                      ? "bg-clip-text text-transparent bg-gradient-to-b from-[#F24055] to-[#1E7881]"
-                      : "text-black hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-b hover:from-[#F24055] hover:to-[#1E7881]",
-                    !isCollapsed && "xl:space-x-3",
-                  )}
-                >
-                  <i className="material-symbols-outlined">{navLink.icon}</i>
-                  {!isCollapsed && (
-                    <span className="hidden xl:inline">{navLink.label}</span>
-                  )}
-                </div>
-              </Link>
-            ))
-          )}
-        </motion.div>
+            {loading ? (
+              <Skeleton count={navLinks.length} height={30} className="mt-4" />
+            ) : (
+              navLinks.map((navLink) => (
+                <Link key={navLink.href} href={navLink.href}>
+                  <div
+                    className={clsx(
+                      "flex items-center transition-all duration-[450ms]",
+                      router.pathname === navLink.href
+                        ? "bg-clip-text text-transparent bg-gradient-to-b from-[#F24055] to-[#1E7881]"
+                        : "text-black hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-b hover:from-[#F24055] hover:to-[#1E7881]",
+                      !isCollapsed && "xl:space-x-3",
+                    )}
+                  >
+                    <i className="material-symbols-outlined">{navLink.icon}</i>
+                    {!isCollapsed && (
+                      <span className="hidden xl:inline">{navLink.label}</span>
+                    )}
+                  </div>
+                </Link>
+              ))
+            )}
+          </motion.div>
+        )}
         <AnimatePresence mode="wait">
           <motion.div
             key={asPath}
@@ -117,23 +121,25 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         </AnimatePresence>
       </div>
       {/* Bottom Navigation for Small Screens */}
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-md">
-        {navLinks.map((navLink) => (
-          <Link key={navLink.href} href={navLink.href}>
-            <div className="flex flex-col items-center">
-              <i
-                className={`material-symbols-outlined transition-colors ${
-                  router.pathname === navLink.href
-                    ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                    : ""
-                }`}
-              >
-                {navLink.icon}
-              </i>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {!isBuildSitadelPage && (
+        <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-md">
+          {navLinks.map((navLink) => (
+            <Link key={navLink.href} href={navLink.href}>
+              <div className="flex flex-col items-center">
+                <i
+                  className={`material-symbols-outlined transition-colors ${
+                    router.pathname === navLink.href
+                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                      : ""
+                  }`}
+                >
+                  {navLink.icon}
+                </i>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

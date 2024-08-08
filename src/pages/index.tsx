@@ -3,6 +3,7 @@ import Image from "next/image"
 import tourneysData from "../../data.json"
 import { useRouter } from "next/router"
 import SkeletonLoader from "@/components/molecules/SkeletonLoader"
+import Link from "next/link"
 
 interface Tourney {
   id: number
@@ -87,9 +88,11 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
           <div className="flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
             <div className="flex items-center">
-              <span className="material-symbols-outlined text-xl  bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
-                add_circle
-              </span>
+              <Link href="/build-sitadel">
+                <span className="material-symbols-outlined text-xl bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
+                  add_circle
+                </span>
+              </Link>
             </div>
             <div className="flex flex-col items-center justify-center gap-y-1 overflow-hidden w-full">
               <div className="rounded-full shadow-lg overflow-hidden w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] relative bg-white p-2">

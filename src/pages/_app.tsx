@@ -3,13 +3,14 @@ import store from "@/store/store" // Assuming your Redux store is in this locati
 import { AppProps } from "next/app"
 import { Fragment } from "react"
 import Head from "next/head"
-
-// Import your global styles here
 import "@/styles/globals.scss"
 import "animate.css"
-import { Layout } from "@/layouts"
+import Layout from "@/layouts/Layout"
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps, router }: AppProps) {
+  // Check if the current page is the build-sitadel page
+  const isBuildSitadelPage = router.pathname === "/build-sitadel"
+
   return (
     <Provider store={store}>
       <Fragment>
@@ -17,9 +18,13 @@ export default function App({ Component, pageProps }: AppProps) {
           <title>Scout City</title>
           <link rel="icon" href="/sclogo-light.png" type="image/svg+xml" />
         </Head>
-        <Layout>
+        {isBuildSitadelPage ? (
           <Component {...pageProps} />
-        </Layout>
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
       </Fragment>
     </Provider>
   )
