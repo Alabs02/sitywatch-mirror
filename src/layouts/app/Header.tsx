@@ -208,9 +208,11 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
                   add
                 </span>
-                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
-                  Build a new sitadel
-                </span>
+                <Link href="/build-sitadel">
+                  <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
+                    Build a new sitadel
+                  </span>
+                </Link>
               </li>
               <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
