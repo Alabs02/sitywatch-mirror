@@ -1,45 +1,88 @@
-import React, { FC } from "react"
-import { FormData } from "@/types" // Adjust the path as necessary
+import React, { FC, useState, useEffect } from "react";
+import { useRouter } from "next/router"; // Import the useRouter hook
+import { FormData } from "@/types"; // Adjust the path as necessary
+import Link from "next/link";
+import Image from "next/image";
 
 interface StepProps {
-  onBack: () => void
-  formData: FormData
+  onBack: () => void;
+  formData: FormData;
 }
 
 const Step4: FC<StepProps> = ({ onBack, formData }) => {
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>();
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter(); // Initialize the router
+
+  useEffect(() => {
+    if (formData.coverPhoto) {
+      try {
+        const url = URL.createObjectURL(formData.coverPhoto);
+        setCoverPhotoUrl(url);
+
+        return () => {
+          URL.revokeObjectURL(url);
+        };
+      } catch (error) {
+        console.error("Failed to create object URL for cover photo:", error);
+        setCoverPhotoUrl(undefined);
+      }
+    } else {
+      setCoverPhotoUrl(undefined);
+    }
+  }, [formData.coverPhoto]);
+
+  useEffect(() => {
+    if (formData.profilePhoto) {
+      try {
+        const url = URL.createObjectURL(formData.profilePhoto);
+        setProfilePhotoUrl(url);
+
+        return () => {
+          URL.revokeObjectURL(url);
+        };
+      } catch (error) {
+        console.error("Failed to create object URL for profile photo:", error);
+        setProfilePhotoUrl(undefined);
+      }
+    } else {
+      setProfilePhotoUrl("/dummy-user-img.jpg");
+    }
+  }, [formData.profilePhoto]);
+
   const handleConfirm = () => {
-    // Submit form data to the server or perform any final actions here
-    console.log("Form Data:", formData)
-  }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/sitadel-profile"); // Route to the profile page after loading
+    }, 2000); // 2-second loader
+  };
 
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Confirm</h2>
       <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden">
-        {formData.coverPhoto ? (
+        {coverPhotoUrl ? (
           <img
-            src={URL.createObjectURL(formData.coverPhoto)}
+            src={coverPhotoUrl}
             alt="Cover Photo"
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-            <span className="text-gray-500">No cover photo uploaded</span>
+          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-sm">
+            <span className="text-gray-500">No cover photo</span>
           </div>
         )}
       </div>
       <div className="relative mb-4 w-32 h-32 rounded-full border-4 border-gradient-to-r from-[#F24055] to-[#1E7881] overflow-hidden mx-4 -mt-20">
-        {formData.profilePhoto ? (
-          <img
-            src={URL.createObjectURL(formData.profilePhoto)}
-            alt="Profile Photo"
-            className="absolute inset-0 w-full h-full object-cover rounded-full"
-          />
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center text-gray-500">
-            No profile photo uploaded
-          </span>
-        )}
+        <Image
+          src={profilePhotoUrl || "/dummy-user-img.jpg"}
+          alt="Profile Photo"
+          className="absolute inset-0 w-full h-full object-cover rounded-full"
+          width={128}
+          height={128}
+        />
       </div>
       <div className="mb-4 text-gray-700">
         <p>
@@ -53,18 +96,29 @@ const Step4: FC<StepProps> = ({ onBack, formData }) => {
         </p>
       </div>
       <div className="flex justify-between mt-4">
-        <button onClick={onBack} className="p-2 bg-gray-300 text-black rounded">
+        <button
+          onClick={onBack}
+          className="p-2 bg-gray-300 text-black rounded-lg"
+        >
           Back
         </button>
         <button
           onClick={handleConfirm}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          disabled={isLoading}
         >
-          Confirm
+          {isLoading ? (
+            <div className="flex items-center">
+              <div className="loader mr-2" />
+              Loading...
+            </div>
+          ) : (
+            "Confirm"
+          )}
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Step4
+export default Step4;

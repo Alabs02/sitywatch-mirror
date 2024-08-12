@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { FormData } from "@/types" // Adjust the path as necessary
+import { FormData } from "@/types"
 
 interface StepProps {
   onNext: (data: Partial<FormData>) => void
@@ -8,10 +8,18 @@ interface StepProps {
 
 const Step1: FC<StepProps> = ({ onNext, formData }) => {
   const [name, setName] = useState(formData.name)
-  const [shortName, setShortName] = useState(formData.shortName)
+  const [shortName, setShortName] = useState(formData.shortName || "@")
 
   const handleNext = () => {
     onNext({ name, shortName })
+  }
+
+  const handleShortNameChange = (value: string) => {
+    if (!value.startsWith("@")) {
+      setShortName("@" + value.replace(/^@/, ""))
+    } else {
+      setShortName(value)
+    }
   }
 
   return (
@@ -27,14 +35,14 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
       <input
         type="text"
         value={shortName}
-        onChange={(e) => setShortName(e.target.value)}
+        onChange={(e) => handleShortNameChange(e.target.value)}
         placeholder="Short Name"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner"
       />
       <div className="flex justify-between mt-4">
         <button
           onClick={handleNext}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
         >
           Next
         </button>
