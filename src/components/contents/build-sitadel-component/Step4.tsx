@@ -1,67 +1,68 @@
-import React, { FC, useState, useEffect } from "react";
-import { useRouter } from "next/router"; // Import the useRouter hook
-import { FormData } from "@/types"; // Adjust the path as necessary
-import Link from "next/link";
-import Image from "next/image";
+import React, { FC, useState, useEffect } from "react"
+import { useRouter } from "next/router" // Import the useRouter hook
+import { FormData } from "@/types" // Adjust the path as necessary
+import Image from "next/image"
 
 interface StepProps {
-  onBack: () => void;
-  formData: FormData;
+  onBack: () => void
+  formData: FormData
 }
 
 const Step4: FC<StepProps> = ({ onBack, formData }) => {
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>();
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter(); // Initialize the router
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>()
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const router = useRouter() // Initialize the router
 
   useEffect(() => {
     if (formData.coverPhoto) {
       try {
-        const url = URL.createObjectURL(formData.coverPhoto);
-        setCoverPhotoUrl(url);
+        const url = URL.createObjectURL(formData.coverPhoto)
+        setCoverPhotoUrl(url)
 
         return () => {
-          URL.revokeObjectURL(url);
-        };
+          URL.revokeObjectURL(url)
+        }
       } catch (error) {
-        console.error("Failed to create object URL for cover photo:", error);
-        setCoverPhotoUrl(undefined);
+        console.error("Failed to create object URL for cover photo:", error)
+        setCoverPhotoUrl(undefined)
       }
     } else {
-      setCoverPhotoUrl(undefined);
+      setCoverPhotoUrl(undefined)
     }
-  }, [formData.coverPhoto]);
+  }, [formData.coverPhoto])
 
   useEffect(() => {
     if (formData.profilePhoto) {
       try {
-        const url = URL.createObjectURL(formData.profilePhoto);
-        setProfilePhotoUrl(url);
+        const url = URL.createObjectURL(formData.profilePhoto)
+        setProfilePhotoUrl(url)
 
         return () => {
-          URL.revokeObjectURL(url);
-        };
+          URL.revokeObjectURL(url)
+        }
       } catch (error) {
-        console.error("Failed to create object URL for profile photo:", error);
-        setProfilePhotoUrl(undefined);
+        console.error("Failed to create object URL for profile photo:", error)
+        setProfilePhotoUrl(undefined)
       }
     } else {
-      setProfilePhotoUrl("/dummy-user-img.jpg");
+      setProfilePhotoUrl("/dummy-user-img.jpg")
     }
-  }, [formData.profilePhoto]);
+  }, [formData.profilePhoto])
 
   const handleConfirm = () => {
-    setIsLoading(true);
+    setIsLoading(true)
     setTimeout(() => {
-      setIsLoading(false);
-      router.push("/sitadel-profile"); // Route to the profile page after loading
-    }, 2000); // 2-second loader
-  };
+      setIsLoading(false)
+      router.push("/sitadel-profile") // Route to the profile page after loading
+    }, 2000) // 2-second loader
+  }
 
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Confirm</h2>
+
+      {/* Cover Photo Container */}
       <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden">
         {coverPhotoUrl ? (
           <img
@@ -84,17 +85,42 @@ const Step4: FC<StepProps> = ({ onBack, formData }) => {
           height={128}
         />
       </div>
-      <div className="mb-4 text-gray-700">
-        <p>
-          <strong>Name:</strong> {formData.name}
-        </p>
-        <p>
-          <strong>Short Name:</strong> {formData.shortName}
-        </p>
-        <p>
-          <strong>Info:</strong> {formData.info}
-        </p>
+
+      {/* Display Form Data */}
+      <div className="mb-4">
+        <p className="font-bold">Sitadel Name:</p>
+        <p>{formData.name}</p>
       </div>
+      <div className="mb-4">
+        <p className="font-bold">Sitadel Info:</p>
+        <p>{formData.info}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Link:</p>
+        <p>{formData.link}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Email:</p>
+        <p>{formData.email}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Contact:</p>
+        <p>{formData.contact}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Country:</p>
+        <p>{formData.country}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">State:</p>
+        <p>{formData.state}</p>
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Address:</p>
+        <p>{formData.address}</p>
+      </div>
+
+      {/* Navigation Buttons */}
       <div className="flex justify-between mt-4">
         <button
           onClick={onBack}
@@ -113,12 +139,12 @@ const Step4: FC<StepProps> = ({ onBack, formData }) => {
               Loading...
             </div>
           ) : (
-            "Confirm"
+            "Build Sitadel"
           )}
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Step4;
+export default Step4
