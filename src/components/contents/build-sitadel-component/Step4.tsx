@@ -60,10 +60,10 @@ const Step4: FC<StepProps> = ({ onBack, formData }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Confirm</h2>
+      {/* <h2 className="text-xl font-semibold mb-4">Confirm</h2> */}
 
       {/* Cover Photo Container */}
-      <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden">
+      <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden mt-4">
         {coverPhotoUrl ? (
           <img
             src={coverPhotoUrl}

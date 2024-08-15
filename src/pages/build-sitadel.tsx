@@ -32,7 +32,7 @@ const steps: Step[] = [
     component: Step1,
     label: "Name",
     icon: "signature",
-    description: "Enter the name and short name for your sitadel.",
+    description: "",
     text: "A sitadel is a brand, business, organization, company, etc... that represents an ideal and can host events, competitions, olympiads, pageants, tournaments, contests or even grant scholarship programmes.",
   },
   {
@@ -46,14 +46,14 @@ const steps: Step[] = [
     component: Step3,
     label: "Image",
     icon: "image",
-    description: "Upload a backdrop and profile picture for your sitadel.",
+    description: "",
     text: "Upload a beautiful backdrop and a profile picture that best represents your sitadel.",
   },
   {
     component: Step4,
     label: "Confirm",
     icon: "check",
-    description: "Confirm all the details and submit your sitadel.",
+    description: "",
     text: "Review all the details to ensure everything is correct before submitting your sitadel.",
   },
 ]

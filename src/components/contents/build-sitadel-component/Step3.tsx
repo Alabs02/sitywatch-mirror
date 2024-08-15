@@ -70,7 +70,12 @@ const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Images</h2>
+      <h2 className="text-sm font-semibold mt-4 mb-1 text-center">
+        Upload a backdrop for your sitadel
+      </h2>
+      <p className="text-xs text-center mb-1 italic">
+        Upload a backdrop and profile picture for your sitadel.
+      </p>
       <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden">
         <input
           type="file"

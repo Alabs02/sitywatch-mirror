@@ -23,15 +23,31 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Name</h2>
+    <div className="">
+      <h2 className="text-sm font-semibold text-center mt-6 mb-1">
+        What is the name of your Sitadel?
+      </h2>
+      <p className="text-xs text-center mb-1 italic">
+        This is the full name of the brand, business, organization, company,
+        etc.
+        {/* <br /> */}
+        You can always change or modify the name later.
+      </p>
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Name"
-        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner"
+        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner"
       />
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+        How should we refer to your Sitadel on Sitywatch?
+      </h2>
+      <p className="text-xs text-center mb-1 italic">
+        This is the short version of the name of the Sitadel which will be used to refer to the Sitadel on SityWatch. It can be an abbrevation or an accronym, etc.
+        {/* <br /> */}
+        Just keep it short and unique.
+      </p>
       <input
         type="text"
         value={shortName}
@@ -39,7 +55,7 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
         placeholder="Short Name"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner"
       />
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between mt-1">
         <button
           onClick={handleNext}
           className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
