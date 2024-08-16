@@ -113,7 +113,7 @@ const BuildSitadel: FC = () => {
     <div
       className="relative min-h-screen w-full bg-no-repeat"
       style={{
-        backgroundImage: `url('/build-sitadel-bg.svg')`,
+        backgroundImage: `url('/sw-login-bg.png')`,
         backgroundSize: "cover",
         backgroundPosition: "bottom",
       }}

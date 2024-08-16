@@ -1,291 +1,162 @@
-import React, { FC, ReactNode, useEffect, useState } from "react"
-import Image from "next/image"
-import tourneysData from "../../data.json"
-import { useRouter } from "next/router"
-import SkeletonLoader from "@/components/molecules/SkeletonLoader"
+import React, { FC, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
-interface Tourney {
-  id: number
-  title: string
-  image: string
-  description: string
-}
-
-interface BottomCard {
-  id: number
-  title: string
-  image: string
-  description: string
-  icon: string 
-}
-
-const Home: FC<{ children: ReactNode }> = ({ children }) => {
+const LoginForm: FC = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
-  const [currentTourneyIndex, setCurrentTourneyIndex] = useState(0)
-  const [loading, setLoading] = useState(true)
 
-  const handleBottomCardClick = (cardId: number) => {
-    router.push(`/tourneys?cardId=${cardId}`)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Mock login logic
+    if (email === "user@example.com" && password === "password") {
+      setIsLoggedIn(true)
+      // Redirect to the welcome page (index page)
+      router.push("/welcome")
+    } else {
+      alert("Invalid email or password")
+    }
   }
 
-  useEffect(() => {
-    const tourneyInterval = setInterval(() => {
-      setCurrentTourneyIndex((prevIndex) =>
-        prevIndex === tourneysData.leftSection.tourneys.length - 1
-          ? 0
-          : prevIndex + 1,
-      )
-    }, 5000)
+  const handleGoogleLogin = () => {
+    // Mock Google login logic
+    setIsLoggedIn(true)
+    router.push("/welcome")
+  }
 
-    return () => {
-      clearInterval(tourneyInterval)
-    }
-  }, [])
-
-  const handleImageLoad = () => {
-    setLoading(false)
+  if (isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-2xl font-bold">
+          You are logged in! Redirecting to the welcome page...
+        </h2>
+      </div>
+    )
   }
 
   return (
-    <div className="w-full h-full shadow-inner shadow-gray-400/75 border rounded-t-[16px] p-2 ">
-      <div className="w-full h-full overflow-y-auto">
-        {/* Carousel Section */}
-        <section className="w-full grid grid-cols-12 gap-2 mb-4">
-          <div className="h-[90%] md:h-[100%] col-span-8 md:col-span-9 p-2 md:p-4 rounded-lg relative overflow-hidden">
-            <div className="w-full h-full absolute top-0 left-0 transition-opacity">
-              {tourneysData.leftSection.tourneys.map((tourney, index) => (
-                <div
-                  key={tourney.id}
-                  className={`absolute top-0 left-0 h-full w-full transition-opacity ${
-                    index === currentTourneyIndex ? "opacity-90" : "opacity-0"
-                  }`}
-                >
-                  {loading && (
-                    <div className="absolute inset-0">
-                      <SkeletonLoader />
-                    </div>
-                  )}
-                  <Image
-                    src={tourney.image}
-                    alt={tourney.title}
-                    layout="fill"
-                    objectFit="cover"
-                    onLoadingComplete={handleImageLoad}
-                    placeholder="blur"
-                    blurDataURL="/path/to/placeholder.png"
-                    className="rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-2 text-white">
-                    <h2 className="text-sm font-semibold">{tourney.title}</h2>
-                    <p className="text-[10px] md:text-sm tracking-tight w-full md:w-[60%]">
-                      {tourney.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+    <div
+      className="relative min-h-screen w-full bg-no-repeat flex items-center justify-end"
+      style={{
+        backgroundImage: `url('/sw-login-bg.png')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute top-8 left-8 text-white lg:block hidden">
+        <h1 className="relative text-5xl font-bold text-black">
+          <span
+            className="block text-6xl italic tracking-wide leading-none"
+            style={{ fontFamily: "YourCustomFont" }}
+          >
+            Scout
+          </span>
+          <span
+            className="absolute text-6xl italic font-semibold tracking-wider leading-none left-16"
+            style={{
+              fontFamily: "YourCustomFont",
+              transform: "translateY(-35%) translateX(10%) rotate(-5deg)",
+            }}
+          >
+            Sity
+          </span>
+        </h1>
+        <p className="mt-8 text-lg font-semibold leading-8 text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]">
+          Connect with peers and like-minds,
+          <br />
+          hear the latest gists buzzing,
+          <br />
+          explore talent-based opportunities,
+          <br />
+          and gain recognition for your achievements
+        </p>
+      </div>
+
+      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg  p-8 md:w-2/3 lg:max-w-xl lg:right-4 ">
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              placeholder="Email"
+            />
           </div>
-            <div className="flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
-          <Link href="/build-sitadel" className="pb-1">
-              <div className="flex items-center">
-                <span className="material-symbols-outlined text-xl bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
-                  add_circle
+
+          <div>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              placeholder="Password"
+            />
+          </div>
+
+          {/* Added margin here */}
+          <div className="flex justify-center mt-8">
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-full py-2 px-8 font-semibold hover:shadow-lg"
+            >
+              LOGIN
+            </button>
+          </div>
+
+          <div className="flex justify-center">
+            <Link
+              href="/forgot-password"
+              className="text-secondary font-bold hover:text-gray-900"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
+          <div className="relative flex py-5 items-center">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="flex-shrink mx-4 text-gray-400">OR</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center space-y-2 text-xs md:text-sm md:px-16">
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center justify-center border border-gray-300 text-gray-700 rounded-full py-2 hover:bg-gray-100"
+            >
+              <img
+                src="/google-logo.svg"
+                alt="Google"
+                className="w-6 h-6 mr-2"
+              />
+              Log in with Google
+            </button>
+            <Link
+              href="/build-sitadel"
+              className="w-full flex items-center justify-center border border-gray-300 text-gray-700 rounded-full py-2 hover:bg-gray-100 "
+            >
+              <button type="button" className="">
+                <span className="mr-2">New to SityWatch? </span>
+                <span className="text-primary-500 font-bold">
+                  CREATE A NEW LOOK
                 </span>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-y-1 overflow-hidden w-full">
-                <div className="rounded-full shadow-lg overflow-hidden w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] relative bg-white p-2">
-                  {loading && (
-                    <SkeletonLoader className="absolute inset-0 rounded-full" />
-                  )}
-                  <Image
-                    src={tourneysData.rightSection.cards[0].image}
-                    alt={tourneysData.rightSection.cards[0].title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
-                    onLoadingComplete={handleImageLoad}
-                    placeholder="blur"
-                    blurDataURL="/path/to/placeholder.png"
-                  />
-                </div>
+              </button>
+            </Link>
+          </div>
 
-                <div className="flex flex-col text-center mb-[4px]">
-                  <h3 className="text-[8px] mx:text-sm font-bold">
-                    {tourneysData.rightSection.cards[0].title}
-                  </h3>
-                  <p className="text-[10px] hidden md:flex">
-                    {tourneysData.rightSection.cards[0].description}
-                  </p>
-                </div>
-              </div>
-          </Link>
-            </div>
-        </section>
-
-        {/* Bottom Cards Section */}
-        <section className="">
-          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
-            Suggested Tourneys That Might Interest You
-          </h1>
-          <div className="w-full">
-            <div className="overflow-x-auto">
-              <div className="flex space-x-2 md:space-x-4">
-                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
-                  <div
-                    key={bottomCard.id}
-                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
-                    onClick={() => handleBottomCardClick(bottomCard.id)}
-                  >
-                    <div className="relative">
-                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
-                        {loading && (
-                          <SkeletonLoader className="absolute inset-0" />
-                        )}
-                        <Image
-                          src={bottomCard.image}
-                          alt={bottomCard.title}
-                          layout="fill"
-                          objectFit="cover"
-                          onLoadingComplete={handleImageLoad}
-                          placeholder="blur"
-                          blurDataURL="/path/to/placeholder.png"
-                        />
-                      </div>
-                      <div className="text-content p-2">
-                        <div>
-                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
-                            {bottomCard.icon}
-                          </span>
-                        </div>
-                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
-                          <h2 className="font-bold mb-1 text-sm">
-                            {bottomCard.header}
-                          </h2>
-                          <p className="text-xs text-blue-800 font-bold">
-                            {bottomCard.hashtag}
-                          </p>
-                          <p className="text-xs text-gray-900 font-medium">
-                            {bottomCard.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="mb-4">
-          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
-            Most anticipated events
-          </h1>
-          <div className="w-full">
-            <div className="overflow-x-auto">
-              <div className="flex space-x-2 md:space-x-4">
-                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
-                  <div
-                    key={bottomCard.id}
-                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
-                    onClick={() => handleBottomCardClick(bottomCard.id)}
-                  >
-                    <div className="relative">
-                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
-                        {loading && (
-                          <SkeletonLoader className="absolute inset-0" />
-                        )}
-                        <Image
-                          src={bottomCard.image}
-                          alt={bottomCard.title}
-                          layout="fill"
-                          objectFit="cover"
-                          onLoadingComplete={handleImageLoad}
-                          placeholder="blur"
-                          blurDataURL="/path/to/placeholder.png"
-                        />
-                      </div>
-                      <div className="text-content p-2">
-                        <div>
-                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
-                            {bottomCard.icon}
-                          </span>
-                        </div>
-                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
-                          <h2 className="font-bold mb-1 text-sm">
-                            {bottomCard.header}
-                          </h2>
-                          <p className="text-xs text-blue-800 font-bold">
-                            {bottomCard.hashtag}
-                          </p>
-                          <p className="text-xs text-gray-900 font-medium">
-                            {bottomCard.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="mb-8">
-          <h1 className="font-bold text-sm mt-2 md:mt-4 mb-2">
-            Happening somewhere near you
-          </h1>
-          <div className="w-full">
-            <div className="overflow-x-auto">
-              <div className="flex space-x-2 md:space-x-4">
-                {tourneysData.rightSection.bottomCards.map((bottomCard) => (
-                  <div
-                    key={bottomCard.id}
-                    className="flex-shrink-0 w-40 md:w-60 shadow-sm cursor-pointer bg-white rounded-md card-container"
-                    onClick={() => handleBottomCardClick(bottomCard.id)}
-                  >
-                    <div className="relative">
-                      <div className="shadow-lg border border-b border-tertiary-100 image-wrapper h-24 md:h-36">
-                        {loading && (
-                          <SkeletonLoader className="absolute inset-0" />
-                        )}
-                        <Image
-                          src={bottomCard.image}
-                          alt={bottomCard.title}
-                          layout="fill"
-                          objectFit="cover"
-                          onLoadingComplete={handleImageLoad}
-                          placeholder="blur"
-                          blurDataURL="/path/to/placeholder.png"
-                        />
-                      </div>
-                      <div className="text-content p-2">
-                        <div>
-                          <span className="material-symbols-outlined text-base absolute top-2 right-2 text-black bg-white p-1 rounded-full h-6 w-6 flex justify-center items-center">
-                            {bottomCard.icon}
-                          </span>
-                        </div>
-                        <div className="text-center space-y-1 py-1 px-1 md:px-3">
-                          <h2 className="font-bold mb-1 text-sm">
-                            {bottomCard.header}
-                          </h2>
-                          <p className="text-xs text-blue-800 font-bold">
-                            {bottomCard.hashtag}
-                          </p>
-                          <p className="text-xs text-gray-900 font-medium">
-                            {bottomCard.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+          <p className="text-xs text-center text-gray-500 mt-6">
+            By signing up, you agree to the Terms of Service and Privacy Policy,
+            including Cookie Use.
+          </p>
+        </form>
       </div>
     </div>
   )
 }
 
-export default Home
+export default LoginForm

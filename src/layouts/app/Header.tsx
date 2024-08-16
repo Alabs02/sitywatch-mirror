@@ -230,6 +230,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                   Help
                 </span>
               </li>
+              <Link href="/">
               <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
                   logout
@@ -238,6 +239,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                   Logout
                 </span>
               </li>
+              </Link>
             </ul>
           </div>
         </div>

@@ -49,13 +49,19 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     isCollapsedFromQuery ||
     collapsedList.includes(asPath)
 
-  const isBuildSitadelPage = asPath === "/build-sitadel"
+  const isBuildSitadelOrLoginPage =
+    asPath === "/build-sitadel" || asPath === "/" || asPath === "/forgot-password"
+
+  // Ensure that LoginForm or BuildSitadel page is full-width
+  if (isBuildSitadelOrLoginPage) {
+    return <>{children}</>
+  }
 
   return (
     <div className="min-h-screen flex flex-col relative px-0 lg:px-8">
-      {!isBuildSitadelPage && <Header className="" />}
+      {!isBuildSitadelOrLoginPage && <Header className="" />}
       <div className="flex flex-1 overflow-hidden relative">
-        {!isBuildSitadelPage && (
+        {!isBuildSitadelOrLoginPage && (
           <motion.div
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className={clsx(
@@ -121,7 +127,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
         </AnimatePresence>
       </div>
       {/* Bottom Navigation for Small Screens */}
-      {!isBuildSitadelPage && (
+      {!isBuildSitadelOrLoginPage && (
         <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-md">
           {navLinks.map((navLink) => (
             <Link key={navLink.href} href={navLink.href}>
