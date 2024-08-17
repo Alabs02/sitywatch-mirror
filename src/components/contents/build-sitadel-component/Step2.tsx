@@ -149,13 +149,13 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
       <div className="flex justify-between mt-4">
         <button
           onClick={onBack}
-          className="p-2 bg-gray-300 text-black rounded-lg"
+          className="p-2 bg-gray-300 text-black rounded-xl"
         >
           Back
         </button>
         <button
           onClick={handleNext}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-xl"
         >
           Next
         </button>

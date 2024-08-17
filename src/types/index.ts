@@ -15,7 +15,21 @@ export interface FormData {
   state?: string
   address?: string
   study?: string
+  dob: {
+    month: string
+    day: string
+    year: string
+  }
+  showDob: string
+  gender: string
+  sexuality: string
+  relationshipStatus: string
+  nightLife: string
+  sideHustle?: string
 }
+
+
+
 
 export interface CLookFormDate {
   name: string
