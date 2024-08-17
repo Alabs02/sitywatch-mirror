@@ -1,113 +1,57 @@
-import React, { useState, FC, useEffect } from "react"
+import React, { FC } from "react"
 import Step1 from "@/components/contents/build-sitadel-component/Step1"
 import Step2 from "@/components/contents/build-sitadel-component/Step2"
 import Step3 from "@/components/contents/build-sitadel-component/Step3"
 import Step4 from "@/components/contents/build-sitadel-component/Step4"
 import Link from "next/link"
+import { useFormSteps } from "../../hooks/useFormSteps" 
 
-interface FormData {
-  name: string
-  shortName: string
-  info: string
-  coverPhoto: File | null
-  profilePhoto: File | null
-}
-
-interface StepComponentProps {
-  onNext: (data: Partial<FormData>) => void
-  onBack: () => void
-  formData: FormData
-}
-
-interface Step {
-  component: FC<StepComponentProps>
-  label: string
-  icon: string
-  description: string
-  text: string
-}
-
-const steps: Step[] = [
+const steps = [
   {
     component: Step1,
     label: "Name",
     icon: "signature",
-    description: "",
     text: "A sitadel is a brand, business, organization, company, etc... that represents an ideal and can host events, competitions, olympiads, pageants, tournaments, contests or even grant scholarship programmes.",
   },
   {
     component: Step2,
     label: "Info",
-    icon: "quick_reference",
-    description: "",
+    icon: "school",
     text: "Provide detailed information about your sitadel to attract more participants and showcase your events.",
   },
   {
     component: Step3,
     label: "Image",
-    icon: "image",
-    description: "",
+    icon: "description",
     text: "Upload a beautiful backdrop and a profile picture that best represents your sitadel.",
   },
   {
     component: Step4,
     label: "Confirm",
-    icon: "check",
-    description: "",
+    icon: "image",
     text: "Review all the details to ensure everything is correct before submitting your sitadel.",
   },
 ]
 
 const BuildSitadel: FC = () => {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    shortName: "",
-    info: "",
-    coverPhoto: null,
-    profilePhoto: null,
-  })
-  const [loading, setLoading] = useState(false)
-
-  // Load form data from local storage on mount
-  useEffect(() => {
-    const savedData = localStorage.getItem("sitadelFormData")
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData)
-        setFormData(parsedData)
-        console.log("Loaded form data:", parsedData)
-      } catch (error) {
-        console.error("Error parsing saved form data:", error)
-      }
-    }
-  }, [])
-
-  // Save form data to local storage whenever it changes
-  useEffect(() => {
-    console.log("Saving form data:", formData)
-    localStorage.setItem("sitadelFormData", JSON.stringify(formData))
-  }, [formData])
-
-  const handleNext = (data: Partial<FormData>) => {
-    console.log("Form data before next step:", formData)
-    setFormData((prev) => ({ ...prev, ...data }))
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
-    }, 2000) // Loader visible for 2 seconds
-  }
-
-  const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0))
-  }
-
-  const goToStep = (stepIndex: number) => {
-    setCurrentStep(stepIndex)
-  }
-
-  const CurrentStepComponent = steps[currentStep].component
+  const {
+    currentStep,
+    formData,
+    loading,
+    handleNext,
+    handleBack,
+    goToStep,
+    CurrentStepComponent,
+  } = useFormSteps(
+    {
+      name: "",
+      shortName: "",
+      info: "",
+      coverPhoto: null,
+      profilePhoto: null,
+    },
+    steps,
+  )
 
   return (
     <div
@@ -179,7 +123,7 @@ const BuildSitadel: FC = () => {
           ))}
         </div>
         <div className="mb-4 text-gray-700">
-          {steps[currentStep].description}
+          {/* {steps[currentStep].text} */}
         </div>
         <CurrentStepComponent
           onNext={handleNext}

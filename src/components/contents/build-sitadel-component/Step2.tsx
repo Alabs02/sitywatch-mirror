@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react"
 import { FormData } from "@/types" // Adjust the path as necessary
+import Image from "next/image"
 
 interface StepProps {
   onNext: (data: Partial<FormData>) => void
@@ -34,7 +35,7 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
           value={info}
           onChange={(e) => setInfo(e.target.value)}
           placeholder="Information"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner"
+          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
         />
       </div>
 
@@ -52,7 +53,7 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           placeholder="https://example.com"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner"
+          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
         />
       </div>
 
@@ -67,43 +68,48 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@email.com"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner"
+          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
         />
       </div>
 
       {/* Contact Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">
-          Contact Number
+      <div className="flex flex-col justify-center">
+        <label className="block text-sm font-semibold mb-1 text-center">
+          Phone number
         </label>
-        <p className="text-sm text-black italic mb-2">
-          Provide a phone number for contact.
+        <p className="text-sm text-black italic mb-2 text-center">
+          It will not be made public.
         </p>
-        <div className="flex justify-center">
-          <div className="flex items-center w-full">
-            <span className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner w-32 text-center">
-              🇳🇬 +234
-            </span>
-            <input
-              type="text"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Phone Number"
-              className="p-2 border border-gray-300 rounded w-full shadow-inner"
+        <div className="flex items-center w-full">
+          <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
+            <Image
+              src="/flags/nigeria.svg"
+              alt="Nigeria Flag"
+              width={24}
+              height={16}
+              className="inline-block"
             />
+            <span className="ml-2">+234</span>
           </div>
+          <input
+            type="text"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            placeholder="Phone Number"
+            className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+          />
         </div>
       </div>
 
       {/* Location Field */}
-      <div className="mb-6">
+      <div className="mb-6 ">
         <label className="block text-sm font-semibold mb-1">Location</label>
         <div className="flex justify-center space-x-2">
-          <div className="w-1/2">
+          <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="p-2 border border-gray-300 rounded w-full shadow-inner"
+              className="p-2  rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
             >
               <option value="Nigeria">Nigeria</option>
               {/* Add more countries if needed */}
@@ -113,7 +119,7 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             <select
               value={state}
               onChange={(e) => setState(e.target.value)}
-              className="p-2 border border-gray-300 rounded w-full shadow-inner"
+              className="p-2 border border-gray-300 rounded w-full  bg-white shadow-inner shadow-gray-600/50 "
             >
               <option value="">Select State</option>
               <option value="Lagos">Lagos</option>
@@ -136,7 +142,7 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder="Street address, City, etc."
-          className="p-2 border border-gray-300 rounded w-full shadow-inner"
+          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
         />
       </div>
 

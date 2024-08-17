@@ -86,41 +86,46 @@ const Home: FC<{ children: ReactNode }> = ({ children }) => {
               ))}
             </div>
           </div>
-          <div className="flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 p-1">
-            <div className="flex items-center">
-              <Link href="/build-sitadel">
-                <span className="material-symbols-outlined text-xl bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
-                  add_circle
-                </span>
-              </Link>
-            </div>
-            <div className="flex flex-col items-center justify-center gap-y-1 overflow-hidden w-full">
-              <div className="rounded-full shadow-lg overflow-hidden w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] relative bg-white p-2">
-                {loading && (
-                  <SkeletonLoader className="absolute inset-0 rounded-full" />
-                )}
-                <Image
-                  src={tourneysData.rightSection.cards[0].image}
-                  alt={tourneysData.rightSection.cards[0].title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full"
-                  onLoadingComplete={handleImageLoad}
-                  placeholder="blur"
-                  blurDataURL="/path/to/placeholder.png"
-                />
+          <Link
+            href="/build-sitadel"
+            className="flex flex-col h-[90%] md:h-full col-span-4 md:col-span-3 border border-tertiary-400 rounded-lg gap-y-1 pb-2"
+          >
+            <div>
+              <div className="flex items-center ml-1 md:ml-2">
+                
+                  <span className="material-symbols-outlined text-xl md:text-2xl bg-gradient-to-b from-[#F24055] to-[#1E7881] bg-clip-text text-transparent cursor-pointer">
+                    add_circle
+                  </span>
+              
               </div>
+              <div className="flex flex-col items-center justify-center gap-y-1 overflow-hidden w-full">
+                <div className="rounded-full shadow-lg overflow-hidden w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] relative bg-white ">
+                  {loading && (
+                    <SkeletonLoader className="absolute inset-0 rounded-full" />
+                  )}
+                  <Image
+                    src={tourneysData.rightSection.cards[0].image}
+                    alt={tourneysData.rightSection.cards[0].title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full p-1"
+                    onLoadingComplete={handleImageLoad}
+                    placeholder="blur"
+                    blurDataURL="/path/to/placeholder.png"
+                  />
+                </div>
 
-              <div className="flex flex-col text-center">
-                <h3 className="text-xs font-bold">
-                  {tourneysData.rightSection.cards[0].title}
-                </h3>
-                <p className="text-[10px] hidden md:flex">
-                  {tourneysData.rightSection.cards[0].description}
-                </p>
+                <div className="flex flex-col text-center">
+                  <h3 className="text-[10px] md:text-xs font-semibold md:font-bold">
+                    {tourneysData.rightSection.cards[0].title}
+                  </h3>
+                  <p className="text-[10px] hidden md:flex">
+                    {tourneysData.rightSection.cards[0].description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         </section>
 
         {/* Bottom Cards Section */}

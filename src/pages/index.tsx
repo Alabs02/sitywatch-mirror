@@ -5,15 +5,14 @@ import { useRouter } from "next/router"
 const LoginForm: FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock login logic
-    if (email === "user@example.com" && password === "password") {
+    if (email === "user@sitymail.com" && password === "password") {
       setIsLoggedIn(true)
-      // Redirect to the welcome page (index page)
       router.push("/welcome")
     } else {
       alert("Invalid email or password")
@@ -21,9 +20,12 @@ const LoginForm: FC = () => {
   }
 
   const handleGoogleLogin = () => {
-    // Mock Google login logic
     setIsLoggedIn(true)
     router.push("/welcome")
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev)
   }
 
   if (isLoggedIn) {
@@ -74,31 +76,36 @@ const LoginForm: FC = () => {
         </p>
       </div>
 
-      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg  p-8 md:w-2/3 lg:max-w-xl lg:right-4 ">
-        <form onSubmit={handleSubmit} className="space-y-2">
+      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8  md:p-12 md:w-2/3 lg:max-w-xl lg:right-4 ">
+        <form onSubmit={handleSubmit} className="space-y-2 pt-4 lg:pt-8">
           <div>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-white  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 shadow-inner shadow-gray-600/50"
               placeholder="Email"
             />
           </div>
 
-          <div>
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 shadow-inner shadow-gray-600/50"
               placeholder="Password"
             />
+            <span
+              className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "visibility_off" : "visibility"}
+            </span>
           </div>
 
-          {/* Added margin here */}
           <div className="flex justify-center mt-8">
             <button
               type="submit"
@@ -124,28 +131,33 @@ const LoginForm: FC = () => {
           </div>
 
           <div className="flex flex-col items-center justify-center space-y-2 text-xs md:text-sm md:px-16">
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center border border-gray-300 text-gray-700 rounded-full py-2 hover:bg-gray-100"
-            >
-              <img
-                src="/google-logo.svg"
-                alt="Google"
-                className="w-6 h-6 mr-2"
-              />
-              Log in with Google
-            </button>
-            <Link
-              href="/build-sitadel"
-              className="w-full flex items-center justify-center border border-gray-300 text-gray-700 rounded-full py-2 hover:bg-gray-100 "
-            >
-              <button type="button" className="">
-                <span className="mr-2">New to SityWatch? </span>
-                <span className="text-primary-500 font-bold">
-                  CREATE A NEW LOOK
-                </span>
+            <div className="w-full flex items-center justify-center rounded-full p-[1.5px] bg-gradient-to-r from-[#F24055] to-[#1E7881]">
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center bg-white text-gray-700 rounded-full py-2 hover:bg-gray-100 border-transparent"
+              >
+                <img
+                  src="/google-logo.svg"
+                  alt="Google"
+                  className="w-6 h-6 mr-2"
+                />
+                Log in with Google
               </button>
+            </div>
+
+            <Link href="/create-account" className="w-full">
+              <div className="flex items-center justify-center rounded-full p-[1.5px] bg-gradient-to-r from-[#F24055] to-[#1E7881]">
+                <button
+                  type="button"
+                  className="w-full bg-white flex items-center justify-center text-gray-700 rounded-full py-2 hover:bg-gray-100 border-transparent"
+                >
+                  <span className="mr-2">New to SityWatch? </span>
+                  <span className="text-primary-500 font-bold">
+                    CREATE A NEW LOOK
+                  </span>
+                </button>
+              </div>
             </Link>
           </div>
 

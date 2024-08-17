@@ -38,13 +38,15 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Name"
-        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner"
+        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
       <h2 className="text-sm font-semibold text-center mt-2 mb-1">
         How should we refer to your Sitadel on Sitywatch?
       </h2>
       <p className="text-xs text-center mb-1 italic">
-        This is the short version of the name of the Sitadel which will be used to refer to the Sitadel on SityWatch. It can be an abbrevation or an accronym, etc.
+        This is the short version of the name of the Sitadel which will be used
+        to refer to the Sitadel on SityWatch. It can be an abbrevation or an
+        accronym, etc.
         {/* <br /> */}
         Just keep it short and unique.
       </p>
@@ -53,7 +55,7 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
         value={shortName}
         onChange={(e) => handleShortNameChange(e.target.value)}
         placeholder="Short Name"
-        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner"
+        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
       <div className="flex justify-between mt-1">
         <button

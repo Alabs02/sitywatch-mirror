@@ -50,7 +50,10 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     collapsedList.includes(asPath)
 
   const isBuildSitadelOrLoginPage =
-    asPath === "/build-sitadel" || asPath === "/" || asPath === "/forgot-password"
+    asPath === "/build-sitadel" ||
+    asPath === "/" ||
+    asPath === "/forgot-password" ||
+    asPath === "/create-account"
 
   // Ensure that LoginForm or BuildSitadel page is full-width
   if (isBuildSitadelOrLoginPage) {
