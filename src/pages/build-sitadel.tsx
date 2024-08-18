@@ -74,7 +74,7 @@ const BuildSitadel: FC = () => {
       </Link>
 
       {/* Mobile X Button */}
-      <Link href="/">
+      <Link href="/welcome">
         <button className="absolute top-1 right-2 text-xl lg:hidden flex ">
           ✕
         </button>

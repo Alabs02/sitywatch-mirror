@@ -19,7 +19,7 @@ interface LayoutProps {
 }
 
 const navLinks: NavLink[] = [
-  { href: "/", label: "Home", icon: "home" },
+  { href: "/welcome", label: "Home", icon: "home" },
   { href: "/gists", label: "Gists", icon: "diversity_3" },
   { href: "/panda-us", label: "Panda-us", icon: "support_agent" },
   { href: "/notifications", label: "Notifications", icon: "notifications" },

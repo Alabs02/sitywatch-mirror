@@ -70,7 +70,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
         style={style}
       >
         <div className="flex h-full items-center justify-between">
-          <Link href={"/"} className="">
+          <Link href={"/welcome"} className="">
             <HomeIcon width={50} height={50} /> {/* Using HomeIcon component */}
           </Link>
 

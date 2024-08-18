@@ -9,17 +9,19 @@ interface StepProps {
   formData: FormData
 }
 
-const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
-  const [info, setInfo] = useState(formData.info)
+const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
+  const [info, setInfo] = useState(formData.info || "")
   const [link, setLink] = useState(formData.link || "")
   const [email, setEmail] = useState(formData.email || "")
   const [contact, setContact] = useState(formData.contact || "")
   const [country, setCountry] = useState(formData.country || "Nigeria")
   const [state, setState] = useState(formData.state || "")
   const [address, setAddress] = useState(formData.address || "")
-  const [dob, setDob] = useState(
-    formData.dob || { month: "", day: "", year: "" },
-  )
+  const [dob, setDob] = useState({
+    month: formData.dob?.month || "",
+    day: formData.dob?.day || "",
+    year: formData.dob?.year || "",
+  })
   const [showDob, setShowDob] = useState(formData.showDob || "No")
   const [gender, setGender] = useState(formData.gender || "")
   const [sexuality, setSexuality] = useState(formData.sexuality || "")
@@ -51,12 +53,29 @@ const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newMonth = e.target.value
-    const newDaysInMonth = getDaysInMonth(newMonth, dob.year)
+    const newDaysInMonth = getDaysInMonth(newMonth, dob.year || "2024") // Default year
     setDob((prevDob) => ({
       ...prevDob,
       month: newMonth,
-      day: Math.min(parseInt(prevDob.day), newDaysInMonth).toString() || "",
+      day: Math.min(parseInt(prevDob.day) || 1, newDaysInMonth).toString(),
     }))
+  }
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newYear = e.target.value
+    const newDaysInMonth = getDaysInMonth(dob.month || "1", newYear) // Default month
+    setDob((prevDob) => ({
+      ...prevDob,
+      year: newYear,
+      day: Math.min(parseInt(prevDob.day) || 1, newDaysInMonth).toString(),
+    }))
+  }
+
+  const getDaysInMonth = (month: string, year: string) => {
+    const monthIndex = parseInt(month) - 1
+    const parsedYear = parseInt(year)
+    if (isNaN(monthIndex) || isNaN(parsedYear)) return 31 // Fallback in case of an invalid month/year
+    return new Date(parsedYear, monthIndex + 1, 0).getDate()
   }
 
   const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -64,17 +83,6 @@ const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
       ...prevDob,
       day: e.target.value,
     }))
-  }
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDob((prevDob) => ({
-      ...prevDob,
-      year: e.target.value,
-    }))
-  }
-
-  const getDaysInMonth = (month: string, year: string) => {
-    return new Date(parseInt(year), parseInt(month), 0).getDate()
   }
 
   const handleNext = () => {
@@ -407,4 +415,4 @@ const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   )
 }
 
-export default Step3
+export default LookStep3
