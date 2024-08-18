@@ -37,7 +37,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     setLoading(true)
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 1500) // Simulate a loading delay
+    }, 1500) 
 
     return () => clearTimeout(timer)
   }, [asPath])
@@ -55,7 +55,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     asPath === "/forgot-password" ||
     asPath === "/create-account"
 
-  // Ensure that LoginForm or BuildSitadel page is full-width
+  // Ensuring that LoginForm or BuildSitadel page is full-width
   if (isBuildSitadelOrLoginPage) {
     return <>{children}</>
   }
@@ -131,7 +131,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
       </div>
       {/* Bottom Navigation for Small Screens */}
       {!isBuildSitadelOrLoginPage && (
-        <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-md">
+        <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-lg">
           {navLinks.map((navLink) => (
             <Link key={navLink.href} href={navLink.href}>
               <div className="flex flex-col items-center">
