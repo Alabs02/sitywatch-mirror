@@ -28,7 +28,7 @@ const OptionsCard: FC<OptionsCardProps> = ({
 
   useEffect(() => {
     if (isVisible) {
-      controls.start({ opacity: 1, y: 0, height: "auto" })
+      controls.start({ opacity: 1, y: -150, height: "auto" })
     } else {
       controls.start({ opacity: 0, y: -20, height: 0 })
     }
@@ -57,7 +57,7 @@ const OptionsCard: FC<OptionsCardProps> = ({
       initial={{ opacity: 0, y: -20, height: 0 }}
       animate={controls}
       transition={{ duration: 0.3 }}
-      className="absolute top-full left-0 mt-2 max-w-md bg-none shadow-lg rounded-lg"
+      className="absolute top-full left-0 mt-2 max-w-md bg-none rounded-lg"
     >
       <div className="flex flex-wrap gap-2 rounded items-center justify-center">
         {options.map((option, index) => (
