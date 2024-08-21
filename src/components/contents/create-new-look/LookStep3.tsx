@@ -10,6 +10,7 @@ interface StepProps {
 }
 
 const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
+  // Existing states
   const [info, setInfo] = useState(formData.info || "")
   const [link, setLink] = useState(formData.link || "")
   const [email, setEmail] = useState(formData.email || "")
@@ -31,6 +32,13 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [nightLife, setNightLife] = useState(formData.nightLife || "")
   const [sideHustle, setSideHustle] = useState(formData.sideHustle || "")
 
+  // New state for options
+  const [options, setOptions] = useState<string[]>([
+    "Geography",
+    "Literature",
+    "Photography",
+    "Movies",
+  ])
   const [showOptions, setShowOptions] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [cardHeight, setCardHeight] = useState("0px")
@@ -85,6 +93,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
     }))
   }
 
+  const handleUpdateOptions = (updatedOptions: string[]) => {
+    setOptions(updatedOptions)
+  }
+
   const handleNext = () => {
     onNext({
       info,
@@ -101,6 +113,7 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
       relationshipStatus,
       nightLife,
       sideHustle,
+      options, // Include options in the form data
     })
   }
 
@@ -197,7 +210,7 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                   onChange={() => setShowDob("Yes")}
                   className="form-radio"
                 />
-                <span className="text-sm">Yes</span>
+                <span>Yes</span>
               </label>
               <label className="flex items-center space-x-2">
                 <input
@@ -207,7 +220,7 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                   onChange={() => setShowDob("No")}
                   className="form-radio"
                 />
-                <span className="text-sm">No</span>
+                <span>No</span>
               </label>
             </div>
           </div>
@@ -358,37 +371,34 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
               isVisible={showOptions}
               onClose={() => setShowOptions(false)}
               buttonRef={buttonRef}
+              cardHeight={cardHeight}
+              onUpdateOptions={handleUpdateOptions}
             />
           </div>
           {/* Location Field */}
-          <div className="mb-6 mt-4">
-            <label className="block text-sm font-semibold mb-1 text-center">
-              Where do you reside?
-            </label>
-            <div className="flex justify-center space-x-2">
-              <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
-                <select
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
-                >
-                  <option value="Nigeria">Nigeria</option>
-                  {/* Add more countries if needed */}
-                </select>
-              </div>
-              <div className="w-1/2">
-                <select
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-                >
-                  <option value="">Select State</option>
-                  <option value="Lagos">Lagos</option>
-                  <option value="Abuja">Abuja</option>
-                  <option value="Kano">Kano</option>
-                  {/* Add more states as needed */}
-                </select>
-              </div>
+          <div className="flex justify-center gap-2 mt-4 w-full">
+            <div className="relative z-10 w-full">
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
+              >
+                <option value="Nigeria">Nigeria</option>
+                {/* Add more countries if needed */}
+              </select>
+            </div>
+            <div className="relative z-10 w-full">
+              <select
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
+              >
+                <option value="">Select State</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Abuja">Abuja</option>
+                <option value="Kano">Kano</option>
+                {/* Add more states as needed */}
+              </select>
             </div>
           </div>
 

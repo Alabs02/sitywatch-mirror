@@ -11,8 +11,6 @@ export interface FormData {
   link?: string
   email?: string
   contact?: string
-  country?: string
-  state?: string
   address?: string
   study?: string
   dob: {
@@ -26,6 +24,11 @@ export interface FormData {
   relationshipStatus: string
   nightLife: string
   sideHustle?: string
+  institutionType: string // Added
+  schoolStatus: string // Added
+  options: string[]
+  country: string
+  state: string
 }
 
 

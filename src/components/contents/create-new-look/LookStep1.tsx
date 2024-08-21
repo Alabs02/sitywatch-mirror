@@ -19,10 +19,20 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
   const [passwordsMatch, setPasswordsMatch] = useState(true)
 
   const handleNext = () => {
+    console.log("Form data at step 1:", {
+      name,
+      shortName,
+      email,
+      contact,
+      password,
+      confirmPassword,
+    })
     if (password === confirmPassword) {
-      onNext({ name, shortName, email, contact, })
+      onNext({ name, shortName, email, contact })
+      console.log("Passwords match, proceeding to next step.")
     } else {
       setPasswordsMatch(false)
+      console.log("Passwords do not match.")
     }
   }
 
@@ -130,9 +140,6 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
         <label className="block text-sm font-semibold mb-1 text-center mt-4">
           What should be your password
         </label>
-        {/* <p className="text-sm text-black italic mb-2 text-center">
-          Provide a password for your account.
-        </p> */}
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
@@ -157,9 +164,6 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
         <label className="block text-sm font-semibold mb-1 text-center">
           Re-enter your password
         </label>
-        {/* <p className="text-sm text-black italic mb-2 text-center">
-          Confirm your password.
-        </p> */}
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}

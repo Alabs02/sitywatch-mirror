@@ -4,18 +4,27 @@ import Link from "next/link"
 
 interface StepProps {
   onNext: (data: Partial<FormData>) => void
-  onBack: () => void // Added this prop to handle the back navigation
+  onBack: () => void
   formData: FormData
 }
 
 const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
-  const [name, setName] = useState(formData.name)
+  const [name, setName] = useState(formData.name || "")
   const [study, setStudy] = useState(formData.study || "")
   const [country, setCountry] = useState(formData.country || "Nigeria")
   const [state, setState] = useState(formData.state || "")
+  const [institutionType, setInstitutionType] = useState<string>("")
+  const [schoolStatus, setSchoolStatus] = useState<string>("")
 
   const handleNext = () => {
-    onNext({ study, country, state })
+    onNext({
+      name,
+      study,
+      country,
+      state,
+      institutionType,
+      schoolStatus,
+    })
   }
 
   return (
@@ -47,6 +56,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-type"
             value="high-school"
+            checked={institutionType === "high-school"}
+            onChange={(e) => setInstitutionType(e.target.value)}
             className="ml-2 text-black"
           />
         </label>
@@ -56,6 +67,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-type"
             value="higher-institution"
+            checked={institutionType === "higher-institution"}
+            onChange={(e) => setInstitutionType(e.target.value)}
             className="ml-2 text-black bg-transparent"
           />
         </label>
@@ -65,6 +78,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-type"
             value="other"
+            checked={institutionType === "other"}
+            onChange={(e) => setInstitutionType(e.target.value)}
             className="ml-2 text-black"
           />
         </label>
@@ -113,6 +128,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-status-type"
             value="student"
+            checked={schoolStatus === "student"}
+            onChange={(e) => setSchoolStatus(e.target.value)}
             className="ml-2 text-black"
           />
         </label>
@@ -122,6 +139,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-status-type"
             value="alumnus"
+            checked={schoolStatus === "alumnus"}
+            onChange={(e) => setSchoolStatus(e.target.value)}
             className="ml-2 text-black bg-transparent"
           />
         </label>
@@ -131,6 +150,8 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
             type="radio"
             name="school-status-type"
             value="dropout"
+            checked={schoolStatus === "dropout"}
+            onChange={(e) => setSchoolStatus(e.target.value)}
             className="ml-2 text-black"
           />
         </label>
@@ -147,14 +168,14 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
         <input
           type="text"
           value={study}
-          onChange={(e) => setStudy(e.target.value)} // Corrected line
+          onChange={(e) => setStudy(e.target.value)}
           placeholder="Example: Computer Science"
           className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
         />
       </div>
 
       {/* Add School Button */}
-      <Link href="" className="">
+      <Link href="#">
         <div className="flex items-center justify-center rounded-full">
           <button
             type="button"
