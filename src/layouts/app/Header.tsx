@@ -200,9 +200,11 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
                   add
                 </span>
+                <Link href="/create-account">
                 <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
                   Create a new look
                 </span>
+                </Link>
               </li>
               <li className="flex items-center p-1 sm:p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
