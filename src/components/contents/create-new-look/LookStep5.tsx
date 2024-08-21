@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react"
-import { useRouter } from "next/router" // Import the useRouter hook
-import { FormData } from "@/types" // Adjust the path as necessary
+import { useRouter } from "next/router"
+import { FormData } from "@/types"
 import Image from "next/image"
 
 interface StepProps {
@@ -12,7 +12,7 @@ const LookStep5: FC<StepProps> = ({ onBack, formData }) => {
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>()
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const router = useRouter() // Initialize the router
+  const router = useRouter()
 
   useEffect(() => {
     if (formData.coverPhoto) {
@@ -43,7 +43,7 @@ const LookStep5: FC<StepProps> = ({ onBack, formData }) => {
         }
       } catch (error) {
         console.error("Failed to create object URL for profile photo:", error)
-        setProfilePhotoUrl(undefined)
+        setProfilePhotoUrl("/dummy-user-img.jpg")
       }
     } else {
       setProfilePhotoUrl("/dummy-user-img.jpg")
@@ -54,14 +54,12 @@ const LookStep5: FC<StepProps> = ({ onBack, formData }) => {
     setIsLoading(true)
     setTimeout(() => {
       setIsLoading(false)
-      router.push("/sitadel-profile") // Route to the profile page after loading
-    }, 2000) // 2-second loader
+      router.push("/sitadel-profile")
+    }, 2000)
   }
 
   return (
     <div>
-      {/* <h2 className="text-xl font-semibold mb-4">Confirm</h2> */}
-
       {/* Cover Photo Container */}
       <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden mt-4">
         {coverPhotoUrl ? (
@@ -87,37 +85,39 @@ const LookStep5: FC<StepProps> = ({ onBack, formData }) => {
       </div>
 
       {/* Display Form Data */}
-      <div className="mb-4">
-        <p className="font-bold">Sitadel Name:</p>
-        <p>{formData.name}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Sitadel Info:</p>
-        <p>{formData.info}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Link:</p>
-        <p>{formData.link}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Email:</p>
-        <p>{formData.email}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Contact:</p>
-        <p>{formData.contact}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Country:</p>
-        <p>{formData.country}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">State:</p>
-        <p>{formData.state}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Address:</p>
-        <p>{formData.address}</p>
+      <div className="flex flex-wrap gap-4 mt-4">
+        <div className="flex-1">
+          <p className="font-bold">Sitadel Name:</p>
+          <p>{formData.name}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Sitadel Info:</p>
+          <p>{formData.info}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Link:</p>
+          <p>{formData.link}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Email:</p>
+          <p>{formData.email}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Contact:</p>
+          <p>{formData.contact}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Country:</p>
+          <p>{formData.country}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">State:</p>
+          <p>{formData.state}</p>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold">Address:</p>
+          <p>{formData.address}</p>
+        </div>
       </div>
 
       {/* Navigation Buttons */}
@@ -139,7 +139,7 @@ const LookStep5: FC<StepProps> = ({ onBack, formData }) => {
               Loading...
             </div>
           ) : (
-            "Build Sitadel"
+            "Create Look"
           )}
         </button>
       </div>
