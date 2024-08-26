@@ -38,6 +38,8 @@ const PandaUs = () => {
 
   const renderPandaCard = () => {
     return pandaSection.cards.map((card) => (
+      <Link href="/create-pandar-poll">
+      
       <PandPollContent
         key={card.id}
         icon={card.icon}
@@ -45,6 +47,7 @@ const PandaUs = () => {
         title={card.title}
         description={card.description}
       />
+      </Link>
     ))
   }
 

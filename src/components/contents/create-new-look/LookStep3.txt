@@ -128,10 +128,11 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
         {/* Step Content */}
         <div className="text-center">
           {/* Info Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">Bio</label>
             <p className="text-sm text-black italic mb-2">
-              What are your interests?
+              In a sentence or two, say something interesting you want people to
+              know about you when they view your profile.
             </p>
             <textarea
               value={info}
@@ -139,10 +140,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
               placeholder="Information"
               className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
             />
-          </div> */}
+          </div>
 
           {/* Date of Birth Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Date of Birth <span className="text-red-500">*</span>
             </label>
@@ -189,10 +190,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 ))}
               </select>
             </div>
-          </div> */}
+          </div>
 
           {/* Show DOB Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Do you want people to see your DOB?{" "}
               <span className="text-red-500">*</span>
@@ -222,10 +223,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 <span>No</span>
               </label>
             </div>
-          </div> */}
+          </div>
 
           {/* Gender Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Gender <span className="text-red-500">*</span>
             </label>
@@ -251,10 +252,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 <span className="text-sm">Female</span>
               </label>
             </div>
-          </div> */}
+          </div>
 
           {/* Sexuality Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Sexuality <span className="text-red-500">*</span>
             </label>
@@ -279,10 +280,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 </label>
               ))}
             </div>
-          </div> */}
+          </div>
 
           {/* Relationship Status Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Relationship Status <span className="text-red-500">*</span>
             </label>
@@ -309,10 +310,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 </label>
               ))}
             </div>
-          </div> */}
+          </div>
 
           {/* Night Life Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Night Life <span className="text-red-500">*</span>
             </label>
@@ -336,10 +337,10 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
                 </label>
               ))}
             </div>
-          </div> */}
+          </div>
 
           {/* Side Hustle Field */}
-          {/* <div className="mb-6">
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-1">
               Side Hustle <span className="text-red-500">(optional)</span>
             </label>
@@ -352,9 +353,9 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
               placeholder="What is your side hustle?"
               className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
             />
-          </div> */}
+          </div>
           {/* Options Button */}
-          <div className="relative my-[50%]">
+          <div className="relative ">
             <button
               ref={buttonRef}
               onClick={() => setShowOptions(!showOptions)}
@@ -375,6 +376,31 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
             />
           </div>
           {/* Location Field */}
+          <div className="flex justify-center gap-2 mt-4 w-full">
+            <div className="relative z-10 w-full">
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
+              >
+                <option value="Nigeria">Nigeria</option>
+                {/* Add more countries if needed */}
+              </select>
+            </div>
+            <div className="relative z-10 w-full">
+              <select
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
+              >
+                <option value="">Select State</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Abuja">Abuja</option>
+                <option value="Kano">Kano</option>
+                {/* Add more states as needed */}
+              </select>
+            </div>
+          </div>
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-2">

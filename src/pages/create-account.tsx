@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import LookStep1 from "@/components/contents/create-new-look/LookStep1"
 import LookStep2 from "@/components/contents/create-new-look/LookStep2"
 import LookStep3 from "@/components/contents/create-new-look/LookStep3"
-import LookStep4 from "@/components/contents/create-new-look/LookStep4"
+// import LookStep4 from "@/components/contents/create-new-look/LookStep4"
 import LookStep5 from "@/components/contents/create-new-look/LookStep5"
 import Link from "next/link"
 import { useFormSteps } from "../../hooks/useFormSteps" 
@@ -26,12 +26,12 @@ const steps = [
     icon: "description",
     text: "Upload a beautiful backdrop and a profile picture that best represents your sitadel.",
   },
-  {
-    component: LookStep4,
-    label: "Confirm",
-    icon: "image",
-    text: "Review all the details to ensure everything is correct before submitting your sitadel.",
-  },
+  // {
+  //   component: LookStep4,
+  //   label: "Confirm",
+  //   icon: "image",
+  //   text: "Review all the details to ensure everything is correct before submitting your sitadel.",
+  // },
   {
     component: LookStep5,
     label: "Finish",
