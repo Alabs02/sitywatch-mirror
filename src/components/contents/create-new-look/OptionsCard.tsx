@@ -28,7 +28,7 @@ const OptionsCard: FC<OptionsCardProps> = ({
 
   useEffect(() => {
     if (isVisible) {
-      controls.start({ opacity: 1, y: -150, height: "auto" })
+      controls.start({ opacity: 1, y: -300, height: "auto" })
     } else {
       controls.start({ opacity: 0, y: -20, height: 0 })
     }
