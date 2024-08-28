@@ -8,10 +8,49 @@ interface StepProps {
   formData: FormData
 }
 
+const nigeriaStates = [
+  "Abia",
+  "Adamawa",
+  "Akwa Ibom",
+  "Anambra",
+  "Bauchi",
+  "Bayelsa",
+  "Benue",
+  "Borno",
+  "Cross River",
+  "Delta",
+  "Ebonyi",
+  "Edo",
+  "Ekiti",
+  "Enugu",
+  "Gombe",
+  "Imo",
+  "Jigawa",
+  "Kaduna",
+  "Kano",
+  "Kogi",
+  "Katsina",
+  "Kebbi",
+  "Kwara",
+  "Lagos",
+  "Nasarawa",
+  "Niger",
+  "Ogun",
+  "Ondo",
+  "Osun",
+  "Oyo",
+  "Plateau",
+  "Rivers",
+  "Sokoto",
+  "Taraba",
+  "Yobe",
+  "Zamfara",
+]
+
 const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [name, setName] = useState(formData.name || "")
   const [study, setStudy] = useState(formData.study || "")
-  const [country, setCountry] = useState(formData.country || "Nigeria")
+  const [country, setCountry] = useState("Nigeria")
   const [state, setState] = useState(formData.state || "")
   const [institutionType, setInstitutionType] = useState<string>("")
   const [schoolStatus, setSchoolStatus] = useState<string>("")
@@ -98,7 +137,6 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
               className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
             >
               <option value="Nigeria">Nigeria</option>
-              {/* Add more countries if needed */}
             </select>
           </div>
           <div className="w-1/2">
@@ -108,10 +146,11 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
               className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
             >
               <option value="">Select State</option>
-              <option value="Lagos">Lagos</option>
-              <option value="Abuja">Abuja</option>
-              <option value="Kano">Kano</option>
-              {/* Add more states as needed */}
+              {nigeriaStates.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
             </select>
           </div>
         </div>

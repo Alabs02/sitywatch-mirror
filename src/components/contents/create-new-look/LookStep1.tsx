@@ -8,7 +8,7 @@ interface StepProps {
 }
 
 const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
-  const [name, setName] = useState(formData.name)
+  const [name, setName] = useState(formData.name || "")
   const [shortName, setShortName] = useState(formData.shortName || "@")
   const [email, setEmail] = useState(formData.email || "")
   const [contact, setContact] = useState(formData.contact || "")
@@ -19,21 +19,25 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
   const [passwordsMatch, setPasswordsMatch] = useState(true)
 
   const handleNext = () => {
-    console.log("Form data at step 1:", {
-      name,
-      shortName,
-      email,
-      contact,
-      password,
-      confirmPassword,
-    })
-    if (password === confirmPassword) {
-      onNext({ name, shortName, email, contact })
-      console.log("Passwords match, proceeding to next step.")
-    } else {
-      setPasswordsMatch(false)
-      console.log("Passwords do not match.")
+    if (
+      !name ||
+      !shortName ||
+      !email ||
+      !contact ||
+      !password ||
+      !confirmPassword
+    ) {
+      alert("Please fill out all fields.")
+      return
     }
+
+    if (password !== confirmPassword) {
+      setPasswordsMatch(false)
+      return
+    }
+
+    onNext({ name, shortName, email, contact })
+    console.log("Passwords match, proceeding to next step.")
   }
 
   const handleShortNameChange = (value: string) => {
@@ -86,6 +90,7 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
         placeholder="Example: John_Pharrel919"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
+
       {/* Email Field */}
       <div className="mb-6">
         <label className="block text-sm font-semibold mb-1 text-center">
@@ -128,9 +133,9 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
             onChange={(e) => setContact(e.target.value)}
             placeholder="Phone Number"
             className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" /* Optional pattern for validation */
-            maxLength={15} /* Optional maximum length */
-            required /* Optional to make it a required field */
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+            maxLength={15}
+            required
           />
         </div>
       </div>

@@ -1,11 +1,12 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import LookStep1 from "@/components/contents/create-new-look/LookStep1"
 import LookStep2 from "@/components/contents/create-new-look/LookStep2"
 import LookStep3 from "@/components/contents/create-new-look/LookStep3"
 // import LookStep4 from "@/components/contents/create-new-look/LookStep4"
-import LookStep5 from "@/components/contents/create-new-look/LookStep5"
+import LookStep4 from "@/components/contents/create-new-look/LookStep4"
 import Link from "next/link"
-import { useFormSteps } from "../../hooks/useFormSteps" 
+import { useFormSteps } from "../../hooks/useFormSteps"
+import { FormData } from "@/types"
 
 const steps = [
   {
@@ -33,7 +34,7 @@ const steps = [
   //   text: "Review all the details to ensure everything is correct before submitting your sitadel.",
   // },
   {
-    component: LookStep5,
+    component: LookStep4,
     label: "Finish",
     icon: "check",
     text: "You're all set! Review your information one last time before completing the creation of your Look.",
@@ -64,9 +65,14 @@ const CreateNewLook: FC = () => {
       address: "",
       password: "", // Optional
       fieldOfStudy: "",
+      options: [],
     },
     steps,
   )
+
+  useEffect(() => {
+    console.log("CreateNewLook - FormData:", formData)
+  }, [formData])
 
   return (
     <div

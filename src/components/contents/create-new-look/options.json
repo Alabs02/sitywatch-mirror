@@ -1,0 +1,87 @@
+{
+  "Geography": {
+    "Specific Regions": [
+      "North America",
+      "Europe",
+      "Asia",
+      "Africa",
+      "South America",
+      "Oceania"
+    ],
+    "Types of Geography": [
+      "Mountains",
+      "Forests",
+      "Beaches",
+      "Deserts",
+      "Urban Areas",
+      "Rural Areas"
+    ],
+    "Geographic Interests": [
+      "Hiking",
+      "Camping",
+      "Geocaching",
+      "Traveling",
+      "Exploring"
+    ]
+  },
+  "Literature": {
+    "Genres": [
+      "Fiction",
+      "Non-Fiction",
+      "Poetry",
+      "Drama",
+      "Science Fiction",
+      "Fantasy",
+      "Romance",
+      "Mystery"
+    ],
+    "Time Periods": [
+      "Ancient",
+      "Medieval",
+      "Renaissance",
+      "Modern",
+      "Contemporary"
+    ],
+    "Authors": ["Classic Authors", "Contemporary Authors", "Specific Authors"]
+  },
+  "Photography": {
+    "Photography Styles": [
+      "Portrait",
+      "Landscape",
+      "Street",
+      "Wildlife",
+      "Macro",
+      "Abstract"
+    ],
+    "Photography Techniques": [
+      "Black and White",
+      "Color",
+      "Digital",
+      "Film",
+      "HDR"
+    ],
+    "Photography Communities": [
+      "Instagram",
+      "Flickr",
+      "500px",
+      "National Geographic"
+    ]
+  },
+  "Movies": {
+    "Genres": [
+      "Action",
+      "Adventure",
+      "Animation",
+      "Comedy",
+      "Drama",
+      "Fantasy",
+      "Horror",
+      "Mystery",
+      "Romance",
+      "Science Fiction",
+      "Thriller"
+    ],
+    "Directors": ["Famous Directors", "Independent Directors"],
+    "Time Periods": ["Classic Films", "Modern Films", "Independent Films"]
+  }
+}
