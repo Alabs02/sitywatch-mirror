@@ -24,16 +24,20 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
     })
   }
 
+  const handleRemoveOption = (option: string) => {
+    setSelectedOptions((prev) => prev.filter((o) => o !== option))
+  }
+
   return (
-    <div className=" flex flex-col h-full">
+    <div className="flex flex-col h-full">
       <div className="text-center mb-4">
         <p className="text-center font-bold mt-14">
           Click the button to add your interests:
         </p>
       </div>
 
-      <div className="flex flex-col ">
-        <div className="text-center ">
+      <div className="flex flex-col">
+        <div className="text-center">
           <button
             onClick={() => setShowOptions(!showOptions)}
             className="p-2 border border-gray-300 rounded-full text-white flex justify-center mx-auto bg-gradient-to-r from-[#F24055] to-[#1E7881] h-12 w-12"
@@ -44,14 +48,31 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
           </button>
         </div>
 
+        {/* Display Selected Interests in a Responsive Row Layout */}
+        <div className="mt-6 flex flex-wrap gap-1 justify-center">
+          {selectedOptions.map((option) => (
+            <div
+              key={option}
+              className="flex items-center justify-between p-1 bg-gradient-to-b from-green-700 to-green-500 bg-opacity-60 text-white rounded-full min-w-[120px] sm:w-[160px] backdrop-blur-md shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
+              onClick={() => handleRemoveOption(option)}
+            >
+              <span className="text-center flex-1">{option}</span>
+              <span className="material-symbols-outlined ml-2 text-white">
+                close
+              </span>
+            </div>
+          ))}
+        </div>
+
         <OptionsCard
           isVisible={showOptions}
           onClose={() => setShowOptions(false)}
           onUpdateOptions={handleUpdateOptions}
+          selectedOptions={selectedOptions} // Pass selectedOptions to OptionsCard
         />
       </div>
 
-      <div className="flex justify-between mb-2 mt-[30%]">
+      <div className="flex justify-between my-4">
         <button
           onClick={onBack}
           className="p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
