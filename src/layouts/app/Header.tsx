@@ -178,14 +178,14 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                       className="object-cover rounded-full mr-1 h-6 md:h-8 w-6 md:w-8"
                     />
                   </div>
-                  <div className="flex flex-col">
+                  <Link href="/sitadel" className="flex flex-col">
                     <span className="font-semibold text-[10px] sm:text-[12px]">
                       Nasir Kingly Touch Photography
                     </span>
                     <span className="text-[10px] sm:text-[12px] text-blue-900">
                       @NKTPhotography
                     </span>
-                  </div>
+                  </Link>
                 </div>
               </li>
               <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">

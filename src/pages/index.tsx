@@ -76,7 +76,7 @@ const LoginForm: FC = () => {
         </p>
       </div>
 
-      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8  md:p-12 md:w-2/3 lg:max-w-xl lg:right-4 ">
+      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8  md:p-12 md:w-2/3 lg:max-w-xl lg:right-4 h-screen md:max-h-[80vh]">
         <form onSubmit={handleSubmit} className="space-y-2 pt-4 lg:pt-8">
           <div>
             <input

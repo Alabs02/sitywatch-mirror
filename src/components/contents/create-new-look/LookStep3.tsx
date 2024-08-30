@@ -14,18 +14,36 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
     formData.options || [],
   )
 
+  const capitalizeWords = (str: string) => {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+  }
+
   const handleUpdateOptions = (updatedOptions: string[]) => {
-    setSelectedOptions(updatedOptions)
+    const normalizedOptions = updatedOptions.map(capitalizeWords)
+    const uniqueOptions = Array.from(new Set(normalizedOptions))
+    setSelectedOptions(uniqueOptions)
+  }
+
+  const handleSelectOption = (option: string) => {
+    const normalizedOption = capitalizeWords(option)
+    if (!selectedOptions.includes(normalizedOption)) {
+      handleUpdateOptions([...selectedOptions, normalizedOption])
+    }
+  }
+
+  const handleUnselectOption = (option: string) => {
+    const normalizedOption = capitalizeWords(option)
+    handleUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
   }
 
   const handleNext = () => {
     onNext({
       options: selectedOptions, // Pass selected options to the next step
     })
-  }
-
-  const handleRemoveOption = (option: string) => {
-    setSelectedOptions((prev) => prev.filter((o) => o !== option))
   }
 
   return (
@@ -53,11 +71,17 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
           {selectedOptions.map((option) => (
             <div
               key={option}
-              className="flex items-center justify-between p-1 bg-gradient-to-b from-green-700 to-green-500 bg-opacity-60 text-white rounded-full min-w-[120px] sm:w-[160px] backdrop-blur-md shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
-              onClick={() => handleRemoveOption(option)}
+              className="flex items-center justify-between p-1 bg-gradient-to-b from-green-900 to-green-700 bg-opacity-60 text-gray-50 rounded-full min-w-[120px] sm:w-[160px] backdrop-blur-md shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
+              onClick={() => handleUnselectOption(option)}
+              
             >
-              <span className="text-center flex-1">{option}</span>
-              <span className="material-symbols-outlined ml-2 text-white">
+              <span
+                className="text-center flex-1"
+                style={{ minWidth: "max-content" }}
+              >
+                {option}
+              </span>
+              <span className="material-symbols-outlined text-primary-500 ml-2">
                 close
               </span>
             </div>
@@ -67,7 +91,7 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
         <OptionsCard
           isVisible={showOptions}
           onClose={() => setShowOptions(false)}
-          onUpdateOptions={handleUpdateOptions}
+          onUpdateOptions={handleUpdateOptions} // Pass array-based handler to OptionsCard
           selectedOptions={selectedOptions} // Pass selectedOptions to OptionsCard
         />
       </div>

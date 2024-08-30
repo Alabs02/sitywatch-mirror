@@ -53,6 +53,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     asPath === "/build-sitadel" ||
     asPath === "/" ||
     asPath === "/forgot-password" ||
+    asPath === "/add-affairs" ||
     asPath === "/create-account"
 
   // Ensuring that LoginForm or BuildSitadel page is full-width

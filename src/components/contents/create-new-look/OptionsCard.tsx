@@ -74,13 +74,15 @@ const OptionsCard: FC<OptionsCardProps> = ({
   }, [isVisible, controls])
 
   const handleSelectOption = (option: string) => {
-    onUpdateOptions([...selectedOptions, option])
+    const normalizedOption = capitalizeWords(option)
+    onUpdateOptions([...selectedOptions, normalizedOption])
     setSearchQuery("") // Clear search field after selection
   }
 
   const handleRemoveOption = (option: string) => {
-    onUpdateOptions(selectedOptions.filter((o) => o !== option))
-    setSuggestedInterests((prev) => [...prev, option]) // Add removed option back to suggestions
+    const normalizedOption = capitalizeWords(option)
+    onUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
+    setSuggestedInterests((prev) => [...prev, normalizedOption]) // Add removed option back to suggestions
   }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,13 +100,14 @@ const OptionsCard: FC<OptionsCardProps> = ({
   }
 
   const handleAddNewInterest = () => {
+    const normalizedSearchQuery = capitalizeWords(searchQuery)
     if (
       searchQuery.trim() !== "" &&
-      !selectedOptions.includes(searchQuery) &&
-      !suggestedInterests.includes(searchQuery)
+      !selectedOptions.includes(normalizedSearchQuery) &&
+      !suggestedInterests.includes(normalizedSearchQuery)
     ) {
-      handleSelectOption(searchQuery)
-      setSuggestedInterests((prev) => [...prev, searchQuery])
+      handleSelectOption(normalizedSearchQuery)
+      setSuggestedInterests((prev) => [...prev, normalizedSearchQuery])
     }
   }
 
@@ -118,13 +121,19 @@ const OptionsCard: FC<OptionsCardProps> = ({
     onClose()
   }
 
+  const capitalizeWords = (str: string) =>
+    str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ")
+
   return (
     <motion.div
-      className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center`}
+      className={`fixed inset-0 z-50 flex items-center justify-center`}
       style={{ display: isVisible ? "flex" : "none" }}
       animate={controls}
     >
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative overflow-y-auto max-h-[90vh]">
+      <div className="bg-[rgb(var(--background-start-rgb))] text-[rgb(var(--foreground-rgb))] p-6 rounded-lg shadow-lg w-full max-w-4xl relative overflow-y-auto h-screen md:max-h-[90vh]">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500"
@@ -135,15 +144,16 @@ const OptionsCard: FC<OptionsCardProps> = ({
         {/* Selected Options */}
         <div className="mb-4">
           <h4 className="font-bold text-md mb-2">Selected Interests:</h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {selectedOptions.map((option) => (
               <div
                 key={option}
-                className="flex items-center justify-between p-2 bg-gradient-to-t from-green-700 to-green-500 text-white rounded-lg flex-1 min-w-[150px] sm:w-[200px] cursor-pointer transform transition-transform hover:scale-105"
+                className="flex items-center justify-between p-2 bg-gradient-to-b from-green-800 to-green-600 text-white rounded-lg min-w-[120px] sm:min-w-[160px] cursor-pointer transform transition-transform hover:scale-105"
                 onClick={() => handleRemoveOption(option)}
+                style={{ minWidth: "max-content" }}
               >
                 <span className="text-center flex-1">{option}</span>
-                <AiOutlineClose className="text-white" />
+                <AiOutlineClose className="text-primary-500" />
               </div>
             ))}
           </div>
@@ -170,12 +180,13 @@ const OptionsCard: FC<OptionsCardProps> = ({
         {/* Suggestions */}
         <div>
           <h4 className="font-bold text-md mb-2">Suggested Interests:</h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {filteredInterests.map((interest) => (
               <div
                 key={interest}
-                className="flex items-center justify-between p-2 bg-secondary text-white rounded-lg flex-1 min-w-[150px] sm:w-[200px] cursor-pointer"
+                className="flex items-center justify-between p-2 bg-secondary text-white rounded-lg min-w-[120px] sm:min-w-[160px] cursor-pointer transform transition-transform hover:scale-105"
                 onClick={() => handleSelectOption(interest)}
+                style={{ minWidth: "max-content" }}
               >
                 <span className="text-center flex-1">{interest}</span>
                 <AiOutlineCheck className="text-white" />
@@ -184,10 +195,10 @@ const OptionsCard: FC<OptionsCardProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-center mt-4">
           <button
             onClick={handleDone}
-            className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+            className="py-2 px-6 bg-gradient-to-t from-[#F24055] to-[#1E7881] text-white rounded-full"
           >
             Done
           </button>
