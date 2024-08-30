@@ -1,39 +1,46 @@
 import React, { FC } from "react"
-import Step1 from "@/components/contents/build-sitadel-component/Step1"
-import Step2 from "@/components/contents/build-sitadel-component/Step2"
-import Step3 from "@/components/contents/build-sitadel-component/Step3"
-import Step4 from "@/components/contents/build-sitadel-component/Step4"
 import Link from "next/link"
 import { useFormSteps } from "../../hooks/useFormSteps"
+import AffairsStep1 from "@/components/contents/add-affairs-component copy/AffairsStep1"
+import AffairsStep2 from "@/components/contents/add-affairs-component copy/AffairsStep2"
+import AffairsStep3 from "@/components/contents/add-affairs-component copy/AffairsStep3"
+import AffairsStep4 from "@/components/contents/add-affairs-component copy/AffairsStep4"
+import AffairsStep5 from "@/components/contents/add-affairs-component copy/AffairsStep5"
 
 const steps = [
   {
-    component: Step1,
-    label: "Name",
-    icon: "signature",
-    text: "A sitadel is a brand, business, organization, company, etc... that represents an ideal and can host events, competitions, olympiads, pageants, tournaments, contests or even grant scholarship programmes.",
+    component: AffairsStep1,
+    label: "Type",
+    icon: "view_stream",
+    description: "Define the type of sitadel you're creating.",
   },
   {
-    component: Step2,
+    component: AffairsStep2,
+    label: "Category",
+    icon: "category",
+    description: "Select the appropriate category for your sitadel.",
+  },
+  {
+    component: AffairsStep3,
     label: "Info",
-    icon: "school",
-    text: "Provide detailed information about your sitadel to attract more participants and showcase your events.",
-  },
-  {
-    component: Step3,
-    label: "Image",
     icon: "description",
-    text: "Upload a beautiful backdrop and a profile picture that best represents your sitadel.",
+    description: "Provide detailed information about your sitadel.",
   },
   {
-    component: Step4,
-    label: "Confirm",
+    component: AffairsStep4,
+    label: "Image",
     icon: "image",
-    text: "Review all the details to ensure everything is correct before submitting your sitadel.",
+    description: "Upload images that best represent your sitadel.",
+  },
+  {
+    component: AffairsStep5,
+    label: "Confirm",
+    icon: "check",
+    description: "Review and confirm all details before submission.",
   },
 ]
 
-const BuildSitadel: FC = () => {
+const AddAffairs: FC = () => {
   const {
     currentStep,
     formData,
@@ -49,9 +56,14 @@ const BuildSitadel: FC = () => {
       info: "",
       coverPhoto: null,
       profilePhoto: null,
+      // Add other necessary initial fields
     },
     steps,
   )
+
+  const handleSubmit = () => {
+    console.log("Final Form Data:", formData)
+  }
 
   return (
     <div
@@ -82,57 +94,74 @@ const BuildSitadel: FC = () => {
 
       <div className="absolute top-8 left-4 w-full md:w-1/3 p-4 text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881] lg:block hidden">
         <p className="text-lg font-semibold">
-          {steps[currentStep].text.split(". ")[0]}.
-        </p>
-        <p className="mt-2">
-          {steps[currentStep].text.split(". ").slice(1).join(". ")}
+          {steps[currentStep].description}
         </p>
       </div>
 
-      <div className="relative w-full max-w-xl bg-white bg-opacity-50 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden  md:px-20">
-        <div className="flex items-center justify-between mb-4">
+      <div className="relative w-full max-w-xl bg-white bg-opacity-50 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden md:px-20">
+        {/* Step Navigation */}
+        <div className="flex items-center justify-center mb-4">
           {steps.map((step, index) => (
-            <div
-              key={index}
-              onClick={() => goToStep(index)}
-              className={`relative flex items-center cursor-pointer ${
-                index <= currentStep
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                  : "text-gray-500"
-              }`}
-            >
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full border-2 ${
-                  index <= currentStep
-                    ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
-                    : "border-gray-200"
-                }`}
-              >
-                <span className="material-symbols-outlined">{step.icon}</span>
+            <React.Fragment key={index}>
+              <div className="flex flex-col items-center">
+                <div
+                  onClick={() => goToStep(index)}
+                  className={`relative flex flex-col items-center cursor-pointer ${
+                    index <= currentStep
+                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                      : "text-gray-500"
+                  }`}
+                >
+                  <div
+                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border-2 ${
+                      index <= currentStep
+                        ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
+                        : "border-gray-200"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-xs sm:text-sm">
+                      {step.icon}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-xs text-center w-12 sm:w-16">
+                    {step.label}
+                  </div>
+                </div>
               </div>
+
               {index < steps.length - 1 && (
                 <div
-                  className={`flex-1 border-t-2 mx-2 ${
+                  className={`h-0.5 ${
                     index < currentStep
-                      ? "border-gradient-to-r from-[#F24055] to-[#1E7881]"
-                      : "border-gray-200"
+                      ? "bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                      : "bg-gray-200"
                   }`}
+                  style={{
+                    width: "1.75rem",
+                    marginTop: "-1.2rem", // Slightly reduce to move the connector up
+                    marginBottom: "-0.25rem", // Adjust to ensure it is centered
+                  }}
                 ></div>
               )}
-            </div>
+            </React.Fragment>
           ))}
         </div>
+
+        {/* Step-specific Instructions or Details */}
         <div className="mb-4 text-gray-700">
-          {/* {steps[currentStep].text} */}
+          {/* You can add step-specific content here */}
         </div>
+
+        {/* Current Step Component */}
         <CurrentStepComponent
           onNext={handleNext}
-          onBack={currentStep > 0 ? handleBack : () => {}}
+          onBack={currentStep > 0 ? handleBack : undefined}
           formData={formData}
+          onSubmit={currentStep === steps.length - 1 ? handleSubmit : undefined}
         />
       </div>
     </div>
   )
 }
 
-export default BuildSitadel
+export default AddAffairs

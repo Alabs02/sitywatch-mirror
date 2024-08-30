@@ -7,7 +7,7 @@ interface StepProps {
   formData: FormData
 }
 
-const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
+const AffairsStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [coverPhoto, setCoverPhoto] = useState<File | null>(null)
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null)
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>()
@@ -150,4 +150,4 @@ const Step3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   )
 }
 
-export default Step3
+export default AffairsStep3

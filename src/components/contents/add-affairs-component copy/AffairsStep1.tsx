@@ -6,7 +6,7 @@ interface StepProps {
   formData: FormData
 }
 
-const Step1: FC<StepProps> = ({ onNext, formData }) => {
+const AffairsStep1: FC<StepProps> = ({ onNext, formData }) => {
   const [name, setName] = useState(formData.name)
   const [shortName, setShortName] = useState(formData.shortName || "@")
 
@@ -69,4 +69,4 @@ const Step1: FC<StepProps> = ({ onNext, formData }) => {
   )
 }
 
-export default Step1
+export default AffairsStep1

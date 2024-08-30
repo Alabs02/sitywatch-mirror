@@ -8,7 +8,7 @@ interface StepProps {
   formData: FormData
 }
 
-const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
+const AffairsStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [info, setInfo] = useState(formData.info)
   const [link, setLink] = useState(formData.link || "")
   const [email, setEmail] = useState(formData.email || "")
@@ -164,4 +164,4 @@ const Step2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   )
 }
 
-export default Step2
+export default AffairsStep2
