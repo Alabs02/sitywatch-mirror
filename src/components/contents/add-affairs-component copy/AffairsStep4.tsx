@@ -1,123 +1,85 @@
 import React, { FC, useState, useEffect } from "react"
-import { useRouter } from "next/router" // Import the useRouter hook
 import { FormData } from "@/types" // Adjust the path as necessary
-import Image from "next/image"
 
 interface StepProps {
   onBack: () => void
+  onNext: (formData: FormData) => void // Pass formData to onNext
   formData: FormData
 }
 
-const AffairsStep4: FC<StepProps> = ({ onBack, formData }) => {
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | undefined>()
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | undefined>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const router = useRouter() // Initialize the router
+const AffairsStep4: FC<StepProps> = ({ onBack, onNext, formData }) => {
+  const [highlightImage, setHighlightImage] = useState<File | undefined>(
+    undefined,
+  )
+  const [highlightImageUrl, setHighlightImageUrl] = useState<
+    string | undefined
+  >()
 
   useEffect(() => {
-    if (formData.coverPhoto) {
+    if (highlightImage) {
       try {
-        const url = URL.createObjectURL(formData.coverPhoto)
-        setCoverPhotoUrl(url)
+        const url = URL.createObjectURL(highlightImage)
+        setHighlightImageUrl(url)
 
         return () => {
           URL.revokeObjectURL(url)
         }
       } catch (error) {
-        console.error("Failed to create object URL for cover photo:", error)
-        setCoverPhotoUrl(undefined)
+        console.error("Failed to create object URL for highlight image:", error)
+        setHighlightImageUrl(undefined)
       }
     } else {
-      setCoverPhotoUrl(undefined)
+      setHighlightImageUrl(undefined)
     }
-  }, [formData.coverPhoto])
+  }, [highlightImage])
 
-  useEffect(() => {
-    if (formData.profilePhoto) {
-      try {
-        const url = URL.createObjectURL(formData.profilePhoto)
-        setProfilePhotoUrl(url)
-
-        return () => {
-          URL.revokeObjectURL(url)
-        }
-      } catch (error) {
-        console.error("Failed to create object URL for profile photo:", error)
-        setProfilePhotoUrl(undefined)
-      }
-    } else {
-      setProfilePhotoUrl("/dummy-user-img.jpg")
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : undefined
+    setHighlightImage(file)
+    if (file) {
+      setHighlightImageUrl(URL.createObjectURL(file))
     }
-  }, [formData.profilePhoto])
+  }
 
-  const handleConfirm = () => {
-    setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/sitadel-profile") // Route to the profile page after loading
-    }, 2000) // 2-second loader
+  const handleNext = () => {
+    onNext({ ...formData, highlightImage }) // Manually trigger the next step
   }
 
   return (
-    <div>
-      {/* <h2 className="text-xl font-semibold mb-4">Confirm</h2> */}
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        Upload a highlight for your event
+      </h2>
+      <p className="text-sm text-center mb-4 italic">
+        Using a highlight for your event will give it an authentic and aesthetic
+        look. It should be something that captivates people about your event.
+      </p>
 
-      {/* Cover Photo Container */}
-      <div className="relative mb-4 w-full h-40 border border-gray-300 rounded-lg overflow-hidden mt-4">
-        {coverPhotoUrl ? (
+      <div
+        className="relative w-full h-64 bg-dark-gray rounded-lg border border-gray-300 overflow-hidden cursor-pointer"
+        onClick={() => document.getElementById("file-input")?.click()}
+      >
+        {highlightImageUrl ? (
           <img
-            src={coverPhotoUrl}
-            alt="Cover Photo"
+            src={highlightImageUrl}
+            alt="Highlight"
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-sm">
-            <span className="text-gray-500">No cover photo</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-gray-500">
+            <span className="material-symbols-outlined text-4xl">
+              add_a_photo
+            </span>
+            <p className="mt-2">Click to upload image</p>
           </div>
         )}
-      </div>
-      <div className="relative mb-4 w-32 h-32 rounded-full border-4 border-gradient-to-r from-[#F24055] to-[#1E7881] overflow-hidden mx-4 -mt-20">
-        <Image
-          src={profilePhotoUrl || "/dummy-user-img.jpg"}
-          alt="Profile Photo"
-          className="absolute inset-0 w-full h-full object-cover rounded-full"
-          width={128}
-          height={128}
+        <input
+          id="file-input"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
         />
-      </div>
-
-      {/* Display Form Data */}
-      <div className="mb-4">
-        <p className="font-bold">Sitadel Name:</p>
-        <p>{formData.name}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Sitadel Info:</p>
-        <p>{formData.info}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Link:</p>
-        <p>{formData.link}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Email:</p>
-        <p>{formData.email}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Contact:</p>
-        <p>{formData.contact}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Country:</p>
-        <p>{formData.country}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">State:</p>
-        <p>{formData.state}</p>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Address:</p>
-        <p>{formData.address}</p>
       </div>
 
       {/* Navigation Buttons */}
@@ -129,18 +91,10 @@ const AffairsStep4: FC<StepProps> = ({ onBack, formData }) => {
           Back
         </button>
         <button
-          onClick={handleConfirm}
+          onClick={handleNext}
           className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
-          disabled={isLoading}
         >
-          {isLoading ? (
-            <div className="flex items-center">
-              <div className="loader mr-2" />
-              Loading...
-            </div>
-          ) : (
-            "Build Sitadel"
-          )}
+          Next
         </button>
       </div>
     </div>

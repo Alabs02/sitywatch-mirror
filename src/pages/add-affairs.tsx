@@ -12,19 +12,22 @@ const steps = [
     component: AffairsStep1,
     label: "Type",
     icon: "view_stream",
-    description: "Define the type of sitadel you're creating.",
+    description:
+      "An affair is any engaging activity or program organised by a sitadel that people can participate in. It can alsobe a product or service marketed oprovided by the sitadel.There are three types of affairs: Tourney, Event, Provice.",
   },
   {
     component: AffairsStep2,
     label: "Category",
     icon: "category",
-    description: "Select the appropriate category for your sitadel.",
+    description:
+      "Every event must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests",
   },
   {
     component: AffairsStep3,
     label: "Info",
     icon: "description",
-    description: "Provide detailed information about your sitadel.",
+    description:
+      "Every event must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests",
   },
   {
     component: AffairsStep4,
@@ -137,9 +140,11 @@ const AddAffairs: FC = () => {
                       : "bg-gray-200"
                   }`}
                   style={{
-                    width: "1.75rem",
-                    marginTop: "-1.2rem", // Slightly reduce to move the connector up
-                    marginBottom: "-0.25rem", // Adjust to ensure it is centered
+                    width: "3.5rem", // Adjust this value to make the divider longer
+                    marginLeft: "-0.68rem", // Adjust to reduce the spacing between divider and circle
+                    marginRight: "-0.68rem", // Adjust to reduce the spacing between divider and circle
+                    marginTop: "-1.2rem", // Keep this to move the connector up
+                    marginBottom: "-0.25rem", // Keep this to ensure it is centered
                   }}
                 ></div>
               )}

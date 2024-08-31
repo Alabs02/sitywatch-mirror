@@ -1,6 +1,12 @@
 import React, { FC, useState } from "react"
 import { FormData } from "@/types" // Adjust the path as necessary
-import Image from "next/image"
+
+const predefinedGames = [
+  "Chess", "Monopoly", "Scrabble", "Risk", "Clue", "Codenames", "Pandemic", 
+  "Ticket to Ride", "Carcassonne", "Catan", "Dixit", "Azul", "7 Wonders", 
+  "Splendor", "Dominion", "Jenga", "Twilight Struggle", "7 Wonders Duel", 
+  "Gloomhaven", "Terraforming Mars"
+]
 
 interface StepProps {
   onNext: (data: Partial<FormData>) => void
@@ -9,6 +15,7 @@ interface StepProps {
 }
 
 const AffairsStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
+  const [showBars, setShowBars] = useState(false)
   const [info, setInfo] = useState(formData.info)
   const [link, setLink] = useState(formData.link || "")
   const [email, setEmail] = useState(formData.email || "")
@@ -16,135 +23,168 @@ const AffairsStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [country, setCountry] = useState(formData.country || "Nigeria")
   const [state, setState] = useState(formData.state || "")
   const [address, setAddress] = useState(formData.address || "")
+  const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [barValues, setBarValues] = useState([
+    "Board Games",
+    "Monopoly",
+    "Games",
+  ])
+  const [searchValue, setSearchValue] = useState("")
+  const [filteredGames, setFilteredGames] = useState<string[]>([])
+  const maxBars = 5
 
   const handleNext = () => {
     onNext({ info, link, email, contact, country, state, address })
   }
 
+  const handleEditClick = (index: number) => {
+    setEditIndex(index)
+  }
+
+  const handleSaveClick = () => {
+    setEditIndex(null)
+  }
+
+  const handleInputChange = (index: number, value: string) => {
+    const newValues = [...barValues]
+    newValues[index] = value
+    setBarValues(newValues)
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearchValue(value)
+    if (value.trim()) {
+      const filtered = predefinedGames.filter(game =>
+        game.toLowerCase().includes(value.toLowerCase())
+      )
+      setFilteredGames(filtered)
+    } else {
+      setFilteredGames([])
+    }
+  }
+
+  const handleAddClick = () => {
+    if (barValues.length >= maxBars) {
+      alert("You have reached the maximum limit of 5 items. You can edit your existing options.")
+      return
+    }
+    if (searchValue.trim()) {
+      setBarValues([...barValues, searchValue.trim()])
+      setSearchValue("")
+      setFilteredGames([])
+    }
+  }
+
+  const handleGameClick = (game: string) => {
+    if (barValues.length >= maxBars) {
+      alert("You have reached the maximum limit of 5 items. You can edit your existing options.")
+      return
+    }
+    setBarValues([...barValues, game])
+    setSearchValue("")
+    setFilteredGames([])
+  }
+
   return (
-    <div className="text-center">
-      {/* Info Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">
-          What is your Sitadel about?
-        </label>
-        <p className="text-sm text-black italic mb-2">
-          Provide general information about your Sitadel.
-        </p>
-        <textarea
-          value={info}
-          onChange={(e) => setInfo(e.target.value)}
-          placeholder="Information"
-          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-        />
-      </div>
+    <div className="text-center relative">
+      <h2 className="text-lg font-semibold mb-2">
+        What category/niche is your event under?
+      </h2>
+      <p className="text-sm text-black italic mb-4">
+        This will be used as a keyword when people search. You can have a
+        maximum of five.
+      </p>
 
-      {/* Link Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">
-          Does your Sitadel have a website?
-        </label>
-        <p className="text-sm text-black italic mb-2">
-          If your Sitadel has a website or any sort of presence on the internet
-          that you would like people to visit, you can put the link below.
-        </p>
-        <input
-          type="url"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          placeholder="https://example.com"
-          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-        />
-      </div>
-
-      {/* Email Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">Email</label>
-        <p className="text-sm text-black italic mb-2">
-          Enter the contact email for your Sitadel.
-        </p>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="example@email.com"
-          className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-        />
-      </div>
-
-      {/* Contact Field */}
-      <div className="flex flex-col justify-center">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          Phone number
-        </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
-        </p>
-        <div className="flex items-center w-full">
-          <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
-            <Image
-              src="/flags/nigeria.svg"
-              alt="Nigeria Flag"
-              width={24}
-              height={16}
-              className="inline-block"
-            />
-            <span className="ml-2">+234</span>
+      <div className="relative mb-6">
+        {/* Filtering dropdown */}
+        {filteredGames.length > 0 && searchValue.trim() && (
+          <div className="absolute left-0 right-0 bottom-full mb-2 bg-transparent border border-gray-300 shadow-lg rounded-md z-10">
+            <div className="flex flex-wrap gap-2 p-2 bg-white border border-gray-300 rounded-md shadow-lg">
+              {filteredGames.slice(0, 5).map((game, index) => (
+                <div
+                  key={index}
+                  className="p-2 text-white bg-black hover:bg-gray-800 cursor-pointer rounded"
+                  onClick={() => handleGameClick(game)}
+                >
+                  {game}
+                </div>
+              ))}
+            </div>
           </div>
-          <input
-            type="text"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            placeholder="Phone Number"
-            className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-          />
-        </div>
-      </div>
-
-      {/* Location Field */}
-      <div className="mb-6 ">
-        <label className="block text-sm font-semibold mb-1">Location</label>
-        <div className="flex justify-center space-x-2">
-          <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="p-2  rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
-            >
-              <option value="Nigeria">Nigeria</option>
-              {/* Add more countries if needed */}
-            </select>
-          </div>
-          <div className="w-1/2">
-            <select
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              className="p-2 border border-gray-300 rounded w-full  bg-white shadow-inner shadow-gray-600/50 "
-            >
-              <option value="">Select State</option>
-              <option value="Lagos">Lagos</option>
-              <option value="Abuja">Abuja</option>
-              <option value="Kano">Kano</option>
-              {/* Add more states as needed */}
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Address Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1">Address</label>
-        <p className="text-sm text-black italic mb-2">
-          Enter the address where your Sitadel is located.
-        </p>
+        )}
         <input
           type="text"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Street address, City, etc."
+          value={searchValue}
+          onChange={handleSearchChange}
+          placeholder="Search or add new..."
           className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
         />
+        {searchValue.trim() && (
+          <button
+            onClick={handleAddClick}
+            className="absolute right-3 top-2 bg-primary-600 text-white rounded px-2 py-1 text-sm"
+            style={{ right: "60px" }}
+          >
+            Add
+          </button>
+        )}
       </div>
+
+      <button
+        onClick={() => setShowBars(!showBars)}
+        className="p-2 bg-primary-600 text-white rounded-xl mb-4"
+      >
+        {showBars ? "Hide Options" : "Show Options"}
+      </button>
+
+      {showBars && (
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          {barValues.map((value, index) => (
+            <div
+              key={index}
+              className="flex items-center bg-black border border-gray-300 shadow-inner shadow-gray-600/50 rounded-lg"
+              style={{
+                maxWidth: "600px",
+                flexBasis: "calc(50% - 8px)",
+                marginBottom: "8px",
+                position: "relative",
+              }}
+            >
+              {editIndex === index ? (
+                <input
+                  type="text"
+                  value={value}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  className="flex-1 bg-transparent border-none text-white p-1 focus:outline-none"
+                  autoFocus
+                  style={{ minWidth: 0, width: "calc(100% - 40px)" }}
+                />
+              ) : (
+                <span className="flex-1 text-white">{value}</span>
+              )}
+              <span
+                className="material-symbols-outlined text-primary-600 cursor-pointer ml-2"
+                onClick={() => {
+                  editIndex === index
+                    ? handleSaveClick()
+                    : handleEditClick(index)
+                }}
+              >
+                {editIndex === index ? "save" : "edit"}
+              </span>
+            </div>
+          ))}
+          <div className="w-full mt-4 flex justify-center">
+            <button
+              onClick={() => setShowBars(false)}
+              className="p-2 bg-gray-300 text-black rounded-xl"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-between mt-4">
         <button

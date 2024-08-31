@@ -24,12 +24,26 @@ export interface FormData {
   relationshipStatus: string
   nightLife: string
   sideHustle?: string
-  institutionType: string // Added
-  schoolStatus: string // Added
+  institutionType: string
+  schoolStatus: string
   options: string[]
   country: string
   state: string
+  type?: string // New field for the affair type (TOURNEY, EVENT, PROVINCE)
+  handle?: string // New field for event handle
+  description?: string // New field for event description
+  startDate?: string // New field for event start date
+  endDate?: string // New field for event end date
+  time?: {
+    hour: string
+    minute: string
+    period: string
+  } // New field for event start time
+  highlightImage?: File
 }
+
+
+
 
 
 
