@@ -6,6 +6,7 @@ import AffairsSearchTab from "@/components/contents/affairs-components/affairsSe
 import AffairsActivityTab from "@/components/contents/affairs-components/AffairsActivityTab"
 import AffairsAboutTab from "@/components/contents/affairs-components/AffairsAboutTab"
 import AffairsAffairsTab from "@/components/contents/affairs-components/AffairsAffairsTab"
+import Link from "next/link"
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
@@ -46,10 +47,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 
             <div className="flex items-center justify-between w-full px-2">
               <div className="flex">
-                
-
                 <button className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
-                 
                   <span className="lg:inline text-xs md:text-sm p-1">
                     Edit Sitadel
                   </span>
@@ -57,12 +55,14 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
               </div>
               <div className="flex justify-between items-center px-4">
                 <div className="flex space-x-4">
-                 
                   <span className="material-symbols-outlined">more_vert</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-around space-x-6 mt-4 w-full">
+            <Link
+              href="/view-recognition"
+              className="flex items-center justify-around space-x-6 mt-4 w-full"
+            >
               <div className="flex flex-col space-y-1 items-center">
                 <h2 className="font-bold text-sm lg:text-base">135</h2>
                 <p className="text-sm text-slate-500">Sitizens</p>
@@ -77,7 +77,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
                 <h2 className="font-bold text-sm lg:text-base">8</h2>
                 <p className="text-sm text-slate-500">Recognitions</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="mt-4">
@@ -102,7 +102,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 }
 
 const RightSide: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("AffairsTab")
+  const [activeTab, setActiveTab] = useState("Affairs")
 
   const renderActiveComponent = () => {
     switch (activeTab) {
@@ -128,7 +128,7 @@ const RightSide: React.FC = () => {
         <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
           <span
             className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "SearchTab" ? "text-secondary" : ""
+              activeTab === "Search" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Search")}
           >
@@ -136,7 +136,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "ActivityTab" ? "text-secondary" : ""
+              activeTab === "Activity" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Activity")}
           >
@@ -144,7 +144,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "AboutTab" ? "text-secondary" : ""
+              activeTab === "About" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("About")}
           >
@@ -152,7 +152,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "AffairsTab" ? "text-secondary" : ""
+              activeTab === "Affairs" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Affairs")}
           >
@@ -169,7 +169,7 @@ const RightSide: React.FC = () => {
   )
 }
 
-const Sitadel: React.FC = () => {
+const Affairs: React.FC = () => {
   const router = useRouter()
 
   useEffect(() => {
@@ -187,4 +187,4 @@ const Sitadel: React.FC = () => {
   )
 }
 
-export default Sitadel
+export default Affairs

@@ -92,42 +92,39 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
           </div>
 
           {/* Right Section: Search Icon, Avatar, Dropdown */}
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <div className="h-6 w-6 md:h-10 md:w-10">
+          <div className="flex items-center space-x-4">
+            <div className="h-10 w-10 flex items-center justify-center">
               {loading ? (
-                <Skeleton circle={true} height={24} width={24} />
+                <Skeleton circle={true} height={40} width={40} />
               ) : (
                 <Image
                   src="/header-images/search.svg"
                   alt="Search"
                   width={40}
                   height={40}
-                  className="cursor-pointer object-cover md:w-10 md:h-10 w-6 h-6"
+                  className="cursor-pointer object-cover"
                 />
               )}
             </div>
-            <div className="h-6 w-6 md:h-10 md:w-10 rounded-full overflow-hidden">
+            <div className="h-10 w-10 rounded-full overflow-hidden flex items-center justify-center">
               {loading ? (
-                <Skeleton circle={true} height={24} width={24} />
+                <Skeleton circle={true} height={40} width={40} />
               ) : (
                 <Image
                   src="/header-images/avatar.jpg"
                   alt="Avatar"
                   width={40}
                   height={40}
-                  className="cursor-pointer object-cover md:w-10 md:h-10 w-6 h-6"
+                  className="cursor-pointer object-cover"
                   onClick={handleAvatarClick}
                 />
               )}
             </div>
-
-            <div className="h-6 w-6 md:h-10 md:w-10">
+            <div className="h-10 w-10 flex items-center justify-center">
               {loading ? (
-                <Skeleton circle={true} height={24} width={24} />
+                <Skeleton circle={true} height={40} width={40} />
               ) : (
-                <span className="material-symbols-outlined md:w-10 md:h-10 w-6 h-6">
-                  list
-                </span>
+                <span className="material-symbols-outlined text-2xl md:text-4xl">list</span>
               )}
             </div>
           </div>
@@ -201,9 +198,9 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                   add
                 </span>
                 <Link href="/create-account">
-                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
-                  Create a new look
-                </span>
+                  <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
+                    Create a new look
+                  </span>
                 </Link>
               </li>
               <li className="flex items-center p-1 sm:p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
@@ -233,14 +230,14 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                 </span>
               </li>
               <Link href="/">
-              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
-                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
-                  logout
-                </span>
-                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm pb-1">
-                  Logout
-                </span>
-              </li>
+                <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                  <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                    logout
+                  </span>
+                  <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm pb-1">
+                    Logout
+                  </span>
+                </li>
               </Link>
             </ul>
           </div>

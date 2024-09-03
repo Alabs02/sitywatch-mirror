@@ -6,6 +6,7 @@ import AffairsStep2 from "@/components/contents/add-affairs-component copy/Affai
 import AffairsStep3 from "@/components/contents/add-affairs-component copy/AffairsStep3"
 import AffairsStep4 from "@/components/contents/add-affairs-component copy/AffairsStep4"
 import AffairsStep5 from "@/components/contents/add-affairs-component copy/AffairsStep5"
+import { FormData } from "@/types"
 
 const steps = [
   {
@@ -13,33 +14,39 @@ const steps = [
     label: "Type",
     icon: "view_stream",
     description:
-      "An affair is any engaging activity or program organised by a sitadel that people can participate in. It can alsobe a product or service marketed oprovided by the sitadel.There are three types of affairs: Tourney, Event, Provice.",
+      "An affair is any engaging activity or program organized by a sitadel that people can participate in. It can also be a product or service marketed or provided by the sitadel. There are three types of affairs: Tourney, Event, Province.",
+    validate: (formData: FormData) => !!formData.type, // Validation for Step 1: check if 'type' is provided
   },
   {
     component: AffairsStep2,
     label: "Category",
     icon: "category",
     description:
-      "Every event must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests",
+      "Every tourney must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests.",
+    validate: (formData: FormData) => !!formData.category, // Example validation for Step 2: check if 'category' is provided
   },
   {
     component: AffairsStep3,
     label: "Info",
     icon: "description",
     description:
-      "Every event must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests",
+      "Every event must be in a certain category under a specific niche. This allows users to easily find your tourney when they search for affairs based on their interests.",
+    validate: (formData: FormData) => !!formData.info, // Example validation for Step 3: check if 'info' is provided
   },
   {
     component: AffairsStep4,
     label: "Image",
     icon: "image",
     description: "Upload images that best represent your sitadel.",
+    validate: (formData: FormData) =>
+      !!formData.coverPhoto && !!formData.profilePhoto, // Step 4 validation: check if both cover and profile photos are uploaded
   },
   {
     component: AffairsStep5,
     label: "Confirm",
     icon: "check",
     description: "Review and confirm all details before submission.",
+    validate: (formData: FormData) => true, // Step 5 has no specific validation
   },
 ]
 
@@ -52,17 +59,59 @@ const AddAffairs: FC = () => {
     handleBack,
     goToStep,
     CurrentStepComponent,
-  } = useFormSteps(
+  } = useFormSteps<FormData>(
     {
-      name: "",
-      shortName: "",
+      type: "",
+      category: "",
       info: "",
       coverPhoto: null,
       profilePhoto: null,
-      // Add other necessary initial fields
+      fieldOfStudy: "",
+      name: "",
+      shortName: "",
+      link: "",
+      email: "",
+      contact: "",
+      address: "",
+      study: "",
+      dob: {
+        month: "",
+        day: "",
+        year: "",
+      },
+      showDob: "",
+      gender: "",
+      sexuality: "",
+      relationshipStatus: "",
+      nightLife: "",
+      sideHustle: "",
+      institutionType: "",
+      schoolStatus: "",
+      options: [],
+      country: "",
+      state: "",
+      handle: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+      time: {
+        hour: "",
+        minute: "",
+        period: "",
+      },
+      highlightImage: null,
     },
     steps,
   )
+
+  const handleStepChange = (stepIndex: number) => {
+    // Allow navigation only to the current or previous steps
+    if (stepIndex <= currentStep) {
+      goToStep(stepIndex)
+    } else {
+      alert("Please complete the current step before proceeding.")
+    }
+  }
 
   const handleSubmit = () => {
     console.log("Final Form Data:", formData)
@@ -90,71 +139,70 @@ const AddAffairs: FC = () => {
 
       {/* Mobile X Button */}
       <Link href="/welcome">
-        <button className="absolute top-1 right-2 text-xl lg:hidden flex ">
+        <button className="absolute top-1 right-2 text-xl lg:hidden flex">
           ✕
         </button>
       </Link>
 
+      {/* Step Description (Top Left Corner) */}
       <div className="absolute top-8 left-4 w-full md:w-1/3 p-4 text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881] lg:block hidden">
         <p className="text-lg font-semibold">
           {steps[currentStep].description}
         </p>
       </div>
 
-      <div className="relative w-full max-w-xl bg-white bg-opacity-50 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden md:px-20">
-        {/* Step Navigation */}
-        <div className="flex items-center justify-center mb-4">
-          {steps.map((step, index) => (
-            <React.Fragment key={index}>
-              <div className="flex flex-col items-center">
-                <div
-                  onClick={() => goToStep(index)}
-                  className={`relative flex flex-col items-center cursor-pointer ${
-                    index <= currentStep
-                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                      : "text-gray-500"
-                  }`}
-                >
+      {/* Card Container */}
+      <div className="relative w-full max-w-xl bg-white bg-opacity-50 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] lg:absolute lg:top-10 lg:right-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gradient md:px-20">
+        {/* Sticky Step Navigation */}
+        <div className="sticky top-0 z-10">
+          <div className="flex items-center justify-center mb-4 py-2">
+            {steps.map((step, index) => (
+              <React.Fragment key={index}>
+                <div className="flex flex-col items-center">
                   <div
-                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border-2 ${
+                    onClick={() => handleStepChange(index)}
+                    className={`relative flex flex-col items-center cursor-pointer ${
                       index <= currentStep
-                        ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
-                        : "border-gray-200"
+                        ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                        : "text-gray-500"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-xs sm:text-sm">
-                      {step.icon}
-                    </span>
-                  </div>
-                  <div className="mt-1 text-xs text-center w-12 sm:w-16">
-                    {step.label}
+                    <div
+                      className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border-2 ${
+                        index <= currentStep
+                          ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
+                          : "border-gray-200"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-xs sm:text-sm">
+                        {step.icon}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-center w-12 sm:w-16">
+                      {step.label}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {index < steps.length - 1 && (
-                <div
-                  className={`h-0.5 ${
-                    index < currentStep
-                      ? "bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                      : "bg-gray-200"
-                  }`}
-                  style={{
-                    width: "3.5rem", // Adjust this value to make the divider longer
-                    marginLeft: "-0.68rem", // Adjust to reduce the spacing between divider and circle
-                    marginRight: "-0.68rem", // Adjust to reduce the spacing between divider and circle
-                    marginTop: "-1.2rem", // Keep this to move the connector up
-                    marginBottom: "-0.25rem", // Keep this to ensure it is centered
-                  }}
-                ></div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-
-        {/* Step-specific Instructions or Details */}
-        <div className="mb-4 text-gray-700">
-          {/* You can add step-specific content here */}
+                {index < steps.length - 1 && (
+                  <div
+                    className={`h-0.5 ${
+                      index < currentStep
+                        ? "bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                        : "bg-gray-200"
+                    }`}
+                    style={{
+                      width: "3.5rem", // Adjust this value to make the divider longer
+                      marginLeft: "-0.68rem", // Adjust to reduce the spacing between divider and circle
+                      marginRight: "-0.68rem", // Adjust to reduce the spacing between divider and circle
+                      marginTop: "-1.2rem", // Keep this to move the connector up
+                      marginBottom: "-0.25rem", // Keep this to ensure it is centered
+                    }}
+                  ></div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
 
         {/* Current Step Component */}

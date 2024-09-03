@@ -109,7 +109,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 }
 
 const RightSide: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("AffairsTab")
+  const [activeTab, setActiveTab] = useState("Affairs")
 
   const renderActiveComponent = () => {
     switch (activeTab) {
@@ -135,7 +135,7 @@ const RightSide: React.FC = () => {
         <nav className="flex space-x-4 items-center justify-around p-2 text-tertiary-300 sticky top-0 z-10">
           <span
             className={`material-symbols-outlined cursor-pointer ${
-              activeTab === "SearchTab" ? "text-secondary" : ""
+              activeTab === "Search" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Search")}
           >
@@ -143,7 +143,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "ActivityTab" ? "text-secondary" : ""
+              activeTab === "Activity" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Activity")}
           >
@@ -151,7 +151,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "AboutTab" ? "text-secondary" : ""
+              activeTab === "About" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("About")}
           >
@@ -159,7 +159,7 @@ const RightSide: React.FC = () => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "AffairsTab" ? "text-secondary" : ""
+              activeTab === "Affairs" ? "text-secondary" : ""
             }`}
             onClick={() => setActiveTab("Affairs")}
           >
@@ -182,7 +182,7 @@ const SitadelProfile: React.FC = () => {
   useEffect(() => {
     const query = { collapsed: true }
     router.push({ pathname: "/sitadel-profile", query })
-  }, [])
+  }, [router])
 
   return (
     <div className="h-full shadow-inner shadow-gray-400/75 lg:rounded-t-[10px] overflow-y-auto mb-28 md:mb-36 lg:mb-0">

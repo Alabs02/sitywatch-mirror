@@ -105,7 +105,7 @@ const AffairsStep5: FC<StepProps> = ({ onBack, onConfirm, formData }) => {
         >
           Back
         </button>
-        <Link href="/sitadel">
+        <Link href="/affairs">
         
         <button
           onClick={onConfirm}

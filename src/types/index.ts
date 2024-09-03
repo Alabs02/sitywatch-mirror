@@ -39,7 +39,8 @@ export interface FormData {
     minute: string
     period: string
   } // New field for event start time
-  highlightImage?: File
+  highlightImage?: File | null
+  category: string
 }
 
 
