@@ -9,6 +9,8 @@ import OrganizersAndPartners from "@/components/contents/tourneys-components/Org
 import Group from "@/components/contents/tourneys-components/Group"
 import TourneysCarousel from "@/components/contents/TourneysCarousel"
 import Link from "next/link"
+import SitadelAffairsCarousel from "@/components/contents/sitadel-profile-components/SitadelProductsCarousel"
+import SitadelProductsCarousel from "@/components/contents/sitadel-profile-components/SitadelProductsCarousel"
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
@@ -24,7 +26,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           className="w-full"
         />
       </div> */}
-     
+
       {/* <h3 className="flex justify-center mt-2 text-center text-[14px] lg:text-base tracking-tight italic">
         Providing a platform for photography students worldwide - first prize is
         top Sony digital imaging equipment.
@@ -138,8 +140,7 @@ const RightSide: React.FC = () => {
       </nav>
       <article className="h-full  shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-hidden">
         <div className="h-full overflow-y-auto m-1">
-
-        {renderActiveComponent()}
+          {renderActiveComponent()}
         </div>
       </article>
     </div>
@@ -151,14 +152,14 @@ const Tourneys: React.FC = () => {
 
   useEffect(() => {
     const query = { collapsed: true }
-    router.push({ pathname: "/tourneys", query })
+    router.push({ pathname: "/sitadels/sitadel-products", query })
   }, [])
 
   return (
     <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 lg:rounded-t-[30px]">
       <div className=" overflow-y-auto h-full">
         <div className="items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm hidden lg:flex">
-          <Link href="/sitizens/sitizen-profile">
+          <Link href="/sitadels/sitadel-profile">
             <div className="ml-2 flex items-center">
               <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
                 arrow_back
@@ -169,7 +170,7 @@ const Tourneys: React.FC = () => {
         </div>
         <div className="overflow-x-auto">
           <div className="min-w-[300px] max-w-full mx-auto">
-            <TourneysCarousel />
+            <SitadelProductsCarousel />
           </div>
           <div className="flex items-center justify-center flex-col space-x-2 md:space-y-4">
             <div>

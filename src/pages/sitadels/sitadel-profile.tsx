@@ -6,9 +6,13 @@ import AffairsSearchTab from "@/components/contents/affairs-components/affairsSe
 import AffairsActivityTab from "@/components/contents/affairs-components/AffairsActivityTab"
 import AffairsAboutTab from "@/components/contents/affairs-components/AffairsAboutTab"
 import AffairsAffairsTab from "@/components/contents/affairs-components/AffairsAffairsTab"
+import EditSitadelOverlay from "@/components/contents/sitadel-profile-components/EditSitadelProfile"
 import Link from "next/link"
 
-const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
+const LeftSide: React.FC<{ isCollapsed: boolean; onEditClick: () => void }> = ({
+  isCollapsed,
+  onEditClick,
+}) => {
   return (
     <div className="lg:overflow-y-auto h-full transition-transform duration-500 lg:mb-12 lg:w-1/2">
       <div className="h-full overflow-y-auto m-2">
@@ -47,7 +51,10 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
 
             <div className="flex items-center justify-between w-full px-2">
               <div className="flex">
-                <button className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white">
+                <button
+                  className="py-[2px] px-1 md:px-4 lg:px-8 lg:py-1 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[12px] lg:text-base flex items-center gap-x-2 shadow text-white"
+                  onClick={onEditClick}
+                >
                   <span className="lg:inline text-xs md:text-sm p-1">
                     Edit Sitadel
                   </span>
@@ -101,7 +108,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   )
 }
 
-const RightSide: React.FC = () => {
+const RightSide: React.FC<{ onEditClick: () => void }> = ({ onEditClick }) => {
   const [activeTab, setActiveTab] = useState("Affairs")
 
   const renderActiveComponent = () => {
@@ -169,22 +176,30 @@ const RightSide: React.FC = () => {
   )
 }
 
-const Affairs: React.FC = () => {
+const SitadelProfile: React.FC = () => {
+  const [isOverlayOpen, setOverlayOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     const query = { collapsed: true }
-    router.push({ pathname: "/affairs", query })
+    router.push({ pathname: "/sitadels/sitadel-profile", query })
   }, [])
 
   return (
     <div className="h-full shadow-inner shadow-gray-400/75 lg:rounded-t-[10px] overflow-y-auto mb-28 md:mb-36 lg:mb-0">
       <div className="lg:flex lg:h-screen">
-        <LeftSide isCollapsed={false} />
-        <RightSide />
+        <LeftSide
+          isCollapsed={false}
+          onEditClick={() => setOverlayOpen(true)}
+        />
+        <RightSide onEditClick={() => setOverlayOpen(true)} />
       </div>
+
+      {isOverlayOpen && (
+        <EditSitadelOverlay onClose={() => setOverlayOpen(false)} />
+      )}
     </div>
   )
 }
 
-export default Affairs
+export default SitadelProfile

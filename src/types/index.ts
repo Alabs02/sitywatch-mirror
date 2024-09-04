@@ -29,11 +29,11 @@ export interface FormData {
   options: string[]
   country: string
   state: string
-  type?: string // New field for the affair type (TOURNEY, EVENT, PROVINCE)
-  handle?: string // New field for event handle
-  description?: string // New field for event description
-  startDate?: string // New field for event start date
-  endDate?: string // New field for event end date
+  type?: string 
+  handle?: string 
+  description?: string 
+  startDate?: string 
+  endDate?: string 
   time?: {
     hour: string
     minute: string
@@ -41,6 +41,13 @@ export interface FormData {
   } // New field for event start time
   highlightImage?: File | null
   category: string
+  
+  bio: string
+
+  phone: string
+  website: string
+  
+ 
 }
 
 

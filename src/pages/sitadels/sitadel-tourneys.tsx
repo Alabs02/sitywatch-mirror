@@ -24,7 +24,7 @@ const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
           className="w-full"
         />
       </div> */}
-     
+
       {/* <h3 className="flex justify-center mt-2 text-center text-[14px] lg:text-base tracking-tight italic">
         Providing a platform for photography students worldwide - first prize is
         top Sony digital imaging equipment.
@@ -138,8 +138,7 @@ const RightSide: React.FC = () => {
       </nav>
       <article className="h-full  shadow-inner shadow-gray-400/75 py-2 px-4 rounded-t-[30px] overflow-hidden">
         <div className="h-full overflow-y-auto m-1">
-
-        {renderActiveComponent()}
+          {renderActiveComponent()}
         </div>
       </article>
     </div>

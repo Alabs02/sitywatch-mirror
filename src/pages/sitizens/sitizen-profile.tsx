@@ -181,7 +181,7 @@ const SitadelProfile: React.FC = () => {
 
   useEffect(() => {
     const query = { collapsed: true }
-    router.push({ pathname: "/sitadel-profile", query })
+    router.push({ pathname: "/sitizens/sitizen-profile", query })
   }, [router])
 
   return (
