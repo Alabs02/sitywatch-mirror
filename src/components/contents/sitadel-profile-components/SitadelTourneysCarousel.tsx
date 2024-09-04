@@ -1,16 +1,15 @@
 import React, { useState } from "react"
 
-// Dummy images (replace with your own)
-const images = [
-  "/sitadel/prd-5.svg",
-  "/sitadel/prd-4.svg",
-  "/sitadel/prd-1.svg",
-  "/sitadel/prd-2.svg",
-  "/sitadel/prd-3.svg",
+// Dummy initial images (replace with your own)
+const initialImages = [
+  "/sitadel/tny-3.svg",
+  "/sitadel/tny-2.svg",
+  "/sitadel/tny-1.svg",
 ]
 
-const SitadelProductsCarousel: React.FC = () => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(2) 
+const SitadelTourneyssCarousel: React.FC = () => {
+  const [images, setImages] = useState<string[]>(initialImages)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(2)
 
   const handlePrev = () => {
     setSelectedImageIndex((prevIndex) =>
@@ -28,6 +27,14 @@ const SitadelProductsCarousel: React.FC = () => {
     index === 0 ? images.length - 1 : index - 1
   const getNextIndex = (index: number) =>
     index === images.length - 1 ? 0 : index + 1
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const newImageUrl = URL.createObjectURL(event.target.files[0])
+      setImages((prevImages) => [...prevImages, newImageUrl])
+      setSelectedImageIndex(images.length) // Select the new image
+    }
+  }
 
   return (
     <div className="max-w-full mx-auto mt-2 relative overflow-hidden px-4">
@@ -87,9 +94,21 @@ const SitadelProductsCarousel: React.FC = () => {
             onClick={() => setSelectedImageIndex(index)}
           />
         ))}
+        {/* Add Image Thumbnail */}
+        <label className="cursor-pointer flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-neutral-600 rounded-sm shadow-sm">
+          <span className="material-symbols-outlined text-neutral-700 text-3xl">
+            add_circle
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+        </label>
       </div>
     </div>
   )
 }
 
-export default SitadelProductsCarousel
+export default SitadelTourneyssCarousel

@@ -55,42 +55,42 @@ const EventCard: React.FC<EventCardProps> = ({
   );
 };
 
-const AffairsAffairsTab: React.FC = () => {
+const SitadelAffairsTab: React.FC = () => {
   const eventCards = [
     {
       link: "/add-affairs",
     },
     {
-      imageSrc: "/swa-card-1.svg",
-      link: "/events/event-2",
+      imageSrc: "/sitadel/prd-1.svg",
+      link: "/sitadels/sitadel-products",
       subscript: "PRD",
       description: "Event_2_Description",
     },
     {
-      imageSrc: "/swa-card-2.svg",
-      link: "/events/event-3",
+      imageSrc: "/sitadel/srv-1.svg",
+      link: "/sitadels/sitadel-services",
       subscript: "SRV",
       description: "Event_3_Description",
     },
     {
-      imageSrc: "/swa-card-3.svg",
-      link: "/events/event-4",
+      imageSrc: "/sitadel/tny-1.svg",
+      link: "/sitadels/sitadel-tourneys",
       subscript: "TNY",
       description: "Event_4_Description",
     },
-    {
-      imageSrc: "/swa-card-4.svg",
-      link: "/events/event-5",
-      subscript: "PRD",
-      description: "Event_5_Description",
-    },
-    {
-      imageSrc: "/swa-card-5.svg",
-      link: "/events/event-6",
-      subscript: "SRV",
-      description: "Event_6_Description",
-    },
-  ];
+    // {
+    //   imageSrc: "/swa-card-4.svg",
+    //   link: "/events/event-5",
+    //   subscript: "PRD",
+    //   description: "Event_5_Description",
+    // },
+    // {
+    //   imageSrc: "/swa-card-5.svg",
+    //   link: "/events/event-6",
+    //   subscript: "SRV",
+    //   description: "Event_6_Description",
+    // },
+  ]
 
   return (
     <div className="grid grid-cols-2 md:gap-4 gap-2 md:p-4 p-2 rounded-md shadow-md">
@@ -107,4 +107,4 @@ const AffairsAffairsTab: React.FC = () => {
   );
 };
 
-export default AffairsAffairsTab;
+export default SitadelAffairsTab;

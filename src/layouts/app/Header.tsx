@@ -175,7 +175,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                       className="object-cover rounded-full mr-1 h-6 md:h-8 w-6 md:w-8"
                     />
                   </div>
-                  <Link href="/affairs" className="flex flex-col">
+                  <Link href="/sitadels/sitadel-profile" className="flex flex-col">
                     <span className="font-semibold text-[10px] sm:text-[12px]">
                       Nasir Kingly Touch Photography
                     </span>

@@ -9,6 +9,7 @@ import OrganizersAndPartners from "@/components/contents/tourneys-components/Org
 import Group from "@/components/contents/tourneys-components/Group"
 import TourneysCarousel from "@/components/contents/TourneysCarousel"
 import Link from "next/link"
+import SitadelServicesCarousel from "@/components/contents/sitadel-profile-components/SitadelServicesCarousel"
 
 const LeftSide: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => {
   return (
@@ -150,14 +151,14 @@ const Tourneys: React.FC = () => {
 
   useEffect(() => {
     const query = { collapsed: true }
-    router.push({ pathname: "/tourneys", query })
+    router.push({ pathname: "/sitadels/sitadel-services", query })
   }, [])
 
   return (
     <div className="h-full overflow-hidden  shadow-inner shadow-gray-400/75 lg:rounded-t-[30px]">
       <div className=" overflow-y-auto h-full">
         <div className="items-center p-[2px] md:p-1 bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-50 text-[10px] md:text-sm hidden lg:flex">
-          <Link href="/sitizens/sitizen-profile">
+          <Link href="/sitadels/sitadel-profile">
             <div className="ml-2 flex items-center">
               <span className="material-symbols-outlined mx-2 cursor-pointer md:text-base text-sm">
                 arrow_back
@@ -168,7 +169,7 @@ const Tourneys: React.FC = () => {
         </div>
         <div className="overflow-x-auto">
           <div className="min-w-[300px] max-w-full mx-auto">
-            <TourneysCarousel />
+            <SitadelServicesCarousel />
           </div>
           <div className="flex items-center justify-center flex-col space-x-2 md:space-y-4">
             <div>

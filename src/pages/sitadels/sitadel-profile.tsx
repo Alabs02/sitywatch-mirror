@@ -5,7 +5,7 @@ import ProfileImage from "@/components/molecules/ProfileImage"
 import AffairsSearchTab from "@/components/contents/affairs-components/affairsSearchTab"
 import AffairsActivityTab from "@/components/contents/affairs-components/AffairsActivityTab"
 import AffairsAboutTab from "@/components/contents/affairs-components/AffairsAboutTab"
-import AffairsAffairsTab from "@/components/contents/affairs-components/AffairsAffairsTab"
+import AffairsAffairsTab from "@/components/contents/affairs-components/SitadelAffairsTab"
 import EditSitadelOverlay from "@/components/contents/sitadel-profile-components/EditSitadelProfile"
 import Link from "next/link"
 

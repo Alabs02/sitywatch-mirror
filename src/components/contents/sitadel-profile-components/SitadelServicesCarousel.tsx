@@ -2,15 +2,15 @@ import React, { useState } from "react"
 
 // Dummy images (replace with your own)
 const images = [
-  "/sitadel/prd-5.svg",
-  "/sitadel/prd-4.svg",
-  "/sitadel/prd-1.svg",
-  "/sitadel/prd-2.svg",
-  "/sitadel/prd-3.svg",
+  "/sitadel/srv-5.svg",
+  "/sitadel/srv-4.svg",
+  "/sitadel/srv-1.svg",
+  "/sitadel/srv-2.svg",
+  "/sitadel/srv-3.svg",
 ]
 
-const SitadelProductsCarousel: React.FC = () => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(2) 
+const SitadelServicesCarousel: React.FC = () => {
+  const [selectedImageIndex, setSelectedImageIndex] = useState(2)
 
   const handlePrev = () => {
     setSelectedImageIndex((prevIndex) =>
@@ -92,4 +92,4 @@ const SitadelProductsCarousel: React.FC = () => {
   )
 }
 
-export default SitadelProductsCarousel
+export default SitadelServicesCarousel
