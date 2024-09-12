@@ -1,41 +1,50 @@
 import { useState, useEffect } from "react"
 
-export const useFormSteps = <T extends object>(
+interface BaseFormData {
+  category: string // Ensure that every form data object must have 'category'
+}
+
+export const useFormSteps = <T extends BaseFormData>(
   initialFormData: T,
-  steps: any[],
+  getCategorySteps: (formData: T) => any[], // Steps based on category
 ) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<T>(initialFormData)
   const [loading, setLoading] = useState(false)
+  const [completedSteps, setCompletedSteps] = useState<boolean[]>([])
 
-  // Load form data from local storage on mount
-  useEffect(() => {
-    const savedData = localStorage.getItem("sitadelFormData")
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData)
-        setFormData(parsedData)
-        console.log("Loaded form data:", parsedData)
-      } catch (error) {
-        console.error("Error parsing saved form data:", error)
-      }
-    }
-  }, [])
+  // Dynamically get steps based on the selected category
+  const categorySteps = getCategorySteps(formData)
 
-  // Save form data to local storage whenever it changes
   useEffect(() => {
-    console.log("Saving form data:", formData)
-    localStorage.setItem("sitadelFormData", JSON.stringify(formData))
-  }, [formData])
+    // Update completed steps dynamically based on the current category's steps
+    setCompletedSteps(new Array(categorySteps.length).fill(false))
+  }, [formData.category, categorySteps.length])
+
+  const canNavigateToStep = (stepIndex: number) => {
+    return completedSteps[stepIndex] || stepIndex <= currentStep
+  }
 
   const handleNext = (data: Partial<T>) => {
-    console.log("Form data before next step:", formData)
+    if (!data.category && currentStep === 0) {
+      console.error("Category must be selected to proceed.")
+      return
+    }
+
     setFormData((prev) => ({ ...prev, ...data }))
+
+    // Update completed steps dynamically
+    setCompletedSteps((prev) =>
+      prev.map((completed, index) =>
+        index === currentStep ? true : completed,
+      ),
+    )
+
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
-    }, 2000) // Loader visible for 2 seconds
+      setCurrentStep((prev) => Math.min(prev + 1, categorySteps.length - 1))
+    }, 1000)
   }
 
   const handleBack = () => {
@@ -43,7 +52,13 @@ export const useFormSteps = <T extends object>(
   }
 
   const goToStep = (stepIndex: number) => {
-    setCurrentStep(stepIndex)
+    if (canNavigateToStep(stepIndex)) {
+      setCurrentStep(stepIndex)
+    }
+  }
+
+  const updateFormData = (data: Partial<T>) => {
+    setFormData((prev) => ({ ...prev, ...data }))
   }
 
   return {
@@ -53,6 +68,8 @@ export const useFormSteps = <T extends object>(
     handleNext,
     handleBack,
     goToStep,
-    CurrentStepComponent: steps[currentStep].component,
+    updateFormData,
+    CurrentStepComponent: categorySteps[currentStep]?.component || (() => null), // Ensure no undefined component
+    canNavigateToStep,
   }
 }

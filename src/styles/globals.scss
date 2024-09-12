@@ -179,6 +179,16 @@ h1.h1-with-border::before {
     transform: rotate(360deg);
   }
 }
+.step-connector {
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%;
+  transform: translateY(-50%); /* Adjust centering */
+  width: 2px; /* Make it thinner */
+  height: 40px; /* Adjust the height as needed */
+  background-color: #F24055; /* Adjust color if needed */
+}
+
 
 
 

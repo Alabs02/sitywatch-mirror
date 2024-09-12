@@ -7,11 +7,11 @@ interface StepProps {
   formData: FormData
 }
 
-const LookStep4: FC<StepProps> = ({ onBack, formData }) => {
+const LookSitizenStep4: FC<StepProps> = ({ onBack, formData }) => {
   const router = useRouter() // Initialize the router
 
   const handleImageClick = () => {
-    router.push("/sitadel-profile") // Redirect to /sitadel-profile
+    router.push("/sitadels/sitadel-profile") // Redirect to /sitadel-profile
   }
 
   return (
@@ -36,4 +36,4 @@ const LookStep4: FC<StepProps> = ({ onBack, formData }) => {
   )
 }
 
-export default LookStep4
+export default LookSitizenStep4

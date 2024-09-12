@@ -7,7 +7,7 @@ interface StepProps {
   formData: FormData
 }
 
-const AffairsStep4: FC<StepProps> = ({ onBack, onNext, formData }) => {
+const AffairsServiceStep4: FC<StepProps> = ({ onBack, onNext, formData }) => {
   const [highlightImage, setHighlightImage] = useState<File | undefined>(
     undefined,
   )
@@ -101,4 +101,4 @@ const AffairsStep4: FC<StepProps> = ({ onBack, onNext, formData }) => {
   )
 }
 
-export default AffairsStep4
+export default AffairsServiceStep4

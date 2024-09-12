@@ -47,7 +47,7 @@ const nigeriaStates = [
   "Zamfara",
 ]
 
-const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
+const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [name, setName] = useState(formData.name || "")
   const [study, setStudy] = useState(formData.study || "")
   const [country, setCountry] = useState("Nigeria")
@@ -251,4 +251,4 @@ const LookStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   )
 }
 
-export default LookStep2
+export default LookSitadelStep2

@@ -29,26 +29,26 @@ export interface FormData {
   options: string[]
   country: string
   state: string
-  type?: string 
-  handle?: string 
-  description?: string 
-  startDate?: string 
-  endDate?: string 
+  type?: string
+  handle?: string
+  description?: string
+  startDate?: string
+  endDate?: string
   time?: {
     hour: string
     minute: string
     period: string
-  } // New field for event start time
+  } // Event start time
   highlightImage?: File | null
   category: string
-  
   bio: string
-
   phone: string
   website: string
-  
- 
+  password: string 
+  confirmPassword: string
 }
+
+
 
 
 

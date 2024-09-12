@@ -7,7 +7,7 @@ interface StepProps {
   formData: FormData
 }
 
-const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
+const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
   const [name, setName] = useState(formData.name || "")
   const [shortName, setShortName] = useState(formData.shortName || "@")
   const [email, setEmail] = useState(formData.email || "")
@@ -57,7 +57,7 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
   }
 
   return (
-    <div className="">
+    <div className="h-full overflow-y-auto">
       {/* Name Field */}
       <h2 className="text-sm font-semibold text-center mt-6 mb-1">
         What is your name?
@@ -207,4 +207,4 @@ const LookStep1: FC<StepProps> = ({ onNext, formData }) => {
   )
 }
 
-export default LookStep1
+export default LookSitizenStep1

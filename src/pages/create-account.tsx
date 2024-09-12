@@ -1,45 +1,99 @@
 import React, { FC, useEffect } from "react"
-import LookStep1 from "@/components/contents/create-new-look/LookStep1"
-import LookStep2 from "@/components/contents/create-new-look/LookStep2"
-import LookStep3 from "@/components/contents/create-new-look/LookStep3"
-// import LookStep4 from "@/components/contents/create-new-look/LookStep4"
-import LookStep4 from "@/components/contents/create-new-look/LookStep4"
+import LookSitizenStep1 from "@/components/contents/create-new-look/LookSitizenStep1"
+import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1"
+import LookSitizenStep2 from "@/components/contents/create-new-look/LookSitizenStep2"
+import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2"
+import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenStep3"
+import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3"
+import LookSitizenStep4 from "@/components/contents/create-new-look/LookSitizenStep4"
+import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4"
+import LookStepType from "@/components/contents/create-new-look/LookStepType"
 import Link from "next/link"
 import { useFormSteps } from "../../hooks/useFormSteps"
 import { FormData } from "@/types"
 
-const steps = [
+interface Step {
+  component: FC<any>
+  label: string
+  icon: string
+  text: string
+}
+
+// Define the steps for both Sitizen and Sitadel
+const sitizenSteps: Step[] = [
   {
-    component: LookStep1,
+    component: LookStepType,
+    label: "Type",
+    icon: "list_alt",
+    text: "Choose a look type.",
+  },
+  {
+    component: LookSitizenStep1,
     label: "Name",
     icon: "signature",
-    text: "A Look is an account on SityWatch. When Someone creates a Look, that person becomes a sitizen of SityWatch. Use the progress bar to navigate between steps.",
+    text: "Create a Sitizen look.",
   },
   {
-    component: LookStep2,
+    component: LookSitizenStep2,
     label: "Info",
     icon: "school",
-    text: "Provide detailed information about your sitadel to attract more participants and showcase your events.",
+    text: "Provide detailed Sitizen info.",
   },
   {
-    component: LookStep3,
-    label: "Image",
+    component: LookSitizenStep3,
+    label: "Interests",
     icon: "description",
-    text: "Upload a beautiful backdrop and a profile picture that best represents your sitadel.",
+    text: "Add interests to your Sitizen look.",
   },
-  // {
-  //   component: LookStep4,
-  //   label: "Confirm",
-  //   icon: "image",
-  //   text: "Review all the details to ensure everything is correct before submitting your sitadel.",
-  // },
   {
-    component: LookStep4,
+    component: LookSitizenStep4,
     label: "Finish",
     icon: "check",
-    text: "You're all set! Review your information one last time before completing the creation of your Look.",
+    text: "Review and finish your Sitizen look.",
   },
 ]
+
+const sitadelSteps: Step[] = [
+  {
+    component: LookStepType,
+    label: "Type",
+    icon: "list_alt",
+    text: "Choose a look type.",
+  },
+  {
+    component: LookSitadelStep1,
+    label: "Name",
+    icon: "signature",
+    text: "Create a Sitadel look.",
+  },
+  {
+    component: LookSitadelStep2,
+    label: "Organization",
+    icon: "category",
+    text: "Provide detailed Sitadel info.",
+  },
+  // {
+  //   component: LookSitadelStep3,
+  //   label: "Interests",
+  //   icon: "description",
+  //   text: "Add interests to your Sitadel look.",
+  // },
+  {
+    component: LookSitadelStep4,
+    label: "Finish",
+    icon: "check",
+    text: "Review and finish your Sitadel look.",
+  },
+]
+
+const allSteps: Step[] = [...sitizenSteps, ...sitadelSteps]
+
+// Get the steps based on the selected category
+const getCategorySteps = (formData: FormData): Step[] => {
+  if (formData.category === "sitizen") return sitizenSteps
+  if (formData.category === "sitadel") return sitadelSteps
+  return [] // No steps if no category is selected
+}
 
 const CreateNewLook: FC = () => {
   const {
@@ -49,8 +103,9 @@ const CreateNewLook: FC = () => {
     handleNext,
     handleBack,
     goToStep,
+    updateFormData, 
     CurrentStepComponent,
-  } = useFormSteps(
+  } = useFormSteps<FormData>(
     {
       name: "",
       shortName: "",
@@ -63,22 +118,46 @@ const CreateNewLook: FC = () => {
       country: "",
       state: "",
       address: "",
-      password: "", // Optional
+      password: "",
+      confirmPassword: "",
       fieldOfStudy: "",
       options: [],
+      dob: { month: "", day: "", year: "" },
+      showDob: "",
+      gender: "",
+      sexuality: "",
+      relationshipStatus: "",
+      nightLife: "",
+      institutionType: "",
+      schoolStatus: "",
+      category: "sitizen",
+      bio: "",
+      phone: "",
+      website: "",
     },
-    steps,
+  
+    getCategorySteps,
   )
 
   useEffect(() => {
     console.log("CreateNewLook - FormData:", formData)
   }, [formData])
 
+  const handleStepClick = (index: number) => {
+    if (formData.category || index === 0) {
+      // Ensure category is selected
+      goToStep(index)
+    } else {
+      alert("Please select a category to proceed.")
+    }
+  }
+
+
   return (
     <div
       className="relative min-h-screen w-full bg-no-repeat"
       style={{
-        backgroundImage: `url('/sw-login-bg.png')`,
+        backgroundImage: "url('/sw-login-bg.png')",
         backgroundSize: "cover",
         backgroundPosition: "bottom",
       }}
@@ -94,63 +173,68 @@ const CreateNewLook: FC = () => {
         </button>
       </Link>
 
-      {/* Mobile X Button */}
-      <Link href="/">
-        <button className="absolute top-1 right-2 text-xl lg:hidden flex ">
-          ✕
-        </button>
-      </Link>
-
-      <div className="absolute top-8 left-4 w-full md:w-1/3 p-4 text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881] lg:block hidden">
-        <p className="text-lg font-semibold">
-          {steps[currentStep].text.split(". ")[0]}.
-        </p>
-        <p className="mt-2">
-          {steps[currentStep].text.split(". ").slice(1).join(". ")}
-        </p>
-      </div>
-
-      <div className="relative w-full max-w-xl bg-white bg-opacity-80 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden  md:px-20">
-        <div className="flex items-center justify-between mb-4">
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              onClick={() => goToStep(index)}
-              className={`relative flex items-center cursor-pointer ${
-                index <= currentStep
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                  : "text-gray-500"
-              }`}
-            >
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full border-2 ${
-                  index <= currentStep
-                    ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
-                    : "border-gray-200"
-                }`}
-              >
-                <span className="material-symbols-outlined">{step.icon}</span>
-              </div>
-              {index < steps.length - 1 && (
+      <div className="relative w-full max-w-xl bg-white bg-opacity-80 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden md:px-20">
+        {/* Step Navigation */}
+        <div className="flex items-center justify-between mb-6">
+          {getCategorySteps(formData).map((step, index) => (
+            <React.Fragment key={index}>
+              <div className="flex flex-col items-center relative">
                 <div
-                  className={`flex-1 border-t-2 mx-2 ${
-                    index < currentStep
-                      ? "border-gradient-to-r from-[#F24055] to-[#1E7881]"
-                      : "border-gray-200"
+                  onClick={() => handleStepClick(index)}
+                  className={`flex flex-col items-center cursor-pointer mb-4 overflow-hidden ${
+                    index <= currentStep
+                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                      : "text-gray-500"
                   }`}
-                ></div>
-              )}
-            </div>
+                >
+                  <div
+                    className={`w-10 h-10 flex items-center justify-center rounded-full border-2 ${
+                      index <= currentStep
+                        ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
+                        : "border-gray-200"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      {step.icon}
+                    </span>
+                  </div>
+                  <div className="mt-2 text-xs sm:text-sm text-center w-20">
+                    {step.label}
+                  </div>
+                </div>
+                {index < getCategorySteps(formData).length - 1 && (
+                  <div
+                    className={`h-0.5 ${
+                      index < currentStep
+                        ? "bg-gradient-to-r from-[#F24055] to-[#1E7881]"
+                        : "bg-gray-200"
+                    }`}
+                    style={{
+                      width: "1.9rem",
+                      marginLeft: "2.68rem",
+                      marginRight: "-2.0rem",
+                      marginTop: "-3.2rem",
+                      marginBottom: "-0.25rem",
+                    }}
+                  ></div>
+                )}
+              </div>
+            </React.Fragment>
           ))}
         </div>
-        <div className="mb-4 text-gray-700">
-          {/* {steps[currentStep].text} */}
-        </div>
-        <CurrentStepComponent
-          onNext={handleNext}
-          onBack={currentStep > 0 ? handleBack : () => {}}
-          formData={formData}
-        />
+
+        {/* Display the current step */}
+        {/* Current Step Component */}
+        {CurrentStepComponent ? (
+          <CurrentStepComponent
+            formData={formData}
+            updateFormData={updateFormData}
+            onNext={() => handleNext({ category: formData.category })}
+            handleBack={handleBack}
+          />
+        ) : (
+          <div>No step available. Please select a category to proceed.</div>
+        )}
       </div>
     </div>
   )

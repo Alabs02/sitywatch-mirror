@@ -8,7 +8,7 @@ interface StepProps {
   formData: FormData
 }
 
-const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
+const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [showOptions, setShowOptions] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     formData.options || [],
@@ -114,4 +114,4 @@ const LookStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   )
 }
 
-export default LookStep3
+export default LookSitizenStep3

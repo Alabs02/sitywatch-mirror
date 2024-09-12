@@ -8,7 +8,7 @@ interface StepProps {
   formData: FormData
 }
 
-const AffairsStep5: FC<StepProps> = ({ onBack, onConfirm, formData }) => {
+const AffairsEventStep5: FC<StepProps> = ({ onBack, onConfirm, formData }) => {
   const highlightImageUrl = formData.highlightImage
     ? URL.createObjectURL(formData.highlightImage)
     : undefined
@@ -119,4 +119,4 @@ const AffairsStep5: FC<StepProps> = ({ onBack, onConfirm, formData }) => {
   )
 }
 
-export default AffairsStep5
+export default AffairsEventStep5
