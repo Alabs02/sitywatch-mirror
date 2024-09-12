@@ -68,7 +68,7 @@ const sitadelSteps: Step[] = [
   },
   {
     component: LookSitadelStep2,
-    label: "Organization",
+    label: "Industry",
     icon: "category",
     text: "Provide detailed Sitadel info.",
   },
