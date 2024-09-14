@@ -1,5 +1,5 @@
 import { Provider } from "react-redux"
-import store from "@/store/store" // Assuming your Redux store is in this location
+import store from "@/store/store" 
 import { AppProps } from "next/app"
 import { Fragment } from "react"
 import Head from "next/head"
@@ -8,7 +8,6 @@ import "animate.css"
 import Layout from "@/layouts/Layout"
 
 export default function App({ Component, pageProps, router }: AppProps) {
-  // Check if the current page is the build-sitadel page
   const isBuildSitadelPage = router.pathname === "/build-sitadel"
 
   return (

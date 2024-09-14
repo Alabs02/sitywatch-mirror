@@ -26,36 +26,29 @@ export const useFormSteps2 = <T extends BaseFormData>(
     return completedSteps[stepIndex] || stepIndex <= currentStep
   }
 
-  const handleNext = (data: Partial<T>) => {
-    // Ensure a type is selected
-    if (!data.type && currentStep === 0) {
-      console.error("Type must be selected to proceed.")
-      return
-    }
+ const handleNext = (data: Partial<T>) => {
+   // Ensure a type is selected
+   if (!formData.type && currentStep === 0) {
+     console.error("Type must be selected to proceed.")
+     return
+   }
 
-    // Ensure category is selected if needed
-    if (data.type === "tourney" && !formData.category) {
-      console.error("Category must be selected to proceed.")
-      return
-    }
+   // Update form data with newly passed data
+   setFormData((prev) => ({ ...prev, ...data }))
 
-    // Update form data
-    setFormData((prev) => ({ ...prev, ...data }))
+   // Move to next step after form update
+   setCompletedSteps((prev) =>
+     prev.map((completed, index) => (index === currentStep ? true : completed)),
+   )
 
-    // Mark the current step as completed
-    setCompletedSteps((prev) =>
-      prev.map((completed, index) =>
-        index === currentStep ? true : completed,
-      ),
-    )
+   // Simulate loading and go to the next step
+   setLoading(true)
+   setTimeout(() => {
+     setLoading(false)
+     setCurrentStep((prev) => Math.min(prev + 1, categorySteps.length - 1))
+   }, 1000)
+ }
 
-    // Simulate loading and transition to the next step
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setCurrentStep((prev) => Math.min(prev + 1, categorySteps.length - 1))
-    }, 1000)
-  }
 
   const handleBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0))

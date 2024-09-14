@@ -44,8 +44,9 @@ export interface FormData {
   bio: string
   phone: string
   website: string
-  password: string 
+  password: string
   confirmPassword: string
+  emailToken?: string
 }
 
 

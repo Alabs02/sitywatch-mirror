@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import Link from "next/link"
 import { useFormSteps2 } from "../../hooks/useFormSteps2"
 import { FormData } from "@/types"
@@ -42,7 +42,7 @@ const categories: Record<string, Step[]> = {
       label: "Type",
       icon: "view_stream",
       description: "Step 1 Tourney Description",
-      validate: (formData: FormData) => !!formData.type,
+      validate: (formData: FormData) => true,
     },
     {
       component: AffairsTourneyStep2,
@@ -192,9 +192,11 @@ const categories: Record<string, Step[]> = {
 
 // Get steps based on the form type
 const getCategorySteps = (formData: FormData): Step[] => {
+  console.log("Fetching steps for type: ", formData.type)
   const type = formData.type || "tourney"
   return categories[type] || []
 }
+
 
 const AddAffairs: FC = () => {
   const {
@@ -258,6 +260,10 @@ const AddAffairs: FC = () => {
   const handleSubmit = () => {
     console.log("Final Form Data:", formData)
   }
+  useEffect(() => {
+    console.log("Form Data Updated: ", formData)
+  }, [formData])
+
 
   return (
     <div

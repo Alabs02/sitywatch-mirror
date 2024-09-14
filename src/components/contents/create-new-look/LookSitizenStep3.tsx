@@ -1,5 +1,8 @@
 import React, { FC, useState } from "react"
 import { FormData } from "@/types"
+import { useAppDispatch } from "@/app/store"
+import { setFormData } from "@/features/auth/authSlice"
+import Link from "next/link"
 import OptionsCard from "./OptionsCard"
 
 interface StepProps {
@@ -9,6 +12,7 @@ interface StepProps {
 }
 
 const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
+  const dispatch = useAppDispatch()
   const [showOptions, setShowOptions] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     formData.options || [],
@@ -41,9 +45,15 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
   }
 
   const handleNext = () => {
-    onNext({
+    const updatedFormData: Partial<FormData> = {
+      ...formData,
       options: selectedOptions, // Pass selected options to the next step
-    })
+    }
+
+    // Dispatch the form data to the Redux store
+    dispatch(setFormData(updatedFormData))
+
+    onNext(updatedFormData) // Proceed to the next step
   }
 
   return (
@@ -73,7 +83,6 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack, formData }) => {
               key={option}
               className="flex items-center justify-between p-1 bg-gradient-to-b from-green-900 to-green-700 bg-opacity-60 text-gray-50 rounded-full min-w-[120px] sm:w-[160px] backdrop-blur-md shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
               onClick={() => handleUnselectOption(option)}
-              
             >
               <span
                 className="text-center flex-1"

@@ -1,5 +1,8 @@
 import React, { FC, useState } from "react"
 import { FormData } from "@/types"
+import { useAppDispatch } from "@/app/store"
+import { useRegisterSitizenMutation } from "@/features/auth/authApi"
+import { setFormData } from "@/features/auth/authSlice"
 import Link from "next/link"
 
 interface StepProps {
@@ -48,6 +51,7 @@ const nigeriaStates = [
 ]
 
 const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
+  const dispatch = useAppDispatch()
   const [name, setName] = useState(formData.name || "")
   const [study, setStudy] = useState(formData.study || "")
   const [country, setCountry] = useState("Nigeria")
@@ -55,27 +59,29 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const [institutionType, setInstitutionType] = useState<string>("")
   const [schoolStatus, setSchoolStatus] = useState<string>("")
 
-  const handleNext = () => {
-    onNext({
-      name,
-      study,
-      country,
-      state,
-      institutionType,
-      schoolStatus,
-    })
-  }
+  const [registerSitizen, { isLoading, error }] = useRegisterSitizenMutation()
+
+   const handleNext = () => {
+     const updatedFormData: Partial<FormData> = {
+       name,
+       study,
+       country,
+       state,
+       institutionType,
+       schoolStatus,
+     }
+
+     dispatch(setFormData(updatedFormData)) // Update form data in Redux store
+     onNext(updatedFormData) // Proceed to the next step
+   }
 
   return (
-    <div className="">
+    <div>
+      {/* Form Fields for Step 2 */}
       {/* Name Field */}
       <h2 className="text-sm font-semibold text-center mt-6 mb-1">
         What is the name of your school?
       </h2>
-      <p className="text-xs text-center mb-1 italic">
-        Tell us the name of the school you attended or are currently attending.
-        You have the option to add more schools below.
-      </p>
       <input
         type="text"
         value={name}

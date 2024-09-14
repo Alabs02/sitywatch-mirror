@@ -1,6 +1,8 @@
 import React, { FC, useState } from "react"
 import { FormData } from "@/types"
 import Image from "next/image"
+import { useAppDispatch } from "@/app/store" // Redux dispatch import
+import { setFormData } from "@/features/auth/authSlice" // Redux action to update form data
 
 interface StepProps {
   onNext: (data: Partial<FormData>) => void
@@ -8,6 +10,8 @@ interface StepProps {
 }
 
 const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
+  const dispatch = useAppDispatch() // Initialize Redux dispatch
+
   const [name, setName] = useState(formData.name || "")
   const [shortName, setShortName] = useState(formData.shortName || "@")
   const [email, setEmail] = useState(formData.email || "")
@@ -36,8 +40,17 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
       return
     }
 
-    onNext({ name, shortName, email, contact })
-    console.log("Passwords match, proceeding to next step.")
+    const updatedFormData: Partial<FormData> = {
+      name,
+      shortName,
+      email,
+      contact,
+      password,
+    }
+
+    // Update the Redux store with form data but don't trigger the API yet
+    dispatch(setFormData(updatedFormData))
+    onNext(updatedFormData) // Proceed to the next step
   }
 
   const handleShortNameChange = (value: string) => {
