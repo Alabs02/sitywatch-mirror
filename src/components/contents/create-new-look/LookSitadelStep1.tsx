@@ -1,17 +1,16 @@
 import React, { FC, useState } from "react"
-import { FormData } from "@/types"
 import Image from "next/image"
 
 interface StepProps {
-  onNext: (data: Partial<FormData>) => void
-  formData: FormData
+  onBack: () => void,
+  onNext: () => void
 }
 
-const LookSitadelStep1: FC<StepProps> = ({ onNext, formData }) => {
-  const [name, setName] = useState(formData.name || "")
-  const [shortName, setShortName] = useState(formData.shortName || "@")
-  const [email, setEmail] = useState(formData.email || "")
-  const [contact, setContact] = useState(formData.contact || "")
+const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
+  const [name, setName] = useState("")
+  const [shortName, setShortName] = useState("@")
+  const [email, setEmail] = useState("")
+  const [contact, setContact] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -36,7 +35,7 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, formData }) => {
       return
     }
 
-    onNext({ name, shortName, email, contact })
+    onNext()
     console.log("Passwords match, proceeding to next step.")
   }
 
@@ -63,7 +62,9 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, formData }) => {
         What is the name of your Sitadel?
       </h2>
       <p className="text-xs text-center mb-1 italic">
-    This is the full name of the brand, business, organization, company, etc. <br />You can always change and modify the name later.
+        This is the full name of the brand, business, organization, company,
+        etc. <br />
+        You can always change and modify the name later.
       </p>
       <input
         type="text"
@@ -78,7 +79,10 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, formData }) => {
         How should we refer to your Sitadel on Sitywatch?
       </h2>
       <p className="text-xs text-center mb-1 italic">
-        This is the short version of the name of the sitadel which will be used to refer to the Sitadel on SityWatch. It can be an abbreviation, accronym, etc. <br />Just keep it short and unique. 
+        This is the short version of the name of the sitadel which will be used
+        to refer to the Sitadel on SityWatch. It can be an abbreviation,
+        accronym, etc. <br />
+        Just keep it short and unique.
       </p>
       <input
         type="text"
@@ -187,6 +191,13 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, formData }) => {
 
       {/* Next Button */}
       <div className="flex justify-between mt-1">
+        <button
+          onClick={onBack}
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+        >
+          Back
+        </button>
+
         <button
           onClick={handleNext}
           className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"

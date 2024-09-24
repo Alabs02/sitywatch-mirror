@@ -63,12 +63,12 @@ const AffairsEventStep1: FC<StepProps> = ({ onNext, formData }) => {
         <label className="flex items-center">
           <input
             type="radio"
-            value="PROVINCE"
-            checked={type === "PROVINCE"}
+            value="PRODUCT"
+            checked={type === "PRODUCT"}
             onChange={(e) => setType(e.target.value)}
             className="mr-2"
           />
-          <span className="text-sm font-semibold">PROVINCE</span>
+          <span className="text-sm font-semibold">PRODUCT</span>
         </label>
         <p className="text-xs italic mt-1">
           A province is any product or service that you sell or provide for

@@ -1,14 +1,13 @@
 import React, { FC } from "react"
-import { useRouter } from "next/router" // Import useRouter
-import { FormData } from "@/types" // Adjust the path as necessary
+import { useRouter } from "next/router"
 
 interface StepProps {
   onBack: () => void
-  formData: FormData
+  onNext: () => void
 }
 
-const LookSitadelStep3: FC<StepProps> = ({ onBack, formData }) => {
-  const router = useRouter() // Initialize the router
+const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
+  const router = useRouter()
 
   const handleImageClick = () => {
     router.push("/sitadels/sitadel-profile") // Redirect to /sitadel-profile

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import CardWithWithImage from "@/components/molecules/CardWithRoundedImage"
 import ProfileImage from "@/components/molecules/ProfileImage"
-import AffairsSearchTab from "@/components/contents/affairs-components/affairsSearchTab"
-import AffairsActivityTab from "@/components/contents/affairs-components/AffairsActivityTab"
-import AffairsAboutTab from "@/components/contents/affairs-components/AffairsAboutTab"
-import AffairsAffairsTab from "@/components/contents/affairs-components/SitadelAffairsTab"
 import EditSitadelOverlay from "@/components/contents/sitadel-profile-components/EditSitadelProfile"
 import Link from "next/link"
+import AffairsTab from "@/components/contents/sitadel-profile-components/AffairsTab"
+import ActivityTab from "@/components/contents/sitadel-profile-components/ActivityTab"
+import PropsTab from "@/components/contents/sitadel-profile-components/PropsTab"
+import SearchTab from "@/components/contents/sitadel-profile-components/SearchTab"
+import IdentityTab from "@/components/contents/sitadel-profile-components/IdentityTab" // Add this import for IdentityTab
 
 const LeftSide: React.FC<{ isCollapsed: boolean; onEditClick: () => void }> = ({
   isCollapsed,
@@ -109,20 +110,23 @@ const LeftSide: React.FC<{ isCollapsed: boolean; onEditClick: () => void }> = ({
 }
 
 const RightSide: React.FC<{ onEditClick: () => void }> = ({ onEditClick }) => {
-  const [activeTab, setActiveTab] = useState("Affairs")
+  // Set "Activity" as the default active tab
+  const [activeTab, setActiveTab] = useState("Activity")
 
   const renderActiveComponent = () => {
     switch (activeTab) {
       case "Search":
-        return <AffairsSearchTab />
+        return <SearchTab />
       case "Activity":
-        return <AffairsActivityTab />
-      case "About":
-        return <AffairsAboutTab />
+        return <ActivityTab />
+      case "Props":
+        return <PropsTab />
       case "Affairs":
-        return <AffairsAffairsTab />
+        return <AffairsTab />
+      case "Identity": // Handle rendering the IdentityTab
+        return <IdentityTab />
       default:
-        return <AffairsAffairsTab />
+        return <ActivityTab /> // ActivityTab as the fallback
     }
   }
 
@@ -151,11 +155,11 @@ const RightSide: React.FC<{ onEditClick: () => void }> = ({ onEditClick }) => {
           </span>
           <span
             className={`cursor-pointer ${
-              activeTab === "About" ? "text-secondary" : ""
+              activeTab === "Props" ? "text-secondary" : ""
             }`}
-            onClick={() => setActiveTab("About")}
+            onClick={() => setActiveTab("Props")}
           >
-            About
+            Props
           </span>
           <span
             className={`cursor-pointer ${
@@ -164,6 +168,14 @@ const RightSide: React.FC<{ onEditClick: () => void }> = ({ onEditClick }) => {
             onClick={() => setActiveTab("Affairs")}
           >
             Affairs
+          </span>
+          <span
+            className={`cursor-pointer ${
+              activeTab === "Identity" ? "text-secondary" : ""
+            }`}
+            onClick={() => setActiveTab("Identity")}
+          >
+            Identity
           </span>
         </nav>
         <article className="h-[calc(100vh-56px)] overflow-y-auto shadow-inner shadow-gray-400/75 rounded-t-[30px] p-4">

@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useState, useEffect } from "react"
+import React, { ReactNode, FC, useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Header from "./app/Header"
 import clsx from "clsx"
@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 import { motion, AnimatePresence } from "framer-motion"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
+import useOutsideClick from "../../hooks/useClickOutside"
 
 interface NavLink {
   href: string
@@ -32,15 +33,19 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
   const router = useRouter()
   const { asPath, query } = router
   const [loading, setLoading] = useState(true)
+  const [isOverlayOpen, setOverlayOpen] = useState(false)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setLoading(true)
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 1500) 
+    }, 1500)
 
     return () => clearTimeout(timer)
   }, [asPath])
+
+  useOutsideClick(overlayRef, () => setOverlayOpen(false)) // Handle click outside
 
   const collapsedList = ["/messages", "/explore"]
   const isCollapsedFromQuery = query.collapsed === "true"
@@ -55,6 +60,11 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     asPath === "/forgot-password" ||
     asPath === "/add-affairs" ||
     asPath === "/create-account"
+
+  // Toggle overlay function
+  const toggleOverlay = () => {
+    setOverlayOpen(!isOverlayOpen)
+  }
 
   // Ensuring that LoginForm or BuildSitadel page is full-width
   if (isBuildSitadelOrLoginPage) {
@@ -77,6 +87,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             )}
           >
             <button
+              onClick={toggleOverlay}
               className={clsx(
                 "flex bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content rounded-full hover:shadow-lg focus:outline-none text-white",
                 isCollapsed ? "p-1" : "space-x-3 xl:py-2 xl:px-4",
@@ -112,6 +123,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
             )}
           </motion.div>
         )}
+
         <AnimatePresence mode="wait">
           <motion.div
             key={asPath}
@@ -130,6 +142,61 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Overlay */}
+      {isOverlayOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div
+            ref={overlayRef}
+            className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
+          >
+            {/* Overlay Header with Image, Text, Icon, and Gist Button */}
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center">
+                <img
+                  src="/header-images/ellipse.svg"
+                  alt="User"
+                  className="w-12 h-12 rounded-full mr-4"
+                />
+                <div>
+                  <span className="text-xs font-bold text-secondary block">
+                    @nasir_gambo
+                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs">Public</span>
+                    <i className="material-symbols-outlined">arrow_drop_down</i>
+                  </div>
+                </div>
+              </div>
+
+              <button className="bg-gradient-to-b from-primary-500 to-secondary-500 text-white py-2 px-4 rounded-full hover:shadow-lg">
+                Gist
+              </button>
+            </div>
+
+            {/* Text Field for Gist Input */}
+            <textarea
+              className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              rows={3}
+              placeholder="What's your gist?"
+            ></textarea>
+
+            {/* Icons below Text Field */}
+            <div className="flex justify-between items-center">
+              <div className="flex space-x-4 w-full justify-between">
+                <i className="material-symbols-outlined text-gray-500">image</i>
+                <i className="material-symbols-outlined text-gray-500">
+                  insert_emoticon
+                </i>
+                <i className="material-symbols-outlined text-gray-500">
+                  attach_file
+                </i>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation for Small Screens */}
       {!isBuildSitadelOrLoginPage && (
         <div className="fixed bottom-0 left-0 right-0 lg:hidden flex justify-around p-2 shadow-md z-50 bg-transparent backdrop-blur-lg">

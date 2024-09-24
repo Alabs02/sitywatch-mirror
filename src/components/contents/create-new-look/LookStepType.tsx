@@ -1,28 +1,8 @@
-import React, { FC, ChangeEvent } from "react"
-import { FormData } from "@/types"
-import { useAppDispatch } from "@/app/store" 
-import { setFormData } from "@/features/auth/authSlice" 
+import React from "react"
+import { useAuthStore } from "@/store"
 
-interface LookStepTypeProps {
-  formData: FormData
-  onNext: () => void
-  updateFormData: (newData: Partial<FormData>) => void
-}
-
-const LookStepType: FC<LookStepTypeProps> = ({
-  formData,
-  onNext,
-  updateFormData,
-}) => {
-  const dispatch = useAppDispatch() 
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const updatedCategory = e.target.value
-
-    // Update the local formData state and dispatch Redux action to save the form data
-    updateFormData({ category: updatedCategory })
-    dispatch(setFormData({ category: updatedCategory })) 
-  }
+const LookStepType: React.FC = () => {
+  const authStore = useAuthStore()
 
   return (
     <div>
@@ -37,8 +17,8 @@ const LookStepType: FC<LookStepTypeProps> = ({
             type="radio"
             name="category"
             value="sitizen"
-            checked={formData.category === "sitizen"}
-            onChange={handleChange}
+            checked={authStore.ui.category === "sitizen"}
+            onChange={() => authStore.setUI("category", "sitizen")}
             className="form-radio"
           />
           <span className="ml-2 font-semibold text-xl">SITIZEN</span>
@@ -55,8 +35,8 @@ const LookStepType: FC<LookStepTypeProps> = ({
             type="radio"
             name="category"
             value="sitadel"
-            checked={formData.category === "sitadel"}
-            onChange={handleChange}
+            checked={authStore.ui.category === "sitadel"}
+            onChange={() => authStore.setUI("category", "sitadel")}
             className="form-radio"
           />
           <span className="ml-2 font-semibold text-xl">SITADEL</span>
@@ -70,11 +50,11 @@ const LookStepType: FC<LookStepTypeProps> = ({
       {/* Navigation buttons */}
       <div className="flex justify-end mt-6">
         <button
-          onClick={onNext}
+          onClick={authStore.setNext}
           className={`bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white px-4 py-2 rounded ${
-            !formData.category ? "opacity-50 cursor-not-allowed" : ""
+            !authStore.ui.category ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={!formData.category} 
+          disabled={!authStore.ui.category}
         >
           Next
         </button>

@@ -1,14 +1,16 @@
-import React, { FC, useState } from "react"
-import { FormData } from "@/types"
-import { useAppDispatch } from "@/app/store"
-import { useRegisterSitizenMutation } from "@/features/auth/authApi"
-import { setFormData } from "@/features/auth/authSlice"
+import React, { FC, Fragment } from "react"
 import Link from "next/link"
 
+// AXIOS
+import { http } from "@/libs"
+
+// STORE
+import { useAuthStore, School } from "@/store"
+import { apiRoutes } from "@/constants/apiRoutes"
+
 interface StepProps {
-  onNext: (data: Partial<FormData>) => void
+  onNext: () => void
   onBack: () => void
-  formData: FormData
 }
 
 const nigeriaStates = [
@@ -50,211 +52,261 @@ const nigeriaStates = [
   "Zamfara",
 ]
 
-const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
-  const dispatch = useAppDispatch()
-  const [name, setName] = useState(formData.name || "")
-  const [study, setStudy] = useState(formData.study || "")
-  const [country, setCountry] = useState("Nigeria")
-  const [state, setState] = useState(formData.state || "")
-  const [institutionType, setInstitutionType] = useState<string>("")
-  const [schoolStatus, setSchoolStatus] = useState<string>("")
+const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
+  const authStore = useAuthStore()
 
-  const [registerSitizen, { isLoading, error }] = useRegisterSitizenMutation()
+const handleInputChange = (
+  index: number,
+  field: keyof School | string, // Allow both string and keyof School
+  value: string,
+) => {
+  const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+  // Create a copy of the school object at the specified index
+  const updatedSchool = { ...updatedSchoolingList[index].school }
 
-   const handleNext = () => {
-     const updatedFormData: Partial<FormData> = {
-       name,
-       study,
-       country,
-       state,
-       institutionType,
-       schoolStatus,
-     }
+  // Assert that field is a string (implicitly casts field to string)
+  updatedSchool[field as string] = value
 
-     dispatch(setFormData(updatedFormData)) // Update form data in Redux store
-     onNext(updatedFormData) // Proceed to the next step
-   }
+  // Update the school object in the list with the modified copy
+  updatedSchoolingList[index].school = updatedSchool
+
+  authStore.setForm("rawSchoolingList", updatedSchoolingList)
+}
+
+
+  // Continue with your component...
+
+  const handleStatusChange = (index: number, value: string) => {
+    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+    updatedSchoolingList[index].status = value
+    authStore.setForm("rawSchoolingList", updatedSchoolingList)
+  }
+
+  const handleCourseChange = (index: number, value: string) => {
+    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+    updatedSchoolingList[index].course = value
+    authStore.setForm("rawSchoolingList", updatedSchoolingList)
+  }
+
+  const onSubmit = async () => {
+    try {
+      authStore.setUI("loading", true)
+
+      const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
+        const { status, course, confirmedSchool, school } = item
+        return {
+          school: {
+            ...school,
+            type: Number(school.type) || 0, // Default to 0 if undefined
+          },
+          course,
+          confirmedSchool,
+          status: Number(status) || 0, // Default to 0 if NaN or null
+        }
+      })
+
+      const payload = {
+        email: authStore.form.email,
+        password: authStore.form.password,
+        name: authStore.form.name,
+        phone: authStore.form.phone,
+        countryCode: authStore.form.countryCode || "defaultCountryCode", // Default value
+        rawSchoolingList,
+      }
+
+      console.log({ payload })
+
+      const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
+      console.log({ response })
+
+      setTimeout(() => {
+        authStore.setUI("loading", false)
+        onNext() // Move to the next step on success
+      }, 1000)
+    } catch (error: any) {
+      authStore.setUI("loading", false)
+      console.error({ error })
+    }
+  }
 
   return (
-    <div>
-      {/* Form Fields for Step 2 */}
-      {/* Name Field */}
-      <h2 className="text-sm font-semibold text-center mt-6 mb-1">
-        What is the name of your school?
-      </h2>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Example: John Hopkins University"
-        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-      />
+    <Fragment>
+      {authStore.form.rawSchoolingList.map((formItem, index) => (
+        <div key={formItem.school.id} className="h-full overflow-y-auto">
+          {/* Name Field */}
+          <h2 className="text-sm font-semibold text-center mt-6 mb-1">
+            What is the name of your school?
+          </h2>
+          <input
+            type="text"
+            value={formItem.school.name}
+            onChange={(e) => handleInputChange(index, "name", e.target.value)}
+            placeholder="Example: John Hopkins University"
+            className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+          />
 
-      {/* Institution Type */}
-      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-        What type of institution is it?
-      </h2>
-      <div className="flex justify-between items-center space-x-4">
-        <label className="text-sm flex items-center">
-          High school
-          <input
-            type="radio"
-            name="school-type"
-            value="high-school"
-            checked={institutionType === "high-school"}
-            onChange={(e) => setInstitutionType(e.target.value)}
-            className="ml-2 text-black"
-          />
-        </label>
-        <label className="text-sm flex items-center">
-          Higher institution
-          <input
-            type="radio"
-            name="school-type"
-            value="higher-institution"
-            checked={institutionType === "higher-institution"}
-            onChange={(e) => setInstitutionType(e.target.value)}
-            className="ml-2 text-black bg-transparent"
-          />
-        </label>
-        <label className="text-sm flex items-center">
-          Other
-          <input
-            type="radio"
-            name="school-type"
-            value="other"
-            checked={institutionType === "other"}
-            onChange={(e) => setInstitutionType(e.target.value)}
-            className="ml-2 text-black"
-          />
-        </label>
-      </div>
-
-      {/* Location Field */}
-      <div className="mb-6 mt-4">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          Where is the school located?
-        </label>
-        <div className="flex justify-center space-x-2">
-          <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
-            >
-              <option value="Nigeria">Nigeria</option>
-            </select>
+          {/* Institution Type */}
+          <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+            What type of institution is it?
+          </h2>
+          <div className="flex justify-between items-center space-x-4">
+            <label className="text-sm flex items-center">
+              Tertiary
+              <input
+                type="radio"
+                name={`school-type-${index}`}
+                value="TETIARY"
+                checked={formItem.school.type === "TETIARY"}
+                onChange={(e) =>
+                  handleInputChange(index, "type", e.target.value)
+                }
+                className="ml-2 text-black"
+              />
+            </label>
+            <label className="text-sm flex items-center">
+              Higher institution
+              <input
+                type="radio"
+                name={`school-type-${index}`}
+                value="1"
+                checked={formItem.school.type === "1"}
+                onChange={(e) =>
+                  handleInputChange(index, "type", e.target.value)
+                }
+                className="ml-2 text-black bg-transparent"
+              />
+            </label>
+            <label className="text-sm flex items-center">
+              Other
+              <input
+                type="radio"
+                name={`school-type-${index}`}
+                value="2"
+                checked={formItem.school.type === "2"}
+                onChange={(e) =>
+                  handleInputChange(index, "type", e.target.value)
+                }
+                className="ml-2 text-black"
+              />
+            </label>
           </div>
-          <div className="w-1/2">
-            <select
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-            >
-              <option value="">Select State</option>
-              {nigeriaStates.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
+
+          {/* Location Field */}
+          <div className="mb-6 mt-4">
+            <label className="block text-sm font-semibold mb-1 text-center">
+              Where is the school located?
+            </label>
+            <div className="flex justify-center space-x-2">
+              <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
+                <select
+                  value={formItem.school.country}
+                  onChange={(e) =>
+                    handleInputChange(index, "country", e.target.value)
+                  }
+                  className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
+                >
+                  <option value="" disabled>
+                    Select Country
+                  </option>
+                  <option value="Nigeria">Nigeria</option>
+                </select>
+              </div>
+              <div className="w-1/2">
+                <select
+                  value={formItem.school.state}
+                  onChange={(e) =>
+                    handleInputChange(index, "state", e.target.value)
+                  }
+                  className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
+                >
+                  <option value="">Select State</option>
+                  {nigeriaStates.map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
+
+          {/* School Status */}
+          <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+            What is your status in reference to the school?
+          </h2>
+          <div className="flex justify-between items-center space-x-1 md:space-x-4">
+            <label className="text-sm flex items-center">
+              Student
+              <input
+                type="radio"
+                name={`school-status-type-${index}`}
+                value="0"
+                checked={formItem.status === "0"}
+                onChange={(e) => handleStatusChange(index, e.target.value)}
+                className="ml-2 text-black"
+              />
+            </label>
+            <label className="text-sm flex items-center">
+              Alumnus/Alumna
+              <input
+                type="radio"
+                name={`school-status-type-${index}`}
+                value="ALUMNUS"
+                checked={formItem.status === "ALUMNUS"}
+                onChange={(e) => handleStatusChange(index, e.target.value)}
+                className="ml-2 text-black bg-transparent"
+              />
+            </label>
+            <label className="text-sm flex items-center">
+              Dropout
+              <input
+                type="radio"
+                name={`school-status-type-${index}`}
+                value="2"
+                checked={formItem.status === "2"}
+                onChange={(e) => handleStatusChange(index, e.target.value)}
+                className="ml-2 text-black"
+              />
+            </label>
+          </div>
+
+          {/* Field of Study */}
+          <div className="mb-6 mt-2">
+            <label className="block text-sm font-semibold mb-1 text-center">
+              What did you study?
+            </label>
+            <p className="text-sm text-black italic mb-2 text-center">
+              It will not be made public.
+            </p>
+            <input
+              type="text"
+              value={formItem.course}
+              onChange={(e) => handleCourseChange(index, e.target.value)}
+              placeholder="Example: Computer Science"
+              className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+            />
+          </div>
+
+          <hr className="my-6 border border-gray-300" />
         </div>
-      </div>
+      ))}
 
-      {/* School Status */}
-      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-        What is your status in reference to the school?
-      </h2>
-      <div className="flex justify-between items-center space-x-1 md:space-x-4">
-        <label className="text-sm flex items-center">
-          Student
-          <input
-            type="radio"
-            name="school-status-type"
-            value="student"
-            checked={schoolStatus === "student"}
-            onChange={(e) => setSchoolStatus(e.target.value)}
-            className="ml-2 text-black"
-          />
-        </label>
-        <label className="text-sm flex items-center">
-          Alumnus/Alumna
-          <input
-            type="radio"
-            name="school-status-type"
-            value="alumnus"
-            checked={schoolStatus === "alumnus"}
-            onChange={(e) => setSchoolStatus(e.target.value)}
-            className="ml-2 text-black bg-transparent"
-          />
-        </label>
-        <label className="text-sm flex items-center">
-          Dropout
-          <input
-            type="radio"
-            name="school-status-type"
-            value="dropout"
-            checked={schoolStatus === "dropout"}
-            onChange={(e) => setSchoolStatus(e.target.value)}
-            className="ml-2 text-black"
-          />
-        </label>
-      </div>
-
-      {/* Field of Study */}
-      <div className="mb-6 mt-2">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          What did you study?
-        </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
-        </p>
-        <input
-          type="text"
-          value={study}
-          onChange={(e) => setStudy(e.target.value)}
-          placeholder="Example: Computer Science"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-        />
-      </div>
-
-      {/* Add School Button */}
-      <Link href="#">
-        <div className="flex items-center justify-center rounded-full">
-          <button
-            type="button"
-            className="flex items-center w-1/2 border border-primary-500 rounded-full justify-center hover:bg-slate-200"
-          >
-            <span className="material-symbols-outlined text-xl md:text-2xl text-primary-500 font-bold mr-2">
-              add_circle
-            </span>
-            <span className="text-primary-500 font-bold text-xs md:text-sm">
-              ADD SCHOOL
-            </span>
-          </button>
-        </div>
-      </Link>
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-2">
-        {/* Back Button */}
+      <div className="flex justify-between mt-4">
         <button
           onClick={onBack}
-          className="p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+          className="bg-gray-300 text-black px-4 py-2 rounded"
         >
           Back
         </button>
-        {/* Next Button */}
         <button
-          onClick={handleNext}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          onClick={onSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           Next
         </button>
       </div>
-    </div>
+    </Fragment>
   )
 }
 
-export default LookSitadelStep2
+export default LookSitizenStep2

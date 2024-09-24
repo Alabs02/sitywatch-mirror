@@ -11,7 +11,7 @@ interface Gist {
   textDown: string
   content: string
   icons: string[]
-  isFocused?: boolean // Define isFocused property as optional
+  isFocused?: boolean 
 }
 
 const Gists: React.FC = () => {

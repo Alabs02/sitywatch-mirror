@@ -1,5 +1,4 @@
 import React, { FC, useState } from "react"
-import { FormData } from "@/types" // Adjust the path as necessary
 
 const predefinedGames = [
   "Chess",
@@ -25,20 +24,19 @@ const predefinedGames = [
 ]
 
 interface StepProps {
-  onNext: (data: Partial<FormData>) => void
+  onNext: () => void
   onBack: () => void
-  formData: FormData
 }
 
-const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
+const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const [showBars, setShowBars] = useState(false)
-  const [info, setInfo] = useState(formData.info)
-  const [link, setLink] = useState(formData.link || "")
-  const [email, setEmail] = useState(formData.email || "")
-  const [contact, setContact] = useState(formData.contact || "")
-  const [country, setCountry] = useState(formData.country || "Nigeria")
-  const [state, setState] = useState(formData.state || "")
-  const [address, setAddress] = useState(formData.address || "")
+  const [info, setInfo] = useState(null)
+  const [link, setLink] = useState("")
+  const [email, setEmail] = useState("")
+  const [contact, setContact] = useState("")
+  const [country, setCountry] = useState("Nigeria")
+  const [state, setState] = useState("")
+  const [address, setAddress] = useState("")
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [barValues, setBarValues] = useState([
     "Board Games",
@@ -50,7 +48,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
   const maxBars = 5
 
   const handleNext = () => {
-    onNext({ info, link, email, contact, country, state, address })
+    onNext()
   }
 
   const handleEditClick = (index: number) => {
@@ -213,6 +211,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack, formData }) => {
         >
           Back
         </button>
+
         <button
           onClick={handleNext}
           className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-xl"

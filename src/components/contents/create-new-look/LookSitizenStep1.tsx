@@ -1,63 +1,52 @@
 import React, { FC, useState } from "react"
-import { FormData } from "@/types"
 import Image from "next/image"
-import { useAppDispatch } from "@/app/store" // Redux dispatch import
-import { setFormData } from "@/features/auth/authSlice" // Redux action to update form data
+
+// STORE
+import { useAuthStore } from "@/store"
 
 interface StepProps {
-  onNext: (data: Partial<FormData>) => void
-  formData: FormData
+  onBack: () => void
+  onNext: () => void
 }
 
-const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
-  const dispatch = useAppDispatch() // Initialize Redux dispatch
-
-  const [name, setName] = useState(formData.name || "")
-  const [shortName, setShortName] = useState(formData.shortName || "@")
-  const [email, setEmail] = useState(formData.email || "")
-  const [contact, setContact] = useState(formData.contact || "")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
+  const authStore = useAuthStore()
+  const { form } = useAuthStore() 
+  const [confirmPassword, setConfirmPassword] = useState(
+    authStore.form.confirmPassword,
+  )
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordsMatch, setPasswordsMatch] = useState(true)
 
   const handleNext = () => {
     if (
-      !name ||
-      !shortName ||
-      !email ||
-      !contact ||
-      !password ||
+      !authStore.form.name ||
+      !authStore.form.shortName ||
+      !authStore.form.email ||
+      !authStore.form.phone ||
+      !authStore.form.password ||
       !confirmPassword
     ) {
       alert("Please fill out all fields.")
       return
     }
 
-    if (password !== confirmPassword) {
+    if (authStore.form.password !== confirmPassword) {
       setPasswordsMatch(false)
       return
     }
 
-    const updatedFormData: Partial<FormData> = {
-      name,
-      shortName,
-      email,
-      contact,
-      password,
-    }
-
-    // Update the Redux store with form data but don't trigger the API yet
-    dispatch(setFormData(updatedFormData))
-    onNext(updatedFormData) // Proceed to the next step
+    // Store confirmPassword in the store as well
+    authStore.setForm("confirmPassword", confirmPassword)
+    onNext() // Proceed to the next step
   }
 
   const handleShortNameChange = (value: string) => {
     if (!value.startsWith("@")) {
-      setShortName("@" + value.replace(/^@/, ""))
+      authStore.setForm("shortName", "@" + value.replace(/^@/, ""))
     } else {
-      setShortName(value)
+      authStore.setForm("shortName", value)
     }
   }
 
@@ -81,8 +70,9 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
       </p>
       <input
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        name="name"
+        value={form.name}
+        onChange={(e) => authStore.setForm("name", e.target.value)}
         placeholder="Example: John Pharrel"
         className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
@@ -98,7 +88,8 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
       </p>
       <input
         type="text"
-        value={shortName}
+        name="shortName"
+        value={authStore.form.shortName}
         onChange={(e) => handleShortNameChange(e.target.value)}
         placeholder="Example: John_Pharrel919"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
@@ -114,8 +105,9 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
         </p>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={form.email}
+          onChange={(e) => authStore.setForm("email", e.target.value)}
           placeholder="example@email.com"
           className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
         />
@@ -142,8 +134,9 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
           </div>
           <input
             type="tel"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
+            name="phone"
+            value={form.phone}
+            onChange={(e) => authStore.setForm("phone", e.target.value)}
             placeholder="Phone Number"
             className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -161,8 +154,9 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={form.password}
+            onChange={(e) => authStore.setForm("password", e.target.value)}
             className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
               !passwordsMatch ? "border-red-500" : ""
             }`}
@@ -204,6 +198,13 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
       {/* Next Button */}
       <div className="flex justify-between mt-1">
         <button
+          onClick={onBack}
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+        >
+          Back
+        </button>
+
+        <button
           onClick={handleNext}
           className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
         >
@@ -211,10 +212,9 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, formData }) => {
         </button>
       </div>
 
+      {/* Password Mismatch Warning */}
       {!passwordsMatch && (
-        <p className="text-red-500 text-xs mt-2 text-center">
-          Passwords do not match.
-        </p>
+        <p className="text-red-500 text-center mt-2">Passwords do not match!</p>
       )}
     </div>
   )

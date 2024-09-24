@@ -55,7 +55,7 @@ const EventCard: React.FC<EventCardProps> = ({
   )
 }
 
-const SitadelAffairsTab: React.FC = () => {
+const LookAffairsTab: React.FC = () => {
   const eventCards = [
     {
       link: "/add-affairs",
@@ -107,4 +107,4 @@ const SitadelAffairsTab: React.FC = () => {
   )
 }
 
-export default SitadelAffairsTab
+export default LookAffairsTab

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import SearchTab from "@/components/contents/sitadel-profile-components/SearchTab"
 import ActivityTab from "@/components/contents/sitadel-profile-components/ActivityTab"
-import AboutTab from "@/components/contents/sitadel-profile-components/AboutTab"
+import AboutTab from "@/components/contents/sitadel-profile-components/PropsTab"
 import AffairsTab from "@/components/contents/sitadel-profile-components/AffairsTab"
 
 const AffairsRightSide: React.FC = () => {

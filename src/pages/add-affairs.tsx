@@ -25,6 +25,7 @@ import AffairsServiceStep2 from "@/components/contents/add-affairs-component cop
 import AffairsServiceStep3 from "@/components/contents/add-affairs-component copy/AffairsServiceStep3"
 import AffairsServiceStep4 from "@/components/contents/add-affairs-component copy/AffairsServiceStep4"
 import AffairsServiceStep5 from "@/components/contents/add-affairs-component copy/AffairsServiceStep5"
+import _toLower from "lodash/toLower"
 
 interface Step {
   component: FC<any>
@@ -74,7 +75,7 @@ const categories: Record<string, Step[]> = {
       validate: (formData: FormData) => true,
     },
   ],
-  product: [
+  province: [
     {
       component: AffairsProductStep1,
       label: "Type",
@@ -193,7 +194,8 @@ const categories: Record<string, Step[]> = {
 // Get steps based on the form type
 const getCategorySteps = (formData: FormData): Step[] => {
   console.log("Fetching steps for type: ", formData.type)
-  const type = formData.type || "tourney"
+  const type = _toLower(formData.type) || "tourney"
+  console.log({ type })
   return categories[type] || []
 }
 
@@ -290,7 +292,7 @@ const AddAffairs: FC = () => {
         <div className="flex items-center justify-between mb-6">
           {getCategorySteps(formData).map((step, index) => (
             <React.Fragment key={index}>
-              <div className="flex flex-col items-center relative">
+              <div className="flex flex-col items-center relative mb-8">
                 <div
                   onClick={() => handleStepChange(index)}
                   className={`flex flex-col items-center cursor-pointer mb-4 overflow-hidden ${
@@ -325,7 +327,7 @@ const AddAffairs: FC = () => {
                       width: "1.9rem",
                       marginLeft: "2.68rem",
                       marginRight: "-2.0rem",
-                      marginTop: "-3.2rem",
+                      marginTop: "-4.2rem",
                       marginBottom: "-0.25rem",
                     }}
                   ></div>

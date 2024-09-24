@@ -1,9 +1,9 @@
 import React from 'react'
 
-const AboutTab = () => {
+const PropsTab = () => {
   return (
     <div>AboutTab</div>
   )
 }
 
-export default AboutTab
+export default PropsTab

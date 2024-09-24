@@ -1,13 +1,11 @@
 import React, { FC } from "react"
 import { useRouter } from "next/router" 
-import { FormData } from "@/types" 
 
 interface StepProps {
   onBack: () => void
-  formData: FormData
 }
 
-const LookSitadelStep4: FC<StepProps> = ({ onBack, formData }) => {
+const LookSitadelStep4: FC<StepProps> = ({ onBack }) => {
   const router = useRouter() 
 
   const handleImageClick = () => {
