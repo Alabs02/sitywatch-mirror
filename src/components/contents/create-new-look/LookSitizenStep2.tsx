@@ -1,297 +1,222 @@
-import React, { FC, Fragment } from "react"
-import Link from "next/link"
-
-// AXIOS
-import { http } from "@/libs"
+import React, { FC, useState } from "react"
+import Image from "next/image"
 
 // STORE
-import { useAuthStore, School } from "@/store"
-import { apiRoutes } from "@/constants/apiRoutes"
+import { useAuthStore } from "@/store"
 
 interface StepProps {
-  onNext: () => void
   onBack: () => void
+  onNext: () => void
 }
-
-const nigeriaStates = [
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Kogi",
-  "Katsina",
-  "Kebbi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Niger",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
-]
 
 const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const authStore = useAuthStore()
+  const { form } = useAuthStore() 
+  const [confirmPassword, setConfirmPassword] = useState(
+    authStore.form.confirmPassword,
+  )
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [passwordsMatch, setPasswordsMatch] = useState(true)
 
-  const handleInputChange = (
-    index: number,
-    field: keyof School | string,
-    value: string,
-  ) => {
-    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-    const updatedSchool = { ...updatedSchoolingList[index].school }
-    updatedSchool[field as string] = value
-    updatedSchoolingList[index].school = updatedSchool
-    authStore.setForm("rawSchoolingList", updatedSchoolingList)
+  const handleNext = () => {
+    if (
+      !authStore.form.name ||
+      !authStore.form.shortName ||
+      !authStore.form.email ||
+      !authStore.form.phone ||
+      !authStore.form.password ||
+      !confirmPassword
+    ) {
+      alert("Please fill out all fields.")
+      return
+    }
+
+    if (authStore.form.password !== confirmPassword) {
+      setPasswordsMatch(false)
+      return
+    }
+
+    // Store confirmPassword in the store as well
+    authStore.setForm("confirmPassword", confirmPassword)
+    onNext() // Proceed to the next step
   }
 
-  const handleStatusChange = (index: number, value: string) => {
-    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-    updatedSchoolingList[index].status = value
-    authStore.setForm("rawSchoolingList", updatedSchoolingList)
-  }
-
-  const handleCourseChange = (index: number, value: string) => {
-    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-    updatedSchoolingList[index].course = value
-    authStore.setForm("rawSchoolingList", updatedSchoolingList)
-  }
-
-  const onSubmit = async () => {
-    try {
-      authStore.setUI("loading", true)
-
-      const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
-        const { status, course, confirmedSchool, school } = item
-        return {
-          school: {
-            ...school,
-            type: Number(school.type) || 0,
-          },
-          course,
-          confirmedSchool,
-          status: Number(status) || 0,
-        }
-      })
-
-      const payload = {
-        email: authStore.form.email,
-        password: authStore.form.password,
-        name: authStore.form.name,
-        phone: authStore.form.phone,
-        countryCode: authStore.form.countryCode || "defaultCountryCode",
-        rawSchoolingList,
-      }
-
-      const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
-      const token = response.data.message.match(/token=(.*)$/)?.[1]
-
-      if (token) {
-        authStore.setForm("emailToken", token)
-
-        // Ensure this calls the correct step (step 3)
-        onNext() // Check if this correctly advances to step 3
-      }
-    } catch (error: any) {
-      console.error("Error during sign-up:", error)
-    } finally {
-      authStore.setUI("loading", false)
+  const handleShortNameChange = (value: string) => {
+    if (!value.startsWith("@")) {
+      authStore.setForm("shortName", "@" + value.replace(/^@/, ""))
+    } else {
+      authStore.setForm("shortName", value)
     }
   }
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev)
+  }
 
   return (
-    <Fragment>
-      {authStore.form.rawSchoolingList.map((formItem, index) => (
-        <div key={formItem.school.id} className="h-full overflow-y-auto">
-          <h2 className="text-sm font-semibold text-center mt-6 mb-1">
-            What is the name of your school?
-          </h2>
-          <input
-            type="text"
-            value={formItem.school.name}
-            onChange={(e) => handleInputChange(index, "name", e.target.value)}
-            placeholder="Example: John Hopkins University"
-            className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-          />
+    <div className="h-full overflow-y-auto">
+      {/* Name Field */}
+      <h2 className="text-sm font-semibold text-center mt-6 mb-1">
+        What is your name?
+      </h2>
+      <p className="text-xs text-center mb-1 italic">
+        Tell us your name, preferably your first and last name. You can add a
+        middle name if you like.
+      </p>
+      <input
+        type="text"
+        name="name"
+        value={form.name}
+        onChange={(e) => authStore.setForm("name", e.target.value)}
+        placeholder="Example: John Pharrel"
+        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
 
-          <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-            What type of institution is it?
-          </h2>
-          <div className="flex justify-between items-center space-x-4">
-            <label className="text-sm flex items-center">
-              Tertiary
-              <input
-                type="radio"
-                name={`school-type-${index}`}
-                value="TETIARY"
-                checked={formItem.school.type === "TETIARY"}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
-                className="ml-2 text-black"
-              />
-            </label>
-            <label className="text-sm flex items-center">
-              Higher institution
-              <input
-                type="radio"
-                name={`school-type-${index}`}
-                value="1"
-                checked={formItem.school.type === "1"}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
-                className="ml-2 text-black bg-transparent"
-              />
-            </label>
-            <label className="text-sm flex items-center">
-              Other
-              <input
-                type="radio"
-                name={`school-type-${index}`}
-                value="2"
-                checked={formItem.school.type === "2"}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
-                className="ml-2 text-black"
-              />
-            </label>
-          </div>
+      {/* Short Name Field */}
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+        How should we refer to you on Sitywatch?
+      </h2>
+      <p className="text-xs text-center mb-1 italic">
+        This will be your alias so that other sitizens can easily cite you. It
+        can be your nickname, a combination of letters and numbers, or anything
+        you like, just make it unique to you.
+      </p>
+      <input
+        type="text"
+        name="shortName"
+        value={authStore.form.shortName}
+        onChange={(e) => handleShortNameChange(e.target.value)}
+        placeholder="Example: John_Pharrel919"
+        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
 
-          <div className="mb-6 mt-4">
-            <label className="block text-sm font-semibold mb-1 text-center">
-              Where is the school located?
-            </label>
-            <div className="flex justify-center space-x-2">
-              <div className="w-1/2 bg-white shadow-inner shadow-gray-600/50 border border-gray-300">
-                <select
-                  value={formItem.school.country}
-                  onChange={(e) =>
-                    handleInputChange(index, "country", e.target.value)
-                  }
-                  className="p-2 rounded w-full bg-white shadow-inner shadow-gray-600/50 border border-gray-300"
-                >
-                  <option value="" disabled>
-                    Select Country
-                  </option>
-                  <option value="Nigeria">Nigeria</option>
-                </select>
-              </div>
-              <div className="w-1/2">
-                <select
-                  value={formItem.school.state}
-                  onChange={(e) =>
-                    handleInputChange(index, "state", e.target.value)
-                  }
-                  className="p-2 border border-gray-300 rounded w-full bg-white shadow-inner shadow-gray-600/50"
-                >
-                  <option value="">Select State</option>
-                  {nigeriaStates.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
+      {/* Email Field */}
+      <div className="mb-6">
+        <label className="block text-sm font-semibold mb-1 text-center">
+          Email
+        </label>
+        <p className="text-sm text-black italic mb-2 text-center">
+          It will not be made public.
+        </p>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={(e) => authStore.setForm("email", e.target.value)}
+          placeholder="example@email.com"
+          className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+        />
+      </div>
 
-          <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-            What is your status in reference to the school?
-          </h2>
-          <div className="flex justify-between items-center space-x-1 md:space-x-4">
-            <label className="text-sm flex items-center">
-              Student
-              <input
-                type="radio"
-                name={`school-status-type-${index}`}
-                value="0"
-                checked={formItem.status === "0"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
-                className="ml-2 text-black"
-              />
-            </label>
-            <label className="text-sm flex items-center">
-              Alumnus/Alumna
-              <input
-                type="radio"
-                name={`school-status-type-${index}`}
-                value="ALUMNUS"
-                checked={formItem.status === "ALUMNUS"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
-                className="ml-2 text-black bg-transparent"
-              />
-            </label>
-            <label className="text-sm flex items-center">
-              Dropout
-              <input
-                type="radio"
-                name={`school-status-type-${index}`}
-                value="2"
-                checked={formItem.status === "2"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
-                className="ml-2 text-black"
-              />
-            </label>
-          </div>
-
-          <div className="mb-6 mt-2">
-            <label className="block text-sm font-semibold mb-1 text-center">
-              What did you study?
-            </label>
-            <p className="text-sm text-black italic mb-2 text-center">
-              It will not be made public.
-            </p>
-            <input
-              type="text"
-              value={formItem.course}
-              onChange={(e) => handleCourseChange(index, e.target.value)}
-              placeholder="Example: Medicine and Surgery"
-              className="p-2 shadow-inner shadow-gray-600/50 rounded border border-gray-300 w-full text-sm"
+      {/* Contact Field */}
+      <div className="flex flex-col justify-center">
+        <label className="block text-sm font-semibold mb-1 text-center">
+          Phone number
+        </label>
+        <p className="text-sm text-black italic mb-2 text-center">
+          It will not be made public.
+        </p>
+        <div className="flex items-center w-full">
+          <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
+            <Image
+              src="/flags/nigeria.svg"
+              alt="Nigeria Flag"
+              width={24}
+              height={16}
+              className="inline-block"
             />
+            <span className="ml-2">+234</span>
           </div>
-
-          <div className="text-center">
-            <button
-              onClick={onBack}
-              className="mt-8 mr-8 p-2 shadow-md bg-gray-200 rounded-md"
-            >
-              Back
-            </button>
-            <button
-              onClick={onSubmit}
-              className="mt-8 p-2 shadow-md bg-blue-500 text-white rounded-md"
-            >
-              Submit
-            </button>
-          </div>
+          <input
+            type="tel"
+            name="phone"
+            value={form.phone}
+            onChange={(e) => authStore.setForm("phone", e.target.value)}
+            placeholder="Phone Number"
+            className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+            maxLength={15}
+            required
+          />
         </div>
-      ))}
-    </Fragment>
+      </div>
+
+      {/* Password Field */}
+      <div className="mb-6 relative">
+        <label className="block text-sm font-semibold mb-1 text-center mt-4">
+          What should be your password
+        </label>
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={form.password}
+            onChange={(e) => authStore.setForm("password", e.target.value)}
+            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
+              !passwordsMatch ? "border-red-500" : ""
+            }`}
+            placeholder="Password"
+          />
+          <span
+            className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? "visibility_off" : "visibility"}
+          </span>
+        </div>
+      </div>
+
+      {/* Confirm Password Field */}
+      <div className="mb-6 relative">
+        <label className="block text-sm font-semibold mb-1 text-center">
+          Re-enter your password
+        </label>
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
+              !passwordsMatch ? "border-red-500" : ""
+            }`}
+            placeholder="Confirm Password"
+          />
+          <span
+            className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {showConfirmPassword ? "visibility_off" : "visibility"}
+          </span>
+        </div>
+      </div>
+
+      {/* Next Button */}
+      <div className="flex justify-between mt-1">
+        <button
+          onClick={onBack}
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+        >
+          Back
+        </button>
+
+        <button
+          onClick={handleNext}
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Password Mismatch Warning */}
+      {!passwordsMatch && (
+        <p className="text-red-500 text-center mt-2">Passwords do not match!</p>
+      )}
+    </div>
   )
 }
 

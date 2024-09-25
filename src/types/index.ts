@@ -1,5 +1,10 @@
 import { ReactNode } from "react"
 
+interface Interest {
+  value: string
+  verified: boolean
+}
+
 
 export interface FormData {
   fieldOfStudy: string
@@ -47,6 +52,7 @@ export interface FormData {
   password: string
   confirmPassword: string
   emailToken?: string
+  interests: Interest[]
 }
 
 

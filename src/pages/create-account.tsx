@@ -1,15 +1,17 @@
-import React, { FC, useEffect, useState } from "react";
-import LookSitizenStep1 from "@/components/contents/create-new-look/LookSitizenStep1";
-import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1";
-import LookSitizenStep2 from "@/components/contents/create-new-look/LookSitizenStep2";
-import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2";
-import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenStep3";
-import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3";
-import LookStepType from "@/components/contents/create-new-look/LookStepType";
-import Link from "next/link";
+import React, { FC, useEffect, useState } from "react"
+import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1"
+import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2"
+import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3" // New Interests step for Sitadel
+import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4" // Moved to step 4
+import LookStepType from "@/components/contents/create-new-look/LookStepType"
+import Link from "next/link"
 
 // STORE
-import { useAuthStore } from "@/store";
+import { useAuthStore } from "@/store"
+import LookSitizenStep1 from "@/components/contents/create-new-look/LookSitizenStep1"
+import LookSitizenStep2 from "@/components/contents/create-new-look/LookSitizenStep2"
+import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenStep3"
+import LookSitizenStep4 from "@/components/contents/create-new-look/LookSitizenStep4"
 
 interface StepProps {
   onBack: () => void
@@ -17,61 +19,94 @@ interface StepProps {
 }
 
 const CreateNewLook: FC = () => {
-  const [isMounted, setIsMounted] = useState(false);
-  const authStore = useAuthStore();
+  const [isMounted, setIsMounted] = useState(false)
+  const authStore = useAuthStore()
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   const sitizenSteps = [
-    { id: 1, label: "Step 1", icon: "step_icon" },
-    { id: 2, label: "Step 2", icon: "step_icon" },
-    { id: 3, label: "Step 3", icon: "step_icon" },
-  ];
+    { id: 1, label: "interests", icon: "school" },
+    { id: 2, label: "user", icon: "person" },
+    { id: 3, label: "school", icon: "interests" }, 
+    { id: 4, label: "verify email", icon: "mail" },
+  ]
 
   const sitadelSteps = [
     { id: 1, label: "Step 1", icon: "step_icon" },
     { id: 2, label: "Step 2", icon: "step_icon" },
-    { id: 3, label: "Step 3", icon: "step_icon" },
-  ];
+    { id: 3, label: "Interests", icon: "interests" },
+    { id: 4, label: "Step 4", icon: "step_icon" },
+  ]
 
   const onChangeStep = (step: number) => {
     if (!!authStore.ui.category || authStore.ui.currentStep === 0) {
-      authStore.setNext();
+      authStore.setNext()
     } else {
-      alert("Please select a category to proceed.");
+      alert("Please select a category to proceed.")
     }
-  };
+  }
 
   const renderSteps = () => {
     switch (authStore.ui.currentStep) {
       case 0:
-        return <LookStepType />;
+        return <LookStepType />
       case 1:
         return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep1 onBack={authStore.setPrevious} onNext={authStore.setNext} />
+          <LookSitizenStep1
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          />
         ) : (
-          <LookSitadelStep1 onBack={authStore.setPrevious} onNext={authStore.setNext} />
-        );
+          <LookSitadelStep1
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          />
+        )
       case 2:
         return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep2 onBack={authStore.setPrevious} onNext={authStore.setNext} />
+          <LookSitizenStep2
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          />
         ) : (
-          <LookSitadelStep2 onBack={authStore.setPrevious} onNext={authStore.setNext} />
-        );
+          <LookSitadelStep2
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          />
+        )
       case 3:
         return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep3 onBack={authStore.setPrevious} onNext={authStore.setNext} />
+          <LookSitizenStep3
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          /> // New Interests step for Sitizen
         ) : (
-          <LookSitadelStep3 onBack={authStore.setPrevious} onNext={authStore.setNext} />
-        );
+          <LookSitadelStep3
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          /> // New Interests step for Sitadel
+        )
+      case 4:
+        return authStore.ui.category === "sitizen" ? (
+          <LookSitizenStep4
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          /> // Moved to step 4
+        ) : (
+          // <LookSitadelStep4
+          //   onBack={authStore.setPrevious}
+          //   onNext={authStore.setNext}
+          // /> 
+          <h1>Blank for now</h1>
+        )
       default:
-        return <LookStepType />;
+        return <LookStepType />
     }
-  };
+  }
 
-  if (!isMounted) return null;
+  if (!isMounted) return null
 
   return (
     <div
@@ -97,7 +132,10 @@ const CreateNewLook: FC = () => {
         <div className="flex items-center justify-between mb-6">
           {authStore.ui.category === "sitizen" &&
             sitizenSteps.map((step) => (
-              <div key={step.id} className="flex flex-col items-center relative mb-10 h-full">
+              <div
+                key={step.id}
+                className="flex flex-col items-center relative mb-10 h-full"
+              >
                 <div
                   onClick={() => onChangeStep(step.id)}
                   className={`flex flex-col items-center cursor-pointer mb-4 overflow-hidden ${
@@ -113,16 +151,23 @@ const CreateNewLook: FC = () => {
                         : "border-gray-200"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-lg">{step.icon}</span>
+                    <span className="material-symbols-outlined text-lg">
+                      {step.icon}
+                    </span>
                   </div>
-                  <div className="mt-2 text-xs sm:text-sm text-center w-20">{step.label}</div>
+                  <div className="mt-2 text-xs sm:text-sm text-center w-20">
+                    {step.label}
+                  </div>
                 </div>
               </div>
             ))}
 
           {authStore.ui.category === "sitadel" &&
             sitadelSteps.map((step) => (
-              <div key={step.id} className="flex flex-col items-center relative mb-10 h-full">
+              <div
+                key={step.id}
+                className="flex flex-col items-center relative mb-10 h-full"
+              >
                 <div
                   onClick={() => onChangeStep(step.id)}
                   className={`flex flex-col items-center cursor-pointer mb-4 overflow-hidden ${
@@ -138,9 +183,13 @@ const CreateNewLook: FC = () => {
                         : "border-gray-200"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-lg">{step.icon}</span>
+                    <span className="material-symbols-outlined text-lg">
+                      {step.icon}
+                    </span>
                   </div>
-                  <div className="mt-2 text-xs sm:text-sm text-center w-20">{step.label}</div>
+                  <div className="mt-2 text-xs sm:text-sm text-center w-20">
+                    {step.label}
+                  </div>
                 </div>
               </div>
             ))}
@@ -149,7 +198,7 @@ const CreateNewLook: FC = () => {
         <div>{renderSteps()}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateNewLook;
+export default CreateNewLook

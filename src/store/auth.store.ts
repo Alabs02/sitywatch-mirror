@@ -1,5 +1,15 @@
 import { create } from "zustand"
 
+interface FormState {
+  interests: Array<{ value: string; verified: boolean }>
+  setInterests: (interests: Array<{ value: string; verified: boolean }>) => void
+}
+
+export const useFormStore = create<FormState>((set) => ({
+  interests: [],
+  setInterests: (interests) => set({ interests }),
+}))
+
 export interface School {
   id: string
   name: string
@@ -172,6 +182,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             confirmedSchool: true,
           },
         ],
+        interests: [],
         fieldOfStudy: "",
         shortName: "",
         info: "",
@@ -202,7 +213,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         loading: false,
         error: "",
         category: "",
-        currentStep: 0, // Reset to first step
+        currentStep: 0, 
       },
     })),
   setNext: () =>

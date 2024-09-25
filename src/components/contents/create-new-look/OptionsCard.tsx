@@ -72,18 +72,36 @@ const OptionsCard: FC<OptionsCardProps> = ({
       controls.start({ opacity: 0, y: -20 })
     }
   }, [isVisible, controls])
+const handleSelectOption = (option: string) => {
+  const normalizedOption = capitalizeWords(option)
 
-  const handleSelectOption = (option: string) => {
-    const normalizedOption = capitalizeWords(option)
-    onUpdateOptions([...selectedOptions, normalizedOption])
-    setSearchQuery("") // Clear search field after selection
-  }
+  // Move the selected option to the selectedOptions list
+  onUpdateOptions([...selectedOptions, normalizedOption])
 
-  const handleRemoveOption = (option: string) => {
-    const normalizedOption = capitalizeWords(option)
-    onUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
-    setSuggestedInterests((prev) => [...prev, normalizedOption]) // Add removed option back to suggestions
-  }
+  // Remove the selected option from suggestedInterests
+  setSuggestedInterests(
+    suggestedInterests.filter((o) => o !== normalizedOption),
+  )
+
+  // Clear search query after selection
+  setSearchQuery("")
+}
+
+const handleRemoveOption = (option: string) => {
+  const normalizedOption = capitalizeWords(option)
+
+  // Remove the option from the selectedOptions
+  onUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
+
+  // Add the removed option back to the suggestedInterests if it's not already there
+  setSuggestedInterests((prev) => {
+    if (!prev.includes(normalizedOption)) {
+      return [...prev, normalizedOption]
+    }
+    return prev
+  })
+}
+
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value

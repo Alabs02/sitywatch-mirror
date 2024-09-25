@@ -1,205 +1,120 @@
-import React, { FC, useState } from "react"
-import Image from "next/image"
-
-// STORE
-import { useAuthStore } from "@/store"
+import React, { FC, useState, useEffect } from "react"
+import { useAuthStore, useFormStore } from "@/store"
+import OptionsCard from "./OptionsCard"
 
 interface StepProps {
-  onBack: () => void
   onNext: () => void
+  onBack: () => void
 }
 
 const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
-  const authStore = useAuthStore()
-  const { form } = useAuthStore() 
-  const [confirmPassword, setConfirmPassword] = useState(
-    authStore.form.confirmPassword,
-  )
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [passwordsMatch, setPasswordsMatch] = useState(true)
+  const { interests, setInterests } = useFormStore()
+  const [isOverlayVisible, setOverlayVisible] = useState(false)
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+
+  // Access store form and actions
+  const { form, setNext, setPrevious } = useAuthStore()
+
+  useEffect(() => {
+    // Set the selected options from the store's form on mount
+    setSelectedOptions(form.options || [])
+  }, [form.options])
+
+  const capitalizeWords = (str: string) => {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+  }
+
+  // Update interests when options are selected or unselected
+  const handleUpdateOptions = (updatedOptions: string[]) => {
+    const formattedInterests = updatedOptions.map((option) => ({
+      value: option,
+      verified: false,
+    }))
+    setInterests(formattedInterests)
+    setSelectedOptions(updatedOptions)
+  }
+
+  const handleSelectOption = (option: string) => {
+    const normalizedOption = capitalizeWords(option)
+    if (!selectedOptions.includes(normalizedOption)) {
+      handleUpdateOptions([...selectedOptions, normalizedOption])
+    }
+  }
+
+  const handleUnselectOption = (option: string) => {
+    const normalizedOption = capitalizeWords(option)
+    handleUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
+  }
 
   const handleNext = () => {
-    if (
-      !authStore.form.name ||
-      !authStore.form.shortName ||
-      !authStore.form.email ||
-      !authStore.form.phone ||
-      !authStore.form.password ||
-      !confirmPassword
-    ) {
-      alert("Please fill out all fields.")
-      return
-    }
-
-    if (authStore.form.password !== confirmPassword) {
-      setPasswordsMatch(false)
-      return
-    }
-
-    // Store confirmPassword in the store as well
-    authStore.setForm("confirmPassword", confirmPassword)
-    onNext() // Proceed to the next step
+    setNext() // Trigger next step from the store
+    onNext() // Call parent's onNext if needed
   }
 
-  const handleShortNameChange = (value: string) => {
-    if (!value.startsWith("@")) {
-      authStore.setForm("shortName", "@" + value.replace(/^@/, ""))
-    } else {
-      authStore.setForm("shortName", value)
-    }
-  }
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev)
-  }
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword((prev) => !prev)
+  const handleBack = () => {
+    setPrevious() // Trigger previous step from the store
+    onBack() // Call parent's onBack if needed
   }
 
   return (
-    <div className="h-full overflow-y-auto">
-      {/* Name Field */}
-      <h2 className="text-sm font-semibold text-center mt-6 mb-1">
-        What is your name?
-      </h2>
-      <p className="text-xs text-center mb-1 italic">
-        Tell us your name, preferably your first and last name. You can add a
-        middle name if you like.
-      </p>
-      <input
-        type="text"
-        name="name"
-        value={form.name}
-        onChange={(e) => authStore.setForm("name", e.target.value)}
-        placeholder="Example: John Pharrel"
-        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-      />
-
-      {/* Short Name Field */}
-      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-        How should we refer to you on Sitywatch?
-      </h2>
-      <p className="text-xs text-center mb-1 italic">
-        This will be your alias so that other sitizens can easily cite you. It
-        can be your nickname, a combination of letters and numbers, or anything
-        you like, just make it unique to you.
-      </p>
-      <input
-        type="text"
-        name="shortName"
-        value={authStore.form.shortName}
-        onChange={(e) => handleShortNameChange(e.target.value)}
-        placeholder="Example: John_Pharrel919"
-        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-      />
-
-      {/* Email Field */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          Email
-        </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
+    <div className="flex flex-col h-full overflow-y-auto">
+      <div className="text-center mb-4">
+        <p className="text-center font-bold mt-14">
+          Click the button to add your interests:
         </p>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={(e) => authStore.setForm("email", e.target.value)}
-          placeholder="example@email.com"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-        />
       </div>
 
-      {/* Contact Field */}
-      <div className="flex flex-col justify-center">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          Phone number
-        </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
-        </p>
-        <div className="flex items-center w-full">
-          <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
-            <Image
-              src="/flags/nigeria.svg"
-              alt="Nigeria Flag"
-              width={24}
-              height={16}
-              className="inline-block"
-            />
-            <span className="ml-2">+234</span>
-          </div>
-          <input
-            type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={(e) => authStore.setForm("phone", e.target.value)}
-            placeholder="Phone Number"
-            className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            maxLength={15}
-            required
-          />
-        </div>
-      </div>
-
-      {/* Password Field */}
-      <div className="mb-6 relative">
-        <label className="block text-sm font-semibold mb-1 text-center mt-4">
-          What should be your password
-        </label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={form.password}
-            onChange={(e) => authStore.setForm("password", e.target.value)}
-            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
-              !passwordsMatch ? "border-red-500" : ""
-            }`}
-            placeholder="Password"
-          />
-          <span
-            className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            onClick={togglePasswordVisibility}
+      <div className="flex flex-col">
+        <div className="text-center">
+          <button
+            onClick={() => setOverlayVisible(true)}
+            className="p-2 border border-gray-300 rounded-full text-white flex justify-center mx-auto bg-gradient-to-r from-[#F24055] to-[#1E7881] h-12 w-12"
           >
-            {showPassword ? "visibility_off" : "visibility"}
-          </span>
+            <span className="material-symbols-outlined text-xl text-white font-bold">
+              add_circle
+            </span>
+          </button>
         </div>
-      </div>
 
-      {/* Confirm Password Field */}
-      <div className="mb-6 relative">
-        <label className="block text-sm font-semibold mb-1 text-center">
-          Re-enter your password
-        </label>
-        <div className="relative">
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
-              !passwordsMatch ? "border-red-500" : ""
-            }`}
-            placeholder="Confirm Password"
+        {/* Display Selected Interests in a Responsive Row Layout */}
+        <div className="mt-6 flex flex-wrap gap-1 justify-center">
+          {selectedOptions.map((option) => (
+            <div
+              key={option}
+              className="flex items-center justify-between p-1 bg-gradient-to-b from-green-900 to-green-700 bg-opacity-60 text-gray-50 rounded-full min-w-[120px] sm:w-[160px] backdrop-blur-md shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
+              onClick={() => handleUnselectOption(option)}
+            >
+              <span
+                className="text-center flex-1"
+                style={{ minWidth: "max-content" }}
+              >
+                {option}
+              </span>
+              <span className="material-symbols-outlined text-primary-500 ml-2">
+                close
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {isOverlayVisible && (
+          <OptionsCard
+            isVisible={isOverlayVisible}
+            selectedOptions={interests.map((interest) => interest.value)}
+            onUpdateOptions={handleUpdateOptions}
+            onClose={() => setOverlayVisible(false)} // Close overlay on action
           />
-          <span
-            className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            onClick={toggleConfirmPasswordVisibility}
-          >
-            {showConfirmPassword ? "visibility_off" : "visibility"}
-          </span>
-        </div>
+        )}
       </div>
 
-      {/* Next Button */}
-      <div className="flex justify-between mt-1">
+      <div className="flex justify-between my-4">
         <button
-          onClick={onBack}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          onClick={handleBack}
+          className="p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
         >
           Back
         </button>
@@ -211,11 +126,6 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
           Next
         </button>
       </div>
-
-      {/* Password Mismatch Warning */}
-      {!passwordsMatch && (
-        <p className="text-red-500 text-center mt-2">Passwords do not match!</p>
-      )}
     </div>
   )
 }
