@@ -1,85 +1,59 @@
-import React, { FC, useState } from "react"
-import { useRouter } from "next/router"
-import { http } from "@/libs"
-
-// STORE
+import React, { FC, useEffect } from "react"
+import Image from "next/image"
 import { useAuthStore } from "@/store"
+import { http } from "@/libs"
 import { apiRoutes } from "@/constants/apiRoutes"
 
 interface StepProps {
-  onBack: () => void
-  onNext?: () => void
+  onNext: () => void
+  onBack?: () => void
 }
 
-const LookSitizenStep3: FC<StepProps> = ({ onBack }) => {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const LookSitizenStep3: FC<StepProps> = ({ onNext }) => {
+  const authStore = useAuthStore()
 
-  const formData = useAuthStore((state) => state.form) // Access form data from Zustand store
-
-  // Handle form data submission to verify email
-  const handleImageClick = async () => {
-    setIsLoading(true)
-    setError(null)
+  const onVerifyEmail = async () => {
+    const token = authStore.form.emailToken
+    if (!token) {
+      console.error("No email token available for verification")
+      return
+    }
 
     try {
-      if (formData.emailToken) {
-        await verifyEmail(formData.emailToken) // Function to call the API to verify email
-        // Redirect to next step or profile page after successful verification
-        router.push("/sitadels/sitadel-profile")
-      } else {
-        console.error("No email token available for verification.")
-        setError("No email token available for verification.")
+      const response = await http.get(
+        `${apiRoutes.VERIFY_EMAIL}?token=${token}`,
+      )
+
+      if (response.status === 200) {
+        console.log("Email verification successful")
+        onNext()
       }
-    } catch (err) {
-      console.error("Verification error:", err)
-      setError("Error verifying email. Please try again.")
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      console.error("Email verification failed:", error)
     }
   }
 
+  useEffect(() => {
+    if (authStore.form.emailToken) {
+      onVerifyEmail()
+    }
+  }, [authStore.form.emailToken])
+
   return (
-    <div className="flex flex-col items-center justify-center h-full p-4 text-center overflow-y-auto">
-      <img
-        src="/verify-look-img.svg"
-        alt="Verify Look"
-        className={`w-1/2 max-w-xs cursor-pointer ${
-          isLoading ? "opacity-50" : ""
-        }`}
-        onClick={!isLoading ? handleImageClick : undefined} // Disable onClick when loading
-      />
-      <p className="mt-4 text-sm font-semibold">
-        Hey, you’re almost done. To login, verify your look by clicking the link
-        that was sent to your email.
+    <div className="h-full w-full flex flex-col justify-center items-center">
+      <p className="text-center text-lg">
+        Click the image below to verify your email.
       </p>
-      {error && <p className="text-red-500">{error}</p>}
-      <button
-        onClick={onBack}
-        className="mt-6 p-2 bg-gray-300 text-black rounded-lg"
-        disabled={isLoading}
-      >
-        Back
-      </button>
+      <Image
+        src="/verify-look-img.svg"
+        alt="Click to verify email"
+        width={200}
+        height={200}
+        className="mt-8 cursor-pointer"
+        onClick={onVerifyEmail}
+      />
     </div>
   )
 }
 
 export default LookSitizenStep3
-
-// Function to verify email
-const verifyEmail = async (token: string) => {
-  const response = await fetch(
-    `https://sitywatch-backend.onrender.com/api/v1/auth/verifyEmail?token=${token}`,
-    {
-      method: "GET",
-    },
-  )
-
-  if (!response.ok) {
-    throw new Error("Email verification failed")
-  }
-
-  return await response.json()
-}

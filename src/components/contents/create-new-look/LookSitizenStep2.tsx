@@ -55,26 +55,17 @@ const nigeriaStates = [
 const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const authStore = useAuthStore()
 
-const handleInputChange = (
-  index: number,
-  field: keyof School | string, // Allow both string and keyof School
-  value: string,
-) => {
-  const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-  // Create a copy of the school object at the specified index
-  const updatedSchool = { ...updatedSchoolingList[index].school }
-
-  // Assert that field is a string (implicitly casts field to string)
-  updatedSchool[field as string] = value
-
-  // Update the school object in the list with the modified copy
-  updatedSchoolingList[index].school = updatedSchool
-
-  authStore.setForm("rawSchoolingList", updatedSchoolingList)
-}
-
-
-  // Continue with your component...
+  const handleInputChange = (
+    index: number,
+    field: keyof School | string,
+    value: string,
+  ) => {
+    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+    const updatedSchool = { ...updatedSchoolingList[index].school }
+    updatedSchool[field as string] = value
+    updatedSchoolingList[index].school = updatedSchool
+    authStore.setForm("rawSchoolingList", updatedSchoolingList)
+  }
 
   const handleStatusChange = (index: number, value: string) => {
     const updatedSchoolingList = [...authStore.form.rawSchoolingList]
@@ -97,11 +88,11 @@ const handleInputChange = (
         return {
           school: {
             ...school,
-            type: Number(school.type) || 0, // Default to 0 if undefined
+            type: Number(school.type) || 0,
           },
           course,
           confirmedSchool,
-          status: Number(status) || 0, // Default to 0 if NaN or null
+          status: Number(status) || 0,
         }
       })
 
@@ -110,30 +101,31 @@ const handleInputChange = (
         password: authStore.form.password,
         name: authStore.form.name,
         phone: authStore.form.phone,
-        countryCode: authStore.form.countryCode || "defaultCountryCode", // Default value
+        countryCode: authStore.form.countryCode || "defaultCountryCode",
         rawSchoolingList,
       }
 
-      console.log({ payload })
-
       const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
-      console.log({ response })
+      const token = response.data.message.match(/token=(.*)$/)?.[1]
 
-      setTimeout(() => {
-        authStore.setUI("loading", false)
-        onNext() // Move to the next step on success
-      }, 1000)
+      if (token) {
+        authStore.setForm("emailToken", token)
+
+        // Ensure this calls the correct step (step 3)
+        onNext() // Check if this correctly advances to step 3
+      }
     } catch (error: any) {
+      console.error("Error during sign-up:", error)
+    } finally {
       authStore.setUI("loading", false)
-      console.error({ error })
     }
   }
+
 
   return (
     <Fragment>
       {authStore.form.rawSchoolingList.map((formItem, index) => (
         <div key={formItem.school.id} className="h-full overflow-y-auto">
-          {/* Name Field */}
           <h2 className="text-sm font-semibold text-center mt-6 mb-1">
             What is the name of your school?
           </h2>
@@ -145,7 +137,6 @@ const handleInputChange = (
             className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
           />
 
-          {/* Institution Type */}
           <h2 className="text-sm font-semibold text-center mt-2 mb-1">
             What type of institution is it?
           </h2>
@@ -191,7 +182,6 @@ const handleInputChange = (
             </label>
           </div>
 
-          {/* Location Field */}
           <div className="mb-6 mt-4">
             <label className="block text-sm font-semibold mb-1 text-center">
               Where is the school located?
@@ -230,7 +220,6 @@ const handleInputChange = (
             </div>
           </div>
 
-          {/* School Status */}
           <h2 className="text-sm font-semibold text-center mt-2 mb-1">
             What is your status in reference to the school?
           </h2>
@@ -270,7 +259,6 @@ const handleInputChange = (
             </label>
           </div>
 
-          {/* Field of Study */}
           <div className="mb-6 mt-2">
             <label className="block text-sm font-semibold mb-1 text-center">
               What did you study?
@@ -282,29 +270,27 @@ const handleInputChange = (
               type="text"
               value={formItem.course}
               onChange={(e) => handleCourseChange(index, e.target.value)}
-              placeholder="Example: Computer Science"
-              className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+              placeholder="Example: Medicine and Surgery"
+              className="p-2 shadow-inner shadow-gray-600/50 rounded border border-gray-300 w-full text-sm"
             />
           </div>
 
-          <hr className="my-6 border border-gray-300" />
+          <div className="text-center">
+            <button
+              onClick={onBack}
+              className="mt-8 mr-8 p-2 shadow-md bg-gray-200 rounded-md"
+            >
+              Back
+            </button>
+            <button
+              onClick={onSubmit}
+              className="mt-8 p-2 shadow-md bg-blue-500 text-white rounded-md"
+            >
+              Submit
+            </button>
+          </div>
         </div>
       ))}
-
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={onBack}
-          className="bg-gray-300 text-black px-4 py-2 rounded"
-        >
-          Back
-        </button>
-        <button
-          onClick={onSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Next
-        </button>
-      </div>
     </Fragment>
   )
 }
