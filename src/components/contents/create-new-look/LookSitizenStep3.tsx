@@ -103,6 +103,7 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
         phone: authStore.form.phone,
         countryCode: authStore.form.countryCode || "defaultCountryCode",
         rawSchoolingList,
+        interests: authStore.form.interests, // Ensure interests are included
       }
 
       const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
@@ -110,9 +111,7 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
 
       if (token) {
         authStore.setForm("emailToken", token)
-
-        // Ensure this calls the correct step (step 3)
-        onNext() // Check if this correctly advances to step 3
+        onNext() // Move to the next step
       }
     } catch (error: any) {
       console.error("Error during sign-up:", error)
@@ -120,6 +119,7 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
       authStore.setUI("loading", false)
     }
   }
+
 
 
   return (
