@@ -2,6 +2,7 @@ import React, { FC } from "react"
 import { useRouter } from "next/router" 
 
 interface StepProps {
+  onNext?: () => void
   onBack: () => void
 }
 

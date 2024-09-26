@@ -40,13 +40,15 @@ const CreateNewLook: FC = () => {
     { id: 4, label: "Step 4", icon: "step_icon" },
   ]
 
-  const onChangeStep = (step: number) => {
-    if (!!authStore.ui.category || authStore.ui.currentStep === 0) {
-      authStore.setNext()
-    } else {
-      alert("Please select a category to proceed.")
-    }
+const onChangeStep = (step: number) => {
+  if (authStore.ui.currentStep === 0 && !authStore.ui.category) {
+    alert("Please select a category to proceed.")
+    return // Prevent navigation without category
   }
+  authStore.setCurrentStep(step) // Proceed with step change
+}
+
+
 
   const renderSteps = () => {
     switch (authStore.ui.currentStep) {
@@ -95,11 +97,11 @@ const CreateNewLook: FC = () => {
             onNext={authStore.setNext}
           /> // Moved to step 4
         ) : (
-          // <LookSitadelStep4
-          //   onBack={authStore.setPrevious}
-          //   onNext={authStore.setNext}
-          // /> 
-          <h1>Blank for now</h1>
+          <LookSitadelStep4
+            onBack={authStore.setPrevious}
+            onNext={authStore.setNext}
+          /> 
+          
         )
       default:
         return <LookStepType />

@@ -89,7 +89,7 @@ interface AuthStore {
   resetForm: () => void
   setNext: () => void
   setPrevious: () => void
-
+  setCurrentStep: (step: number) => void
   // Add functions to handle interests
   addInterest: (interest: Interest) => void
   removeInterest: (value: string) => void
@@ -219,22 +219,29 @@ export const useAuthStore = create<AuthStore>((set) => ({
         currentStep: 0,
       },
     })),
+
   setNext: () =>
     set((state) => ({
       ui: {
         ...state.ui,
-        currentStep: state.ui.currentStep + 1,
+        currentStep: Math.min(state.ui.currentStep + 1, 4), // Prevent exceeding step 4
       },
     })),
   setPrevious: () =>
     set((state) => ({
       ui: {
         ...state.ui,
-        currentStep: Math.max(0, state.ui.currentStep - 1),
+        currentStep: Math.max(0, state.ui.currentStep - 1), // Prevent going below step 0
       },
     })),
 
-  // Function to add an interest
+  setCurrentStep: (step: number) =>
+    set((state) => ({
+      ui: {
+        ...state.ui,
+        currentStep: step, // Set the step to the passed value
+      },
+    })),
   addInterest: (interest: Interest) =>
     set((state) => ({
       form: {
@@ -242,13 +249,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
         interests: [...state.form.interests, interest], // Add new interest
       },
     })),
-
-  // Function to remove an interest by its value
   removeInterest: (value: string) =>
     set((state) => ({
       form: {
         ...state.form,
-        interests: state.form.interests.filter((i) => i.value !== value), // Filter out the interest
+        interests: state.form.interests.filter((i) => i.value !== value),
       },
     })),
 }))
+
