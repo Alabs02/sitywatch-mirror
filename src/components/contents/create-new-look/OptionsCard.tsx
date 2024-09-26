@@ -78,7 +78,7 @@ const handleSelectOption = (option: string) => {
   // Move the selected option to the selectedOptions list
   onUpdateOptions([...selectedOptions, normalizedOption])
 
-  // Remove the selected option from suggestedInterests
+  onUpdateOptions([...selectedOptions, normalizedOption])
   setSuggestedInterests(
     suggestedInterests.filter((o) => o !== normalizedOption),
   )

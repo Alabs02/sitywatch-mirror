@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from "react"
-import { useAuthStore, useFormStore } from "@/store"
+import { useAuthStore } from "@/store" 
+import Link from "next/link"
 import OptionsCard from "./OptionsCard"
 
 interface StepProps {
@@ -8,17 +9,20 @@ interface StepProps {
 }
 
 const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
-  const { interests, setInterests } = useFormStore()
-  const [isOverlayVisible, setOverlayVisible] = useState(false)
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const [showOptions, setShowOptions] = useState(false)
 
   // Access store form and actions
-  const { form, setNext, setPrevious } = useAuthStore()
+  const { form, setForm, setNext, setPrevious } = useAuthStore()
+
+  // State for selected options in this component
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    form.interests.map((interest) => interest.value) || [], // Ensuring interests are initialized from the form state
+  )
 
   useEffect(() => {
-    // Set the selected options from the store's form on mount
-    setSelectedOptions(form.options || [])
-  }, [form.options])
+    // When the component is mounted, set the selected options from the store's form
+    setSelectedOptions(form.interests.map((interest) => interest.value) || [])
+  }, [form.interests])
 
   const capitalizeWords = (str: string) => {
     return str
@@ -28,15 +32,20 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
       .join(" ")
   }
 
-  // Update interests when options are selected or unselected
-  const handleUpdateOptions = (updatedOptions: string[]) => {
-    const formattedInterests = updatedOptions.map((option) => ({
-      value: option,
-      verified: false,
-    }))
-    setInterests(formattedInterests)
-    setSelectedOptions(updatedOptions)
-  }
+ const handleUpdateOptions = (updatedOptions: string[]) => {
+   const normalizedOptions = updatedOptions.map(capitalizeWords)
+   const uniqueOptions = Array.from(new Set(normalizedOptions))
+   setSelectedOptions(uniqueOptions)
+
+   // Update the store's form interests (as Interest[] with verified false by default)
+   setForm(
+     "interests",
+     uniqueOptions.map((option) => ({
+       value: option,
+       verified: false, // Defaulting to false; modify as needed
+     })),
+   )
+ }
 
   const handleSelectOption = (option: string) => {
     const normalizedOption = capitalizeWords(option)
@@ -51,6 +60,7 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   const handleNext = () => {
+    // You could also do validation or any pre-submit logic here before proceeding to the next step
     setNext() // Trigger next step from the store
     onNext() // Call parent's onNext if needed
   }
@@ -71,7 +81,7 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
       <div className="flex flex-col">
         <div className="text-center">
           <button
-            onClick={() => setOverlayVisible(true)}
+            onClick={() => setShowOptions(!showOptions)}
             className="p-2 border border-gray-300 rounded-full text-white flex justify-center mx-auto bg-gradient-to-r from-[#F24055] to-[#1E7881] h-12 w-12"
           >
             <span className="material-symbols-outlined text-xl text-white font-bold">
@@ -101,14 +111,12 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
           ))}
         </div>
 
-        {isOverlayVisible && (
-          <OptionsCard
-            isVisible={isOverlayVisible}
-            selectedOptions={interests.map((interest) => interest.value)}
-            onUpdateOptions={handleUpdateOptions}
-            onClose={() => setOverlayVisible(false)} // Close overlay on action
-          />
-        )}
+        <OptionsCard
+          isVisible={showOptions}
+          onClose={() => setShowOptions(false)}
+          onUpdateOptions={handleUpdateOptions} // Pass array-based handler to OptionsCard
+          selectedOptions={selectedOptions} // Pass selectedOptions to OptionsCard
+        />
       </div>
 
       <div className="flex justify-between my-4">

@@ -1,14 +1,9 @@
 import { create } from "zustand"
 
-interface FormState {
-  interests: Array<{ value: string; verified: boolean }>
-  setInterests: (interests: Array<{ value: string; verified: boolean }>) => void
+export interface Interest {
+  value: string
+  verified: boolean
 }
-
-export const useFormStore = create<FormState>((set) => ({
-  interests: [],
-  setInterests: (interests) => set({ interests }),
-}))
 
 export interface School {
   id: string
@@ -26,7 +21,7 @@ export interface RawSchoolingListItem {
   confirmedSchool: boolean
 }
 
-interface FormData {
+export interface FormData {
   email: string
   password: string
   name: string
@@ -74,6 +69,9 @@ interface FormData {
   website: string
   confirmPassword: string
   emailToken?: string
+
+  // Interests field added here
+  interests: Interest[] // Array of Interest objects
 }
 
 interface UIState {
@@ -91,6 +89,10 @@ interface AuthStore {
   resetForm: () => void
   setNext: () => void
   setPrevious: () => void
+
+  // Add functions to handle interests
+  addInterest: (interest: Interest) => void
+  removeInterest: (value: string) => void
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -114,6 +116,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         confirmedSchool: true,
       },
     ],
+    interests: [], // Initialize as an empty array
     fieldOfStudy: "",
     shortName: "",
     info: "",
@@ -150,14 +153,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set((state) => ({
       form: {
         ...state.form,
-        [key]: value, // key is typed as keyof FormData
+        [key]: value, // Update any form field dynamically
       },
     })),
   setUI: (key, value) =>
     set((state) => ({
       ui: {
         ...state.ui,
-        [key]: value, // key is typed as keyof UIState
+        [key]: value, // Update UI state dynamically
       },
     })),
   resetForm: () =>
@@ -182,7 +185,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             confirmedSchool: true,
           },
         ],
-        interests: [],
+        interests: [], // Reset interests to empty array
         fieldOfStudy: "",
         shortName: "",
         info: "",
@@ -213,7 +216,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         loading: false,
         error: "",
         category: "",
-        currentStep: 0, 
+        currentStep: 0,
       },
     })),
   setNext: () =>
@@ -228,6 +231,24 @@ export const useAuthStore = create<AuthStore>((set) => ({
       ui: {
         ...state.ui,
         currentStep: Math.max(0, state.ui.currentStep - 1),
+      },
+    })),
+
+  // Function to add an interest
+  addInterest: (interest: Interest) =>
+    set((state) => ({
+      form: {
+        ...state.form,
+        interests: [...state.form.interests, interest], // Add new interest
+      },
+    })),
+
+  // Function to remove an interest by its value
+  removeInterest: (value: string) =>
+    set((state) => ({
+      form: {
+        ...state.form,
+        interests: state.form.interests.filter((i) => i.value !== value), // Filter out the interest
       },
     })),
 }))
