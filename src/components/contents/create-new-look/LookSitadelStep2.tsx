@@ -39,13 +39,13 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const [address, setAddress] = useState("")
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [barValues, setBarValues] = useState([
-    "Board Games",
-    "Monopoly",
-    "Games",
+    "Industry",
+    "Info Tech",
+    "Entertainment",
   ])
   const [searchValue, setSearchValue] = useState("")
   const [filteredGames, setFilteredGames] = useState<string[]>([])
-  const maxBars = 5
+  const maxBars = 3
 
   const handleNext = () => {
     onNext()
@@ -81,7 +81,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const handleAddClick = () => {
     if (barValues.length >= maxBars) {
       alert(
-        "You have reached the maximum limit of 5 items. You can edit your existing options.",
+        "You have reached the maximum limit of 3 items. You can edit your existing options.",
       )
       return
     }
@@ -95,7 +95,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const handleGameClick = (game: string) => {
     if (barValues.length >= maxBars) {
       alert(
-        "You have reached the maximum limit of 5 items. You can edit your existing options.",
+        "You have reached the maximum limit of 3 items. You can edit your existing options.",
       )
       return
     }
@@ -161,7 +161,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
           {barValues.map((value, index) => (
             <div
               key={index}
-              className="flex items-center bg-black border border-gray-300 shadow-inner shadow-gray-600/50 rounded-lg"
+              className="flex items-center bg-black border border-gray-300 shadow-inner shadow-gray-600/50 rounded-lg p-1"
               style={{
                 maxWidth: "600px",
                 flexBasis: "calc(50% - 8px)",

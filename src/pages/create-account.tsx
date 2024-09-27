@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react"
 import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1"
 import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2"
-import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3" // New Interests step for Sitadel
-import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4" // Moved to step 4
+import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3" 
+import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4" 
 import LookStepType from "@/components/contents/create-new-look/LookStepType"
 import Link from "next/link"
 
@@ -34,18 +34,17 @@ const CreateNewLook: FC = () => {
   ]
 
   const sitadelSteps = [
-    { id: 1, label: "Step 1", icon: "step_icon" },
-    { id: 2, label: "Step 2", icon: "step_icon" },
-    { id: 3, label: "Interests", icon: "interests" },
-    { id: 4, label: "Step 4", icon: "step_icon" },
+    { id: 1, label: "Info", icon: "list" },
+    { id: 2, label: "Industry", icon: "description" },
+    { id: 3, label: "Verify email", icon: "check" },
   ]
 
 const onChangeStep = (step: number) => {
   if (authStore.ui.currentStep === 0 && !authStore.ui.category) {
     alert("Please select a category to proceed.")
-    return // Prevent navigation without category
+    return 
   }
-  authStore.setCurrentStep(step) // Proceed with step change
+  authStore.setCurrentStep(step) 
 }
 
 
@@ -83,25 +82,12 @@ const onChangeStep = (step: number) => {
           <LookSitizenStep3
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
-          /> // New Interests step for Sitizen
+          /> 
         ) : (
           <LookSitadelStep3
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
-          /> // New Interests step for Sitadel
-        )
-      case 4:
-        return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep4
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          /> // Moved to step 4
-        ) : (
-          <LookSitadelStep4
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
           /> 
-          
         )
       default:
         return <LookStepType />

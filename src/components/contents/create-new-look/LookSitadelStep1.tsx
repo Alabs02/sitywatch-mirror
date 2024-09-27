@@ -1,49 +1,52 @@
 import React, { FC, useState } from "react"
 import Image from "next/image"
 
+// STORE
+import { useAuthStore } from "@/store"
+
 interface StepProps {
-  onBack: () => void,
+  onBack: () => void
   onNext: () => void
 }
 
 const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
-  const [name, setName] = useState("")
-  const [shortName, setShortName] = useState("@")
-  const [email, setEmail] = useState("")
-  const [contact, setContact] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const authStore = useAuthStore()
+  const { form } = useAuthStore()
+  const [confirmPassword, setConfirmPassword] = useState(
+    authStore.form.confirmPassword,
+  )
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordsMatch, setPasswordsMatch] = useState(true)
 
   const handleNext = () => {
     if (
-      !name ||
-      !shortName ||
-      !email ||
-      !contact ||
-      !password ||
+      !authStore.form.name ||
+      !authStore.form.shortName ||
+      !authStore.form.email ||
+      !authStore.form.phone ||
+      !authStore.form.password ||
       !confirmPassword
     ) {
       alert("Please fill out all fields.")
       return
     }
 
-    if (password !== confirmPassword) {
+    if (authStore.form.password !== confirmPassword) {
       setPasswordsMatch(false)
       return
     }
 
-    onNext()
-    console.log("Passwords match, proceeding to next step.")
+    // Store confirmPassword in the store as well
+    authStore.setForm("confirmPassword", confirmPassword)
+    onNext() // Proceed to the next step
   }
 
   const handleShortNameChange = (value: string) => {
     if (!value.startsWith("@")) {
-      setShortName("@" + value.replace(/^@/, ""))
+      authStore.setForm("shortName", "@" + value.replace(/^@/, ""))
     } else {
-      setShortName(value)
+      authStore.setForm("shortName", value)
     }
   }
 
@@ -56,37 +59,37 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   return (
-    <div className="">
+    <div className="h-full overflow-y-auto">
       {/* Name Field */}
       <h2 className="text-sm font-semibold text-center mt-6 mb-1">
         What is the name of your Sitadel?
       </h2>
       <p className="text-xs text-center mb-1 italic">
         This is the full name of the brand, business, organization, company,
-        etc. <br />
-        You can always change and modify the name later.
+        etc. You can always change or modify the name later.
       </p>
       <input
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        name="name"
+        value={form.name}
+        onChange={(e) => authStore.setForm("name", e.target.value)}
         placeholder="Example: John Pharrel"
         className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
 
       {/* Short Name Field */}
       <h2 className="text-sm font-semibold text-center mt-2 mb-1">
-        How should we refer to your Sitadel on Sitywatch?
+        How should we refer to your Sitadel on SityWatch?
       </h2>
       <p className="text-xs text-center mb-1 italic">
         This is the short version of the name of the sitadel which will be used
-        to refer to the Sitadel on SityWatch. It can be an abbreviation,
-        accronym, etc. <br />
-        Just keep it short and unique.
+        to refer to the sitadel on SityWatch. It can be an abbreviation, an
+        acronym, etc. Just keep it short and unique.
       </p>
       <input
         type="text"
-        value={shortName}
+        name="shortName"
+        value={authStore.form.shortName}
         onChange={(e) => handleShortNameChange(e.target.value)}
         placeholder="Example: John_Pharrel919"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
@@ -97,13 +100,14 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
         <label className="block text-sm font-semibold mb-1 text-center">
           Email
         </label>
-        {/* <p className="text-sm text-black italic mb-2 text-center">
+        <p className="text-sm text-black italic mb-2 text-center">
           It will not be made public.
-        </p> */}
+        </p>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={form.email}
+          onChange={(e) => authStore.setForm("email", e.target.value)}
           placeholder="example@email.com"
           className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
         />
@@ -112,10 +116,10 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
       {/* Contact Field */}
       <div className="flex flex-col justify-center">
         <label className="block text-sm font-semibold mb-1 text-center">
-          Contact
+          Phone number
         </label>
         <p className="text-sm text-black italic mb-2 text-center">
-          Make it easier for people to contact you via mobile.
+          It will not be made public.
         </p>
         <div className="flex items-center w-full">
           <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
@@ -130,8 +134,9 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
           </div>
           <input
             type="tel"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
+            name="phone"
+            value={form.phone}
+            onChange={(e) => authStore.setForm("phone", e.target.value)}
             placeholder="Phone Number"
             className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -149,8 +154,9 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={form.password}
+            onChange={(e) => authStore.setForm("password", e.target.value)}
             className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
               !passwordsMatch ? "border-red-500" : ""
             }`}
@@ -206,10 +212,9 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
         </button>
       </div>
 
+      {/* Password Mismatch Warning */}
       {!passwordsMatch && (
-        <p className="text-red-500 text-xs mt-2 text-center">
-          Passwords do not match.
-        </p>
+        <p className="text-red-500 text-center mt-2">Passwords do not match!</p>
       )}
     </div>
   )
