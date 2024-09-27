@@ -12,12 +12,12 @@ export interface School {
   type: string
   country: string
   state: string
-  [key: string]: any
+  [key: string]: any 
 }
 
 export interface RawSchoolingListItem {
   school: School
-  status: string
+  status: string 
   course: string
   confirmedSchool: boolean
 }
@@ -78,8 +78,8 @@ export interface FormData {
   emailToken?: string
 
   // Interests and Niches
-  interests: Interest[]
-  niches: Interest[]
+  interests: Interest[] 
+  niches: Interest[] 
 }
 
 interface UIState {
@@ -102,7 +102,7 @@ interface AuthStore {
   setCurrentStep: (step: number) => void
   addInterest: (interest: Interest) => void
   removeInterest: (value: string) => void
-  setNiches: (niches: Interest[]) => void
+  setNiches: (niches: Interest[]) => void 
   setAuth: (tokens: AuthTokens) => void
   logout: () => void
 }
@@ -128,8 +128,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         confirmedSchool: true,
       },
     ],
-    interests: [],
-    niches: [],
+    interests: [], 
+    niches: [], 
     fieldOfStudy: "",
     shortName: "",
     info: "",
@@ -169,14 +169,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set((state) => ({
       form: {
         ...state.form,
-        [key]: value,
+        [key]: value, 
       },
     })),
   setUI: (key, value) =>
     set((state) => ({
       ui: {
         ...state.ui,
-        [key]: value,
+        [key]: value, 
       },
     })),
   setNiches: (niches: Interest[]) =>
@@ -218,8 +218,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
             confirmedSchool: true,
           },
         ],
-        interests: [],
-        niches: [],
+        interests: [], 
+        niches: [], 
         fieldOfStudy: "",
         shortName: "",
         info: "",
@@ -265,21 +265,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set((state) => ({
       ui: {
         ...state.ui,
-        currentStep: Math.max(0, state.ui.currentStep - 1),
+        currentStep: Math.max(0, state.ui.currentStep - 1), 
       },
     })),
   setCurrentStep: (step: number) =>
     set((state) => ({
       ui: {
         ...state.ui,
-        currentStep: step,
+        currentStep: step, 
       },
     })),
   addInterest: (interest: Interest) =>
     set((state) => ({
       form: {
         ...state.form,
-        interests: [...state.form.interests, interest],
+        interests: [...state.form.interests, interest], 
       },
     })),
   removeInterest: (value: string) =>

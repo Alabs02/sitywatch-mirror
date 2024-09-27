@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react"
 import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1"
 import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2"
-import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3"
-import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4"
+import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3" 
+import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4" 
 import LookStepType from "@/components/contents/create-new-look/LookStepType"
 import Link from "next/link"
 
@@ -29,7 +29,7 @@ const CreateNewLook: FC = () => {
   const sitizenSteps = [
     { id: 1, label: "interests", icon: "school" },
     { id: 2, label: "user", icon: "person" },
-    { id: 3, label: "school", icon: "interests" },
+    { id: 3, label: "school", icon: "interests" }, 
     { id: 4, label: "verify email", icon: "mail" },
   ]
 
@@ -39,13 +39,15 @@ const CreateNewLook: FC = () => {
     { id: 3, label: "Verify email", icon: "check" },
   ]
 
-  const onChangeStep = (step: number) => {
-    if (authStore.ui.currentStep === 0 && !authStore.ui.category) {
-      alert("Please select a category to proceed.")
-      return
-    }
-    authStore.setCurrentStep(step)
+const onChangeStep = (step: number) => {
+  if (authStore.ui.currentStep === 0 && !authStore.ui.category) {
+    alert("Please select a category to proceed.")
+    return 
   }
+  authStore.setCurrentStep(step) 
+}
+
+
 
   const renderSteps = () => {
     switch (authStore.ui.currentStep) {
@@ -80,12 +82,12 @@ const CreateNewLook: FC = () => {
           <LookSitizenStep3
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
-          />
+          /> 
         ) : (
           <LookSitadelStep3
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
-          />
+          /> 
         )
       default:
         return <LookStepType />
