@@ -1,41 +1,51 @@
 import React, { FC, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useAuthStore } from "@/store"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes" // Import the API constants
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { setAuth, setUI } = useAuthStore() // Using Zustand store to handle auth state
   const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email === "user@sitymail.com" && password === "password") {
-      setIsLoggedIn(true)
-      router.push("/welcome")
-    } else {
-      alert("Invalid email or password")
+
+    try {
+      const response = await fetch(`${baseURI}${apiRoutes.SIGN_IN}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        const { sessionId, accessToken, refreshToken } = data.success
+        setAuth({ sessionId, accessToken, refreshToken })
+        router.push("/welcome")
+      } else {
+        setUI("error", data.message) // Set error message in the store
+        alert(data.message) // Alert user about the failure
+      }
+    } catch (error) {
+      console.error("Login failed:", error)
+      alert("An error occurred during login. Please try again.")
     }
   }
 
   const handleGoogleLogin = () => {
-    setIsLoggedIn(true)
-    router.push("/welcome")
+    // Handle Google login here
+    alert("Google login not yet implemented.")
   }
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
-  }
-
-  if (isLoggedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <h2 className="text-2xl font-bold">
-          You are logged in! Redirecting to the welcome page...
-        </h2>
-      </div>
-    )
   }
 
   return (
@@ -84,8 +94,9 @@ const LoginForm: FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 bg-white  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 shadow-inner shadow-gray-600/50"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 shadow-inner shadow-gray-600/50"
               placeholder="Email"
+              required
             />
           </div>
 
@@ -97,6 +108,7 @@ const LoginForm: FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 shadow-inner shadow-gray-600/50"
               placeholder="Password"
+              required
             />
             <span
               className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"

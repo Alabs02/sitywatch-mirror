@@ -21,6 +21,12 @@ export interface RawSchoolingListItem {
   confirmedSchool: boolean
 }
 
+interface AuthTokens {
+  sessionId: string
+  accessToken: string
+  refreshToken: string
+}
+
 export interface FormData {
   email: string
   password: string
@@ -93,6 +99,9 @@ interface AuthStore {
   // Add functions to handle interests
   addInterest: (interest: Interest) => void
   removeInterest: (value: string) => void
+  setAuth: (tokens: AuthTokens) => void
+  logout: () => void
+  tokens: AuthTokens | null
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -149,6 +158,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     category: "",
     currentStep: 0, // Starting at step 0
   },
+  tokens: null,
+  isLoggedIn: false,
   setForm: (key, value) =>
     set((state) => ({
       form: {
@@ -162,6 +173,17 @@ export const useAuthStore = create<AuthStore>((set) => ({
         ...state.ui,
         [key]: value, // Update UI state dynamically
       },
+    })),
+  setAuth: (tokens: AuthTokens) =>
+    set(() => ({
+      tokens,
+      isLoggedIn: true,
+    })),
+
+  logout: () =>
+    set(() => ({
+      tokens: null,
+      isLoggedIn: false,
     })),
   resetForm: () =>
     set(() => ({
