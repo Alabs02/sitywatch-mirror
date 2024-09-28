@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { useAuthStore } from "@/store"
 import { useRouter } from "next/router"
-import { signOut } from "@/libs/https.lib" // Ensure this is imported correctly
+import { signOut } from "@/libs/https.lib" 
 
 interface HeaderProps {
   children?: React.ReactNode
@@ -18,7 +18,7 @@ interface HeaderProps {
 
 const texts = [
   "#HIFL Registration is still ongoing for higher institutions. Registration ends 20th April",
-  "Henry Oandoka has been announced as Best player of #NUGAFootball 2024",
+  "Henry Oandoka has been announced as Best player of #NUGAFootbal 2024",
   "#SitwatchBeautyPageant2023 has released the list of finalists",
   "This would be the last in the array. #Extra.",
 ]
@@ -221,32 +221,20 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                       Nasir Kingly Touch Photography
                     </span>
                     <span className="text-[10px] sm:text-[12px] text-blue-900">
-                      @nasirKingSnap
+                      @NKTPhotography
                     </span>
                   </Link>
                 </div>
               </li>
-              {/* Logout Button */}
-              <li className="p-1 sm:p-2 hover:bg-gray-100 cursor-pointer">
-                <button
-                  className="flex items-center w-full"
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                >
-                  {isLoggingOut ? (
-                    <Skeleton width={80} height={20} />
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-sm md:text-lg">
-                        logout
-                      </span>
-                      <span className="ml-1 sm:ml-2">Logout</span>
-                    </>
-                  )}
-                </button>
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
+                <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
+                  login
+                </span>
+                <span className="ml-1 sm:ml-2 font-bold text-xs sm:text-sm">
+                  Log into another look
+                </span>
               </li>
-              {/* Additional Navigation Links */}
-              <li className="flex items-center p-1 sm:p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
+              <li className="flex items-center p-1 hover:bg-gray-100 cursor-pointer">
                 <span className="material-symbols-outlined text-xs sm:text-sm md:text-lg">
                   add
                 </span>
@@ -282,6 +270,26 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
                   Help
                 </span>
               </li>
+              <Link href="/">
+                <li className="p-1 sm:p-2 hover:bg-gray-100 cursor-pointer">
+                  <button
+                    className="flex items-center w-full"
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                  >
+                    {isLoggingOut ? (
+                      <Skeleton width={80} height={20} />
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-sm md:text-lg">
+                          logout
+                        </span>
+                        <span className="ml-1 sm:ml-2">Logout</span>
+                      </>
+                    )}
+                  </button>
+                </li>
+              </Link>
             </ul>
           </div>
         </div>
