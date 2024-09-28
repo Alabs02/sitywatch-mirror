@@ -1,3 +1,4 @@
+// src/components/LookSitizenStep3.tsx
 import React, { FC, Fragment } from "react"
 import Link from "next/link"
 
@@ -103,24 +104,25 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
         phone: authStore.form.phone,
         countryCode: authStore.form.countryCode || "defaultCountryCode",
         rawSchoolingList,
-        interests: authStore.form.interests, 
+        interests: authStore.form.interests,
       }
 
       const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
       const token = response.data.message.match(/token=(.*)$/)?.[1]
 
-       if (token) {
-         authStore.setForm("emailToken", token)
-         onNext() 
-       }
+      if (token) {
+        authStore.setForm("emailToken", token) // Store token for Step 4
+        onNext() // Proceed to Step 4 (email verification)
+      } else {
+        alert("Registration successful, but no token received.")
+      }
     } catch (error: any) {
       console.error("Error during sign-up:", error)
+      alert("Sign-up failed. Please try again.")
     } finally {
       authStore.setUI("loading", false)
     }
   }
-
-
 
   return (
     <Fragment>
@@ -271,7 +273,7 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
               value={formItem.course}
               onChange={(e) => handleCourseChange(index, e.target.value)}
               placeholder="Example: Medicine and Surgery"
-              className="p-2 shadow-inner shadow-gray-600/50 rounded border border-gray-300 w-full text-sm"
+              className="p-2 shadow-inner shadow-gray-600/50 border border-gray-300 rounded w-full"
             />
           </div>
 
@@ -288,6 +290,14 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
             >
               Submit
             </button>
+          </div>
+
+          <div className="w-full flex justify-center items-center">
+            <p className="text-center text-gray-600">
+              <Link href="/auth/signin" className="text-blue-500 underline">
+                Sign In instead
+              </Link>
+            </p>
           </div>
         </div>
       ))}

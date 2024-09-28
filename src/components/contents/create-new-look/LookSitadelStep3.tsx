@@ -6,7 +6,6 @@ import axios from "axios"
 
 interface StepProps {
   onBack: () => void
-  onNext: () => void
 }
 
 const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
@@ -20,12 +19,13 @@ const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
     setError(null)
 
     try {
-      const response = await axios.post(`${baseURI}${apiRoutes.VERIFY_EMAIL}`, {
-        emailToken: form.emailToken,
-      })
+      // Use GET request and pass the email token as a query parameter
+      const response = await axios.get(
+        `${baseURI}${apiRoutes.VERIFY_EMAIL}?token=${form.emailToken}`,
+      )
 
-      if (response.data.success) {
-        router.push("/sitadels/sitadel-profile")
+      if (response.status === 200) {
+        router.push("/sitadels/sitadel-profile") // Navigate to the profile page on success
       } else {
         throw new Error("Verification failed. Please try again.")
       }

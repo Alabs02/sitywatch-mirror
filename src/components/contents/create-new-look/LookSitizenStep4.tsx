@@ -1,16 +1,17 @@
-import React, { FC, useEffect } from "react"
+import React, { FC } from "react"
 import Image from "next/image"
 import { useAuthStore } from "@/store"
 import { http } from "@/libs"
 import { apiRoutes } from "@/constants/apiRoutes"
+import { useRouter } from "next/router"
 
 interface StepProps {
   onNext: () => void
-  onBack?: () => void
 }
 
 const LookSitizenStep4: FC<StepProps> = ({ onNext }) => {
   const authStore = useAuthStore()
+  const router = useRouter()
 
   const onVerifyEmail = async () => {
     const token = authStore.form.emailToken
@@ -26,18 +27,12 @@ const LookSitizenStep4: FC<StepProps> = ({ onNext }) => {
 
       if (response.status === 200) {
         console.log("Email verification successful")
-        onNext()
+        router.push("/welcome") // Redirect to the welcome page after verification
       }
     } catch (error) {
       console.error("Email verification failed:", error)
     }
   }
-
-  // useEffect(() => {
-  //   if (authStore.form.emailToken) {
-  //     onVerifyEmail()
-  //   }
-  // }, [authStore.form.emailToken])
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center">
