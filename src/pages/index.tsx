@@ -16,7 +16,7 @@ const LoginForm: FC = () => {
   // Redirect authenticated users to /welcome
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace("/welcome")
+      router.push("/welcome")
     }
   }, [isLoggedIn, router])
 
