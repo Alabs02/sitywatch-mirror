@@ -10,13 +10,13 @@ const LoginForm: FC = () => {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
-  const { setAuth, setUI, isLoggedIn, ui } = useAuthStore()
+ const { setTokens, setUI, isLoggedIn, ui } = useAuthStore()
   const router = useRouter()
 
   // Redirect authenticated users to /welcome
   useEffect(() => {
     if (isLoggedIn) {
-      router.push("/welcome")
+      router.replace("/welcome")
     }
   }, [isLoggedIn, router])
 
@@ -38,14 +38,14 @@ const LoginForm: FC = () => {
       // Check response structure
       if (response.data.statusCode === 200) {
         const { sessionId, accessToken, refreshToken } = response.data.success
-        setAuth({ sessionId, accessToken, refreshToken }) 
-        router.push("/welcome") 
+        setTokens({ sessionId, accessToken, refreshToken })
+        router.push("/welcome")
       } else {
         setUI("error", response.data.message || "Login failed.")
       }
     } catch (error: any) {
       console.error("Login failed:", error)
-      // Error handling...
+      setUI("error", error.response?.data?.message || "Login failed.")
     } finally {
       setUI("loading", false)
     }

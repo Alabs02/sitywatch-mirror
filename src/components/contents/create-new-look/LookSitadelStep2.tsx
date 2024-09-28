@@ -1,8 +1,7 @@
-// LookSitadelStep2.tsx
 import React, { FC, useState } from "react"
 import { useAuthStore } from "@/store"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
-import { http } from "@/libs" // Assuming http is axios or similar
+import { http } from "@/libs"
 
 const predefinedNiches = [
   "Info Tech",
@@ -15,7 +14,6 @@ const predefinedNiches = [
   "Gaming",
   "Travel",
   "Food & Beverage",
-  // ...other niches
 ]
 
 interface StepProps {
@@ -37,47 +35,44 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
       return
     }
 
-    // Save selected niches to the auth store
+    // Preparing payload for API
     const niches = nicheValues.map((niche) => ({
       value: niche,
       verified: true,
     }))
     authStore.setNiches(niches)
 
+    const payload = {
+      email: authStore.form.email,
+      password: authStore.form.password,
+      name: authStore.form.name,
+      phone: authStore.form.phone,
+      countryCode: authStore.form.countryCode || "defaultCountryCode",
+      niches,
+    }
+
     try {
       authStore.setUI("loading", true)
-
-      const payload = {
-        email: authStore.form.email,
-        password: authStore.form.password,
-        name: authStore.form.name,
-        phone: authStore.form.phone,
-        countryCode: authStore.form.countryCode || "defaultCountryCode",
-        niches: niches,
-      }
-
       const response = await http.post(
         `${baseURI}${apiRoutes.SITADELS_SIGN_UP}`,
         payload,
       )
 
-      if (response.status === 201 || response.status === 200) {
+      if ([200, 201].includes(response.status)) {
         const tokenMatch = response.data.message.match(/token=(.*)$/)
         const token = tokenMatch ? tokenMatch[1] : null
 
         if (token) {
           authStore.setForm("emailToken", token)
-          onNext() // Move to the next step (email verification)
+          onNext() // Move to next step
         } else {
           alert("Registration successful, but no token received.")
         }
       } else {
-        // Handle other response statuses
         authStore.setUI("error", response.data.message)
         alert(response.data.message || "Registration failed.")
       }
     } catch (error: any) {
-      console.error("Error during registration:", error)
       authStore.setUI("error", error.message || "Registration failed.")
       alert(error.message || "Registration failed.")
     } finally {
@@ -85,6 +80,7 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
     }
   }
 
+  // Handlers for search, add, and select niches
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchValue(value)
@@ -124,7 +120,6 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
     const updatedNiches = nicheValues.filter((_, i) => i !== index)
     setNicheValues(updatedNiches)
   }
-
   return (
     <div className="text-center relative">
       <h2 className="text-lg font-semibold mb-2">

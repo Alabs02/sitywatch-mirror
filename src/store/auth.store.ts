@@ -1,4 +1,3 @@
-// src/store.ts
 import { create } from "zustand"
 
 export interface Interest {
@@ -90,10 +89,12 @@ interface UIState {
 interface AuthStore {
   form: FormData
   ui: UIState
-  tokens: AuthTokens | null
+  tokens: AuthTokens
   isLoggedIn: boolean
+  isVerified: boolean // New property for user verification status
   setForm: <K extends keyof FormData>(key: K, value: FormData[K]) => void
   setUI: <K extends keyof UIState>(key: K, value: UIState[K]) => void
+  setUserVerification: (verified: boolean) => void // New setter for verification
   resetForm: () => void
   setNext: () => void
   setPrevious: () => void
@@ -101,7 +102,7 @@ interface AuthStore {
   addInterest: (interest: Interest) => void
   removeInterest: (value: string) => void
   setNiches: (niches: Interest[]) => void
-  setAuth: (tokens: AuthTokens) => void
+  setTokens: (tokens: Partial<AuthTokens>) => void
   logout: () => void
 }
 
@@ -161,8 +162,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
     category: "",
     currentStep: 0,
   },
-  tokens: null,
+  tokens: {
+    sessionId: "",
+    accessToken: "",
+    refreshToken: "",
+  },
   isLoggedIn: false,
+  isVerified: false, 
+
   setForm: (key, value) =>
     set((state) => ({
       form: {
@@ -170,6 +177,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         [key]: value,
       },
     })),
+
   setUI: (key, value) =>
     set((state) => ({
       ui: {
@@ -177,6 +185,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
         [key]: value,
       },
     })),
+
+  setUserVerification: (
+    verified: boolean, 
+  ) => set({ isVerified: verified }),
+
   setNiches: (niches: Interest[]) =>
     set((state) => ({
       form: {
@@ -184,16 +197,28 @@ export const useAuthStore = create<AuthStore>((set) => ({
         niches,
       },
     })),
-  setAuth: (tokens: AuthTokens) =>
-    set(() => ({
-      tokens,
+
+  setTokens: (tokens) =>
+    set((state) => ({
+      tokens: {
+        sessionId: tokens.sessionId || state.tokens.sessionId,
+        accessToken: tokens.accessToken || state.tokens.accessToken,
+        refreshToken: tokens.refreshToken || state.tokens.refreshToken,
+      },
       isLoggedIn: true,
     })),
+
   logout: () =>
     set(() => ({
-      tokens: null,
+      tokens: {
+        sessionId: "",
+        accessToken: "",
+        refreshToken: "",
+      },
       isLoggedIn: false,
+      isVerified: false, // Reset verification status on logout
     })),
+
   resetForm: () =>
     set(() => ({
       form: {
@@ -252,6 +277,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         currentStep: 0,
       },
     })),
+
   setNext: () =>
     set((state) => ({
       ui: {
@@ -259,6 +285,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         currentStep: Math.min(state.ui.currentStep + 1, 4),
       },
     })),
+
   setPrevious: () =>
     set((state) => ({
       ui: {
@@ -266,6 +293,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         currentStep: Math.max(0, state.ui.currentStep - 1),
       },
     })),
+
   setCurrentStep: (step: number) =>
     set((state) => ({
       ui: {
@@ -273,6 +301,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         currentStep: step,
       },
     })),
+
   addInterest: (interest: Interest) =>
     set((state) => ({
       form: {
@@ -280,6 +309,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         interests: [...state.form.interests, interest],
       },
     })),
+
   removeInterest: (value: string) =>
     set((state) => ({
       form: {

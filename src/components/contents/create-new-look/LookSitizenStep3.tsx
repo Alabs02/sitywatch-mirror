@@ -265,42 +265,34 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
             <label className="block text-sm font-semibold mb-1 text-center">
               What did you study?
             </label>
-            <p className="text-sm text-black italic mb-2 text-center">
-              It will not be made public.
+            <p className="text-sm text-center mb-2">
+              (Add more if you have studied multiple courses)
             </p>
             <input
               type="text"
               value={formItem.course}
               onChange={(e) => handleCourseChange(index, e.target.value)}
-              placeholder="Example: Medicine and Surgery"
-              className="p-2 shadow-inner shadow-gray-600/50 border border-gray-300 rounded w-full"
+              placeholder="Example: Computer Science"
+              className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
             />
-          </div>
-
-          <div className="text-center">
-            <button
-              onClick={onBack}
-              className="mt-8 mr-8 p-2 shadow-md bg-gray-200 rounded-md"
-            >
-              Back
-            </button>
-            <button
-              onClick={onSubmit}
-              className="mt-8 p-2 shadow-md bg-blue-500 text-white rounded-md"
-            >
-              Submit
-            </button>
-          </div>
-
-          <div className="w-full flex justify-center items-center">
-            <p className="text-center text-gray-600">
-              <Link href="/auth/signin" className="text-blue-500 underline">
-                Sign In instead
-              </Link>
-            </p>
           </div>
         </div>
       ))}
+
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={onBack}
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+        >
+          Back
+        </button>
+        <button
+          onClick={onSubmit}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        >
+          Next
+        </button>
+      </div>
     </Fragment>
   )
 }

@@ -6,4 +6,5 @@ export const apiRoutes = {
   SITADELS_SIGN_UP: "sitadels",
   SIGN_IN: "/auth/signin",
   SIGN_OUT: "/auth/signout",
+  REFRESH_TOKEN: "/auth/tokens"
 }
