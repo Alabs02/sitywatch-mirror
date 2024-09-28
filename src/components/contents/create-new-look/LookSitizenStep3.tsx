@@ -103,16 +103,16 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
         phone: authStore.form.phone,
         countryCode: authStore.form.countryCode || "defaultCountryCode",
         rawSchoolingList,
-        interests: authStore.form.interests, // Ensure interests are included
+        interests: authStore.form.interests, 
       }
 
       const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
       const token = response.data.message.match(/token=(.*)$/)?.[1]
 
-      if (token) {
-        authStore.setForm("emailToken", token)
-        onNext() // Move to the next step
-      }
+       if (token) {
+         authStore.setForm("emailToken", token)
+         onNext() 
+       }
     } catch (error: any) {
       console.error("Error during sign-up:", error)
     } finally {

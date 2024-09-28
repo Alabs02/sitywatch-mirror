@@ -1,4 +1,4 @@
-// store.ts
+// src/store.ts
 import { create } from "zustand"
 
 export interface Interest {
@@ -76,8 +76,6 @@ export interface FormData {
   website: string
   confirmPassword: string
   emailToken?: string
-
-  // Interests and Niches
   interests: Interest[]
   niches: Interest[]
 }

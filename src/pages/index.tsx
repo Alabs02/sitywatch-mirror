@@ -1,41 +1,53 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useAuthStore } from "@/store"
-import { apiRoutes, baseURI } from "@/constants/apiRoutes" // Import the API constants
+import { apiRoutes } from "@/constants/apiRoutes"
+import { http } from "@/libs/https.lib"
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const { setAuth, setUI } = useAuthStore() // Using Zustand store to handle auth state
+
+  const { setAuth, setUI, isLoggedIn, ui } = useAuthStore()
   const router = useRouter()
+
+  // Redirect authenticated users to /welcome
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/welcome")
+    }
+  }, [isLoggedIn, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Simple validation
+    if (!email || !password) {
+      setUI("error", "Please enter both email and password.")
+      return
+    }
+
+    setUI("loading", true)
+    setUI("error", "")
+
     try {
-      const response = await fetch(`${baseURI}${apiRoutes.SIGN_IN}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const response = await http.post(apiRoutes.SIGN_IN, { email, password })
 
-      const data = await response.json()
-
-      if (response.ok) {
-        const { sessionId, accessToken, refreshToken } = data.success
-        setAuth({ sessionId, accessToken, refreshToken })
-        router.push("/welcome")
+      // Check response structure
+      if (response.data.statusCode === 200) {
+        const { sessionId, accessToken, refreshToken } = response.data.success
+        setAuth({ sessionId, accessToken, refreshToken }) 
+        router.push("/welcome") 
       } else {
-        setUI("error", data.message) // Set error message in the store
-        alert(data.message) // Alert user about the failure
+        setUI("error", response.data.message || "Login failed.")
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login failed:", error)
-      alert("An error occurred during login. Please try again.")
+      // Error handling...
+    } finally {
+      setUI("loading", false)
     }
   }
 
@@ -57,6 +69,7 @@ const LoginForm: FC = () => {
         backgroundPosition: "center",
       }}
     >
+      {/* Left Side Content */}
       <div className="absolute top-8 left-8 text-white lg:block hidden">
         <h1 className="relative text-5xl font-bold text-black">
           <span
@@ -86,8 +99,10 @@ const LoginForm: FC = () => {
         </p>
       </div>
 
-      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8  md:p-12 md:w-2/3 lg:max-w-xl lg:right-4 h-screen md:max-h-[80vh]">
-        <form onSubmit={handleSubmit} className="space-y-2 pt-4 lg:pt-8">
+      {/* Login Form Container */}
+      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8 md:p-12 md:w-2/3 lg:max-w-xl lg:right-4 h-screen md:max-h-[80vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-4 lg:pt-8">
+          {/* Email Input */}
           <div>
             <input
               type="email"
@@ -100,6 +115,7 @@ const LoginForm: FC = () => {
             />
           </div>
 
+          {/* Password Input */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -118,15 +134,20 @@ const LoginForm: FC = () => {
             </span>
           </div>
 
+          {/* Submit Button */}
           <div className="flex justify-center mt-8">
             <button
               type="submit"
-              className="bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-full py-2 px-8 font-semibold hover:shadow-lg"
+              className={`bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-full py-2 px-8 font-semibold hover:shadow-lg ${
+                ui.loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={ui.loading}
             >
-              LOGIN
+              {ui.loading ? "Logging in..." : "LOGIN"}
             </button>
           </div>
 
+          {/* Forgot Password Link */}
           <div className="flex justify-center">
             <Link
               href="/forgot-password"
@@ -136,12 +157,14 @@ const LoginForm: FC = () => {
             </Link>
           </div>
 
+          {/* OR Separator */}
           <div className="relative flex py-5 items-center">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="flex-shrink mx-4 text-gray-400">OR</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
+          {/* Social Login Buttons */}
           <div className="flex flex-col items-center justify-center space-y-2 text-xs md:text-sm md:px-16">
             <div className="w-full flex items-center justify-center rounded-full p-[1.5px] bg-gradient-to-r from-[#F24055] to-[#1E7881]">
               <button
@@ -173,6 +196,7 @@ const LoginForm: FC = () => {
             </Link>
           </div>
 
+          {/* Terms and Conditions */}
           <p className="text-xs text-center text-gray-500 mt-6">
             By signing up, you agree to the Terms of Service and Privacy Policy,
             including Cookie Use.

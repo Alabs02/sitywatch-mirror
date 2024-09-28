@@ -1,4 +1,5 @@
-function generateUniqueString(len: number = 5): string {
+// src/libs/index.ts
+export function generateUniqueString(len: number = 5): string {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   let result = ""
@@ -11,5 +12,4 @@ function generateUniqueString(len: number = 5): string {
   return result
 }
 
-export * from "./https.lib";
-export { generateUniqueString }
+export * from "./https.lib" // Re-export everything from https.lib
