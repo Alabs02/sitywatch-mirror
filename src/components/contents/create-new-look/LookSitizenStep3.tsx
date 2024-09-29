@@ -10,7 +10,7 @@ import { useAuthStore, School } from "@/store"
 import { apiRoutes } from "@/constants/apiRoutes"
 
 interface StepProps {
-  onNext: () => void
+  onNext: (emailToken: string) => void
   onBack: () => void
 }
 
@@ -112,7 +112,7 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
 
       if (token) {
         authStore.setForm("emailToken", token) // Store token for Step 4
-        onNext() // Proceed to Step 4 (email verification)
+        onNext(token) // Pass token as a prop to onNext
       } else {
         alert("Registration successful, but no token received.")
       }

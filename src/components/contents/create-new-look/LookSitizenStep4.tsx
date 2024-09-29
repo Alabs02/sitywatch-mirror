@@ -6,23 +6,16 @@ import { apiRoutes } from "@/constants/apiRoutes"
 import { useRouter } from "next/router"
 
 interface StepProps {
-  onNext: () => void 
+  token: string // Add the token prop here
 }
 
-const LookSitizenStep4: FC<StepProps> = ({ onNext }) => {
-  const authStore = useAuthStore() 
-  const router = useRouter() 
+const LookSitizenStep4: FC<StepProps> = ({ token }) => {
+  const authStore = useAuthStore()
+  const router = useRouter()
 
   // Function to verify the user's email
   const onVerifyEmail = async () => {
-    const token = authStore.form.emailToken // Get the email token from the store
-    if (!token) {
-      console.error("No email token available for verification")
-      return
-    }
-
     try {
-      // Call the email verification API
       const response = await http.get(
         `${apiRoutes.VERIFY_EMAIL}?token=${token}`,
       )
@@ -34,6 +27,7 @@ const LookSitizenStep4: FC<StepProps> = ({ onNext }) => {
         authStore.setUserVerification(true)
 
         // Redirect to the welcome page after verification
+        // Assuming you have a 'welcome' page defined in your Next.js app
         router.push("/welcome")
       } else {
         console.error("Email verification failed with status:", response.status)
@@ -49,12 +43,12 @@ const LookSitizenStep4: FC<StepProps> = ({ onNext }) => {
         Click the image below to verify your email.
       </p>
       <Image
-        src="/verify-look-img.svg" 
+        src="/verify-look-img.svg"
         alt="Click to verify email"
         width={200}
         height={200}
         className="mt-8 cursor-pointer"
-        onClick={onVerifyEmail} 
+        onClick={onVerifyEmail}
       />
     </div>
   )

@@ -14,13 +14,13 @@ import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenS
 import LookSitizenStep4 from "@/components/contents/create-new-look/LookSitizenStep4"
 
 interface StepProps {
+  onNext: (emailToken: string) => void
   onBack: () => void
-  onNext?: () => void
 }
-
 const CreateNewLook: FC = () => {
   const [isMounted, setIsMounted] = useState(false)
   const authStore = useAuthStore()
+   const [emailToken, setEmailToken] = useState("")
 
   useEffect(() => {
     setIsMounted(true)

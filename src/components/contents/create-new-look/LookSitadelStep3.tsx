@@ -6,6 +6,7 @@ import axios from "axios"
 
 interface StepProps {
   onBack: () => void
+  onNext?: () => void
 }
 
 const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
