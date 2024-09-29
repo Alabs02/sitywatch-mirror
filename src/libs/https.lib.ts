@@ -88,7 +88,7 @@ export const signOut = async (): Promise<void> => {
     console.log("Logout API response:", response)
 
     if (response.status === 200) {
-      logout() // Clear the store
+      logout() 
       localStorage.removeItem("accessToken")
       localStorage.removeItem("refreshToken")
     } else {

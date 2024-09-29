@@ -13,13 +13,13 @@ const withAuth = <P extends object>(
       if (!isLoggedIn) {
         // Check if the current route is the login page
         if (router.pathname !== "/login") {
-          router.replace("/login") // Redirect to login only if not on the login page
+          router.replace("/login") 
         }
       }
     }, [isLoggedIn, router])
 
     if (!isLoggedIn) {
-      return null // Optionally, show a loading spinner here
+      return null 
     }
 
     return <WrappedComponent {...props} />

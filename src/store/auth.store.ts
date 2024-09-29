@@ -1,5 +1,6 @@
 import { create } from "zustand"
 
+// Interfaces
 export interface Interest {
   value: string
   verified: boolean
@@ -91,10 +92,10 @@ interface AuthStore {
   ui: UIState
   tokens: AuthTokens
   isLoggedIn: boolean
-  isVerified: boolean // New property for user verification status
+  isVerified: boolean // User verification status
   setForm: <K extends keyof FormData>(key: K, value: FormData[K]) => void
   setUI: <K extends keyof UIState>(key: K, value: UIState[K]) => void
-  setUserVerification: (verified: boolean) => void // New setter for verification
+  setUserVerification: (verified: boolean) => void 
   resetForm: () => void
   setNext: () => void
   setPrevious: () => void
@@ -106,6 +107,18 @@ interface AuthStore {
   logout: () => void
 }
 
+// Persist tokens in localStorage or browser storage (if available)
+const getInitialTokens = (): AuthTokens => {
+  const storage = typeof window !== "undefined" ? window.localStorage : null
+
+  const sessionId = storage?.getItem("sessionId") || ""
+  const accessToken = storage?.getItem("accessToken") || ""
+  const refreshToken = storage?.getItem("refreshToken") || ""
+
+  return { sessionId, accessToken, refreshToken }
+};
+
+// Store
 export const useAuthStore = create<AuthStore>((set) => ({
   form: {
     email: "",
@@ -162,13 +175,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
     category: "",
     currentStep: 0,
   },
-  tokens: {
-    sessionId: "",
-    accessToken: "",
-    refreshToken: "",
-  },
-  isLoggedIn: false,
-  isVerified: false, 
+  tokens: getInitialTokens(),
+  isLoggedIn: Boolean(
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("accessToken")
+      : null,
+  ),
+  isVerified: false,
 
   setForm: (key, value) =>
     set((state) => ({
@@ -186,9 +199,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       },
     })),
 
-  setUserVerification: (
-    verified: boolean, 
-  ) => set({ isVerified: verified }),
+  setUserVerification: (verified: boolean) => set({ isVerified: verified }),
 
   setNiches: (niches: Interest[]) =>
     set((state) => ({
@@ -198,7 +209,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
       },
     })),
 
-  setTokens: (tokens) =>
+  setTokens: (tokens) => {
+    const storage = typeof window !== "undefined" ? window.localStorage : null
+
+    if (tokens.sessionId) storage?.setItem("sessionId", tokens.sessionId)
+    if (tokens.accessToken) storage?.setItem("accessToken", tokens.accessToken)
+    if (tokens.refreshToken)
+      storage?.setItem("refreshToken", tokens.refreshToken)
+
     set((state) => ({
       tokens: {
         sessionId: tokens.sessionId || state.tokens.sessionId,
@@ -206,18 +224,26 @@ export const useAuthStore = create<AuthStore>((set) => ({
         refreshToken: tokens.refreshToken || state.tokens.refreshToken,
       },
       isLoggedIn: true,
-    })),
+    }))
+  },
 
-  logout: () =>
-    set(() => ({
-      tokens: {
-        sessionId: "",
-        accessToken: "",
-        refreshToken: "",
-      },
-      isLoggedIn: false,
-      isVerified: false, // Reset verification status on logout
-    })),
+  logout: () => {
+   const storage = typeof window !== "undefined" ? window.localStorage : null
+
+   storage?.removeItem("sessionId")
+   storage?.removeItem("accessToken")
+   storage?.removeItem("refreshToken")
+
+   set(() => ({
+     tokens: {
+       sessionId: "",
+       accessToken: "",
+       refreshToken: "",
+     },
+     isLoggedIn: false,
+     isVerified: false, 
+   }))
+  },
 
   resetForm: () =>
     set(() => ({

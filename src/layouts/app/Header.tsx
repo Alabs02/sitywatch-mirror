@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { useAuthStore } from "@/store"
 import { useRouter } from "next/router"
-import { signOut } from "@/libs/https.lib" 
+import { signOut } from "@/libs/https.lib"
 
 interface HeaderProps {
   children?: React.ReactNode
@@ -63,26 +63,25 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     setIsDropdownOpen(!isDropdownOpen)
   }
 
- const handleLogout = async () => {
-   setIsLoggingOut(true) // Show loading during logout
+  const handleLogout = async () => {
+    setIsLoggingOut(true) // Show loading during logout
 
-   try {
-     await signOut() // Attempt to call signOut API
-     alert("You have successfully logged out.")
-   } catch (error: unknown) {
-     console.error("Error during logout:", error)
-     // Even if logout API fails, clear the auth state
-     clearAuth()
-     alert("You have been logged out.")
-   } finally {
-     // Redirect regardless of API success or failure
-     redirectTimeoutRef.current = setTimeout(() => {
-       router.replace("/") // Redirect after logout
-     }, 1000)
-     setIsLoggingOut(false) // Remove loading state after logout attempt
-   }
- }
-
+    try {
+      await signOut() // Attempt to call signOut API
+      alert("You have successfully logged out.")
+    } catch (error: unknown) {
+      console.error("Error during logout:", error)
+      // Even if logout API fails, clear the auth state
+      clearAuth()
+      alert("You have been logged out.")
+    } finally {
+      // Redirect regardless of API success or failure
+      redirectTimeoutRef.current = setTimeout(() => {
+        router.replace("/") // Redirect after logout
+      }, 1000)
+      setIsLoggingOut(false) // Remove loading state after logout attempt
+    }
+  }
 
   const currentText = texts[currentTextIndex].split(" ").map((word, index) =>
     word.startsWith("#") ? (

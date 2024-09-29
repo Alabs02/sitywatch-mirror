@@ -6,7 +6,7 @@ import { apiRoutes } from "@/constants/apiRoutes"
 import { useRouter } from "next/router"
 
 interface StepProps {
-  token: string // Add the token prop here
+  token: string 
 }
 
 const LookSitizenStep4: FC<StepProps> = ({ token }) => {
@@ -27,7 +27,6 @@ const LookSitizenStep4: FC<StepProps> = ({ token }) => {
         authStore.setUserVerification(true)
 
         // Redirect to the welcome page after verification
-        // Assuming you have a 'welcome' page defined in your Next.js app
         router.push("/welcome")
       } else {
         console.error("Email verification failed with status:", response.status)

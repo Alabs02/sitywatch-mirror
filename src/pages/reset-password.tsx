@@ -1,7 +1,7 @@
 // pages/reset-password.tsx
 import React, { useState } from "react"
 import { useRouter } from "next/router"
-import { useAuthStore } from "../store" // Adjust the import based on your store's file location
+import { useAuthStore } from "../store" 
 import axios from "axios"
 
 const ResetPassword = () => {

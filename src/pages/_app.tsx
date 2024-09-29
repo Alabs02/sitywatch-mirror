@@ -13,17 +13,18 @@ import { apiRoutes } from "@/constants/apiRoutes"
 export default function App({ Component, pageProps, router }: AppProps) {
   const isBuildSitadelPage = router.pathname === "/build-sitadel"
 
-  const { tokens, logout, isLoggedIn } = useAuthStore()
+  const { tokens, logout, isLoggedIn, isVerified } = useAuthStore()
   const nextRouter = useRouter()
 
   useEffect(() => {
     const verifyToken = async () => {
-      if (tokens && tokens.accessToken) {
+      if (tokens.accessToken) {
         try {
-          // Optionally, verify the access token by making a test request
-          await http.get("/auth/verifyToken") // Replace with an actual endpoint to verify token
-          // If verification is successful, redirect to welcome page if not already there
-          if (!isLoggedIn && nextRouter.pathname !== "/welcome") {
+          // Replace with your actual verification endpoint
+          await http.get(apiRoutes.VERIFY_EMAIL)
+
+          // If verification is successful and user is not already on /welcome, redirect to /welcome
+          if (!isVerified && nextRouter.pathname !== "/welcome") {
             nextRouter.push("/welcome")
           }
         } catch (error) {
@@ -38,13 +39,15 @@ export default function App({ Component, pageProps, router }: AppProps) {
         // If no token and user is logged in, log out and redirect to index
         if (isLoggedIn) {
           logout()
-          nextRouter.push("/")
+          if (nextRouter.pathname !== "/") {
+            nextRouter.push("/")
+          }
         }
       }
     }
 
     verifyToken()
-  }, [tokens, logout, nextRouter, isLoggedIn])
+  }, [tokens.accessToken, logout, nextRouter, isLoggedIn, isVerified])
 
   return (
     <Fragment>

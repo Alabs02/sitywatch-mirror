@@ -20,13 +20,12 @@ const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
     setError(null)
 
     try {
-      // Use GET request and pass the email token as a query parameter
       const response = await axios.get(
         `${baseURI}${apiRoutes.VERIFY_EMAIL}?token=${form.emailToken}`,
       )
 
       if (response.status === 200) {
-        router.push("/sitadels/sitadel-profile") // Navigate to the profile page on success
+        router.push("/sitadels/sitadel-profile") 
       } else {
         throw new Error("Verification failed. Please try again.")
       }

@@ -1,6 +1,6 @@
 // pages/change-password.tsx
 import React, { useState } from "react"
-import { useAuthStore } from "../store" // Adjust the import based on your store's file location
+import { useAuthStore } from "../store" 
 import axios from "axios"
 
 const ChangePassword = () => {

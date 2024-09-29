@@ -45,7 +45,7 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     return () => clearTimeout(timer)
   }, [asPath])
 
-  useOutsideClick(overlayRef, () => setOverlayOpen(false)) // Handle click outside
+  useOutsideClick(overlayRef, () => setOverlayOpen(false)) 
 
   const collapsedList = ["/messages", "/explore"]
   const isCollapsedFromQuery = query.collapsed === "true"

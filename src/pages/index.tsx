@@ -1,3 +1,4 @@
+// src/components/LoginForm.tsx
 import React, { FC, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -10,7 +11,7 @@ const LoginForm: FC = () => {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
- const { setTokens, setUI, isLoggedIn, ui } = useAuthStore()
+  const { setTokens, setUI, isLoggedIn, ui } = useAuthStore()
   const router = useRouter()
 
   // Redirect authenticated users to /welcome
