@@ -58,6 +58,8 @@ const Layout: FC<LayoutProps> = ({ children, isCollapsedByDefault }) => {
     asPath === "/build-sitadel" ||
     asPath === "/" ||
     asPath === "/forgot-password" ||
+    asPath === "/reset-password" ||
+    asPath === "/change-password" ||
     asPath === "/add-affairs" ||
     asPath === "/create-account"
 

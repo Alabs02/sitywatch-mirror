@@ -1,21 +1,26 @@
-// pages/forgot-password.tsx
-import Link from "next/link"
+// pages/change-password.tsx
 import React, { useState } from "react"
 import { useAuthStore } from "../store" // Adjust the import based on your store's file location
 import axios from "axios"
 
-const ForgotPassword = () => {
+const ChangePassword = () => {
   const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
   const { setUI } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setUI("loading", true)
     try {
-      await axios.post("/api/v1/auth/forgotPassword", { email })
-      alert("Check your email for the password reset code")
+      const response = await axios.post("/api/v1/auth/changePassword", {
+        email,
+        password,
+        newPassword,
+      })
+      alert(response.data.message)
     } catch (error) {
-      alert("Failed to send reset email. Please try again.")
+      alert("Failed to change password. Please try again.")
     } finally {
       setUI("loading", false)
     }
@@ -30,10 +35,8 @@ const ForgotPassword = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8 md:w-2/3 lg:max-w-xl lg:right-4">
-        <h2 className="text-2xl font-bold text-center text-black mb-6">
-          Forgot Password
-        </h2>
+      <div className="relative w-full max-w-md bg-white bg-opacity-80 shadow-lg rounded-lg p-8">
+        <h2 className="text-2xl font-bold text-center mb-6">Change Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -46,22 +49,35 @@ const ForgotPassword = () => {
               required
             />
           </div>
+          <div>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Current password"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New password"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+              required
+            />
+          </div>
           <div className="flex justify-center mt-8">
             <button
               type="submit"
               className="bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-full py-2 px-8 font-semibold hover:shadow-lg"
             >
-              Reset Password
+              Change Password
             </button>
-          </div>
-
-          <div className="flex justify-center">
-            <Link
-              href="/"
-              className="text-secondary font-bold hover:text-gray-900"
-            >
-              Back to Login
-            </Link>
           </div>
         </form>
       </div>
@@ -69,4 +85,4 @@ const ForgotPassword = () => {
   )
 }
 
-export default ForgotPassword
+export default ChangePassword
