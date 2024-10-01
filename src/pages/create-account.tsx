@@ -1,56 +1,60 @@
-import React, { FC, useEffect, useState } from "react"
-import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1"
-import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2"
-import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3"
-import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4"
-import LookStepType from "@/components/contents/create-new-look/LookStepType"
-import Link from "next/link"
+import React, { FC, useEffect, useState } from "react";
+import LookSitadelStep1 from "@/components/contents/create-new-look/LookSitadelStep1";
+import LookSitadelStep2 from "@/components/contents/create-new-look/LookSitadelStep2";
+import LookSitadelStep3 from "@/components/contents/create-new-look/LookSitadelStep3";
+import LookSitadelStep4 from "@/components/contents/create-new-look/LookSitadelStep4";
+import LookStepType from "@/components/contents/create-new-look/LookStepType";
+import Link from "next/link";
 
 // STORE
-import { useAuthStore } from "@/store"
-import LookSitizenStep1 from "@/components/contents/create-new-look/LookSitizenStep1"
-import LookSitizenStep2 from "@/components/contents/create-new-look/LookSitizenStep2"
-import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenStep3"
-import LookSitizenStep4 from "@/components/contents/create-new-look/LookSitizenStep4"
+import { useAuthStore } from "@/store";
+import LookSitizenStep1 from "@/components/contents/create-new-look/LookSitizenStep1";
+import LookSitizenStep2 from "@/components/contents/create-new-look/LookSitizenStep2";
+import LookSitizenStep3 from "@/components/contents/create-new-look/LookSitizenStep3";
+import LookSitizenStep4 from "@/components/contents/create-new-look/LookSitizenStep4";
 
 interface StepProps {
-  onNext: (emailToken: string) => void
-  onBack: () => void
+  onNext: (emailToken: string) => void;
+  onBack: () => void;
 }
 const CreateNewLook: FC = () => {
-  const [isMounted, setIsMounted] = useState(false)
-  const authStore = useAuthStore()
-   const [emailToken, setEmailToken] = useState("")
+  const [isMounted, setIsMounted] = useState(false);
+  const authStore = useAuthStore();
+  const [emailToken, setEmailToken] = useState("");
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    console.log({ current_step: authStore.ui.currentStep });
+  }, [authStore.ui.currentStep]);
 
   const sitizenSteps = [
     { id: 1, label: "interests", icon: "school" },
     { id: 2, label: "user", icon: "person" },
     { id: 3, label: "school", icon: "interests" },
     { id: 4, label: "verify email", icon: "mail" },
-  ]
+  ];
 
   const sitadelSteps = [
     { id: 1, label: "Info", icon: "list" },
     { id: 2, label: "Industry", icon: "description" },
     { id: 3, label: "Verify email", icon: "check" },
-  ]
+  ];
 
   const onChangeStep = (step: number) => {
     if (authStore.ui.currentStep === 0 && !authStore.ui.category) {
-      alert("Please select a category to proceed.")
-      return
+      alert("Please select a category to proceed.");
+      return;
     }
-    authStore.setCurrentStep(step)
-  }
+    authStore.setCurrentStep(step);
+  };
 
   const renderSteps = () => {
     switch (authStore.ui.currentStep) {
       case 0:
-        return <LookStepType />
+        return <LookStepType />;
       case 1:
         return authStore.ui.category === "sitizen" ? (
           <LookSitizenStep1
@@ -62,7 +66,7 @@ const CreateNewLook: FC = () => {
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
           />
-        )
+        );
       case 2:
         return authStore.ui.category === "sitizen" ? (
           <LookSitizenStep2
@@ -74,7 +78,7 @@ const CreateNewLook: FC = () => {
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
           />
-        )
+        );
       case 3:
         return authStore.ui.category === "sitizen" ? (
           <LookSitizenStep3
@@ -86,13 +90,13 @@ const CreateNewLook: FC = () => {
             onBack={authStore.setPrevious}
             onNext={authStore.setNext}
           />
-        )
+        );
       default:
-        return <LookStepType />
+        return <LookStepType />;
     }
-  }
+  };
 
-  if (!isMounted) return null
+  if (!isMounted) return null;
 
   return (
     <div
@@ -184,7 +188,7 @@ const CreateNewLook: FC = () => {
         <div>{renderSteps()}</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateNewLook
+export default CreateNewLook;

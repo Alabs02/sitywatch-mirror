@@ -60,8 +60,6 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   const handleNext = () => {
-    // You could also do validation or any pre-submit logic here before proceeding to the next step
-    setNext() // Trigger next step from the store
     onNext() // Call parent's onNext if needed
   }
 
