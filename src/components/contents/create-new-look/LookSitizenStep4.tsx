@@ -1,39 +1,46 @@
-import React, { FC } from "react"
-import Image from "next/image"
-import { useAuthStore } from "@/store"
-import { http } from "@/libs"
-import { apiRoutes } from "@/constants/apiRoutes"
+import React, { FC, useState } from "react"
 import { useRouter } from "next/router"
+import { useAuthStore } from "@/store"
+import { baseURI, apiRoutes } from "@/constants/apiRoutes"
+import axios from "axios"
 
 interface StepProps {
-  token: string 
+  onBack: () => void
+  onNext?: () => void
 }
 
-const LookSitizenStep4: FC<StepProps> = ({ token }) => {
-  const authStore = useAuthStore()
+const LookSitizenStep4: FC<StepProps> = ({ onBack }) => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { form } = useAuthStore()
   const router = useRouter()
 
   // Function to verify the user's email
-  const onVerifyEmail = async () => {
+  const verifyEmail = async () => {
+    setLoading(true)
+    setError(null)
+
     try {
-      const response = await http.get(
-        `${apiRoutes.VERIFY_EMAIL}?token=${token}`,
+      const response = await axios.get(
+        `${baseURI}${apiRoutes.VERIFY_EMAIL}?token=${form.emailToken}`,
       )
 
       if (response.status === 200) {
-        console.log("Email verification successful")
-
-        // Update user state in the store to reflect successful verification
-        authStore.setUserVerification(true)
-
-        // Redirect to the welcome page after verification
         router.push("/welcome")
       } else {
-        console.error("Email verification failed with status:", response.status)
+        throw new Error("Verification failed. Please try again.")
       }
-    } catch (error) {
-      console.error("Email verification failed:", error)
+    } catch (err) {
+      setError(
+        "Email verification failed. Please check your email and try again.",
+      )
+    } finally {
+      setLoading(false)
     }
+  }
+
+  const handleImageClick = () => {
+    verifyEmail()
   }
 
   return (
@@ -41,14 +48,27 @@ const LookSitizenStep4: FC<StepProps> = ({ token }) => {
       <p className="text-center text-lg mb-4">
         Click the image below to verify your email.
       </p>
-      <Image
+      <img
         src="/verify-look-img.svg"
         alt="Click to verify email"
-        width={200}
-        height={200}
-        className="mt-8 cursor-pointer"
-        onClick={onVerifyEmail}
+        className="w-1/2 max-w-xs cursor-pointer"
+        onClick={handleImageClick}
       />
+      <p className="mt-4 text-sm font-semibold">
+        You're almost done! To log in, verify your sitizen account by
+        clicking the verification link sent to your email.
+      </p>
+
+      {/* Show loading spinner or error messages */}
+      {loading && <p className="mt-4 text-blue-500">Verifying email...</p>}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
+
+      <button
+        onClick={onBack}
+        className="mt-6 p-2 bg-gray-300 text-black rounded-lg"
+      >
+        Back
+      </button>
     </div>
   )
 }

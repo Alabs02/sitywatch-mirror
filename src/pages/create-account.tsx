@@ -46,51 +46,61 @@ const CreateNewLook: FC = () => {
     }
     authStore.setCurrentStep(step)
   }
-
-  const renderSteps = () => {
-    switch (authStore.ui.currentStep) {
-      case 0:
-        return <LookStepType />
-      case 1:
-        return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep1
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        ) : (
-          <LookSitadelStep1
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        )
-      case 2:
-        return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep2
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        ) : (
-          <LookSitadelStep2
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        )
-      case 3:
-        return authStore.ui.category === "sitizen" ? (
-          <LookSitizenStep3
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        ) : (
-          <LookSitadelStep3
-            onBack={authStore.setPrevious}
-            onNext={authStore.setNext}
-          />
-        )
-      default:
-        return <LookStepType />
-    }
+const renderSteps = () => {
+  switch (authStore.ui.currentStep) {
+    case 0:
+      return <LookStepType />
+    case 1:
+      return authStore.ui.category === "sitizen" ? (
+        <LookSitizenStep1
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      ) : (
+        <LookSitadelStep1
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      )
+    case 2:
+      return authStore.ui.category === "sitizen" ? (
+        <LookSitizenStep2
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      ) : (
+        <LookSitadelStep2
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      )
+    case 3:
+      return authStore.ui.category === "sitizen" ? (
+        <LookSitizenStep3
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      ) : (
+        <LookSitadelStep3
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext}
+        />
+      )
+    case 4:
+      // Final step only for sitizen, no Step 4 for sitadel
+      return authStore.ui.category === "sitizen" ? (
+        <LookSitizenStep4
+          onBack={authStore.setPrevious}
+          onNext={authStore.setNext} // You can adjust the onNext handler as needed
+        />
+      ) : (
+        <LookStepType /> // Default or empty state for sitadel
+      )
+    default:
+      return <LookStepType />
   }
+}
+
 
   if (!isMounted) return null
 
