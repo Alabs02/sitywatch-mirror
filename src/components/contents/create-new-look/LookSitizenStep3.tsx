@@ -7,10 +7,10 @@ import { http } from "@/libs"
 
 // STORE
 import { useAuthStore, School } from "@/store"
-import { apiRoutes } from "@/constants/apiRoutes"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
 interface StepProps {
-  onNext: (emailToken: string) => void
+  onNext: () => void
   onBack: () => void
 }
 
@@ -81,8 +81,8 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   const onSubmit = async () => {
-    try {
-      authStore.setUI("loading", true)
+    
+    
 
       const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
         const { status, course, confirmedSchool, school } = item
@@ -107,21 +107,34 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
         interests: authStore.form.interests,
       }
 
-      const response = await http.post(apiRoutes.SITIZENS_SIGN_UP, payload)
-      const token = response.data.message.match(/token=(.*)$/)?.[1]
+      try {
+        authStore.setUI("loading", true)
+        const response = await http.post(
+          `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
+          payload,
+        )
+        // const token = response.data.message.match(/token=(.*)$/)?.[1]
 
-      if (token) {
-        authStore.setForm("emailToken", token) // Store token for Step 4
-        onNext(token) // Pass token as a prop to onNext
-      } else {
-        alert("Registration successful, but no token received.")
+        if ([200, 201].includes(response.status)) {
+          const tokenMatch = response.data.message.match(/token=(.*)$/)
+          const token = tokenMatch ? tokenMatch[1] : null
+
+          if (token) {
+            authStore.setForm("emailToken", token)
+            onNext() // Move to next step
+          } else {
+            alert("Registration successful, but no token received.")
+          }
+        } else {
+          authStore.setUI("error", response.data.message)
+          alert(response.data.message || "Registration failed.")
+        }
+      } catch (error: any) {
+        authStore.setUI("error", error.message || "Registration failed.")
+        alert(error.message || "Registration failed.")
+      } finally {
+        authStore.setUI("loading", false)
       }
-    } catch (error: any) {
-      console.error("Error during sign-up:", error)
-      alert("Sign-up failed. Please try again.")
-    } finally {
-      authStore.setUI("loading", false)
-    }
   }
 
   return (
@@ -282,13 +295,13 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
       <div className="flex justify-between mt-4">
         <button
           onClick={onBack}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+          className="p-2 bg-gray-300 text-black rounded-xl"
         >
           Back
         </button>
         <button
           onClick={onSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-xl"
         >
           Next
         </button>

@@ -83,6 +83,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     }
   }
 
+
   const currentText = texts[currentTextIndex].split(" ").map((word, index) =>
     word.startsWith("#") ? (
       <span key={index} className="text-secondary">

@@ -1,25 +1,30 @@
 import { useState, useEffect } from "react"
 
 interface BaseFormData {
-  category: string // Ensure that every form data object must have 'category'
+  category: string
+}
+
+interface SitadelFormData extends BaseFormData {
+  name: string
+  shortName: string
+  info: string
+  coverPhoto: File | null
+  profilePhoto: File | null
 }
 
 export const useFormSteps = <T extends BaseFormData>(
   initialFormData: T,
-  getCategorySteps: (formData: T) => any[], // Steps based on category
+  steps: any[], // Steps based on category
 ) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<T>(initialFormData)
   const [loading, setLoading] = useState(false)
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([])
 
-  // Dynamically get steps based on the selected category
-  const categorySteps = getCategorySteps(formData)
-
   useEffect(() => {
     // Update completed steps dynamically based on the current category's steps
-    setCompletedSteps(new Array(categorySteps.length).fill(false))
-  }, [formData.category, categorySteps.length])
+    setCompletedSteps(new Array(steps.length).fill(false))
+  }, [formData.category, steps.length])
 
   const canNavigateToStep = (stepIndex: number) => {
     return completedSteps[stepIndex] || stepIndex <= currentStep
@@ -43,7 +48,7 @@ export const useFormSteps = <T extends BaseFormData>(
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
-      setCurrentStep((prev) => Math.min(prev + 1, categorySteps.length - 1))
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
     }, 1000)
   }
 
@@ -69,7 +74,7 @@ export const useFormSteps = <T extends BaseFormData>(
     handleBack,
     goToStep,
     updateFormData,
-    CurrentStepComponent: categorySteps[currentStep]?.component || (() => null), // Ensure no undefined component
+    CurrentStepComponent: steps[currentStep]?.component || (() => null),
     canNavigateToStep,
   }
 }

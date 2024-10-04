@@ -23,11 +23,30 @@ export const FormDataProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [formData, setFormData] = useState<FormData>({
+    fieldOfStudy: "",
     name: "",
     shortName: "",
     info: "",
     coverPhoto: null,
     profilePhoto: null,
+    dob: { month: "", day: "", year: "" },
+    showDob: "",
+    gender: "",
+    sexuality: "",
+    relationshipStatus: "",
+    nightLife: "",
+    institutionType: "",
+    schoolStatus: "",
+    options: [],
+    country: "",
+    state: "",
+    category: "",
+    bio: "",
+    phone: "",
+    website: "",
+    password: "",
+    confirmPassword: "",
+    interests: [], // Assuming this is an array of Interest[]
   })
 
   return (

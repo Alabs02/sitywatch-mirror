@@ -1,5 +1,8 @@
-// src/libs/https.lib.ts
-import axios from "axios"
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosError,
+  AxiosHeaders,
+} from "axios"
 import { useAuthStore } from "@/store"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
@@ -14,44 +17,59 @@ export const http = axios.create({
 
 // Request interceptor to add the access token to headers
 http.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const { tokens } = useAuthStore.getState()
-    if (tokens && tokens.accessToken) {
-      config.headers.Authorization = `Bearer ${tokens.accessToken}`
+    if (tokens?.accessToken && config.headers) {
+      // Use the set method on headers to avoid type mismatch
+      ;(config.headers as AxiosHeaders).set(
+        "Authorization",
+        `Bearer ${tokens.accessToken}`,
+      )
     }
     return config
   },
-  (error) => Promise.reject(error),
+  (error: AxiosError) => Promise.reject(error),
 )
 
 // Function to refresh tokens
-const refreshTokens = async () => {
+// src/libs/https.lib.ts
+const refreshTokens = async (): Promise<string> => {
   const { tokens, setTokens, logout } = useAuthStore.getState()
 
   if (!tokens?.refreshToken) {
-    logout()
-    throw new Error("No refresh token available")
+    console.error("No refresh token available");
+    logout();
+    throw new Error("No refresh token available");
   }
+
+  console.log("Refreshing tokens with:", {
+    refreshToken: tokens.refreshToken,
+    sessionId: tokens.sessionId,
+  });
 
   try {
     const response = await axios.post(`${baseURI}${apiRoutes.REFRESH_TOKEN}`, {
       refreshToken: tokens.refreshToken,
-    })
+      sessionId: tokens.sessionId,
+    });
+
+    console.log("Refresh tokens response:", response);
 
     if (response.status === 200) {
-      const { accessToken, refreshToken, sessionId } = response.data.success
-      setTokens({ accessToken, refreshToken, sessionId })
-      return accessToken
+      const { accessToken, refreshToken, sessionId } = response.data.success;
+      setTokens({ accessToken, refreshToken, sessionId });
+      return accessToken;
     } else {
-      logout()
-      throw new Error("Failed to refresh token")
+      logout();
+      throw new Error("Failed to refresh token");
     }
   } catch (error) {
-    console.error("Error refreshing tokens:", error)
-    logout()
-    throw error
+    console.error("Error refreshing tokens:",);
+    logout();
+    throw error;
   }
-}
+};
+
 
 // Response interceptor to handle token refresh
 http.interceptors.response.use(
@@ -67,7 +85,13 @@ http.interceptors.response.use(
       originalRequest._retry = true
       try {
         const newAccessToken = await refreshTokens()
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        if (originalRequest.headers) {
+          // Use the set method on headers
+          ;(originalRequest.headers as AxiosHeaders).set(
+            "Authorization",
+            `Bearer ${newAccessToken}`,
+          )
+        }
         return http(originalRequest)
       } catch (refreshError) {
         return Promise.reject(refreshError)
@@ -78,24 +102,19 @@ http.interceptors.response.use(
   },
 )
 
-// Function to sign out
-export const signOut = async (): Promise<void> => {
+// Sign out function
+export const signOut = async (): Promise<any> => {
   try {
-    const { tokens, logout } = useAuthStore.getState()
-    console.log("Attempting to sign out with token:", tokens?.accessToken)
-
-    const response = await http.post(apiRoutes.SIGN_OUT)
-    console.log("Logout API response:", response)
-
-    if (response.status === 200) {
-      logout() 
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
-    } else {
-      throw new Error("Logout failed.")
-    }
-  } catch (error: any) {
-    console.error("Sign out error:", error)
-    throw new Error("Logout failed. Please try again.")
+    const response = await axios.post(
+      `${baseURI}${apiRoutes.SIGN_OUT}`,
+      {},
+      {
+        withCredentials: true, // if you are handling cookies or session credentials
+      },
+    )
+    return response.data
+  } catch (error) {
+    console.error("Error during sign out:", error)
+    throw error
   }
 }

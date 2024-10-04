@@ -44,6 +44,9 @@ const LookSitadelStep3: FC<StepProps> = ({ onBack }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+      <p className="text-center text-lg mb-4">
+        Click the image below to verify your email.
+      </p>
       <img
         src="/verify-sitadel-img.png"
         alt="Verify Sitadel"
