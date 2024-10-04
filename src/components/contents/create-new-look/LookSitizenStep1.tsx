@@ -60,7 +60,6 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   const handleNext = () => {
- 
     onNext() // Call parent's onNext if needed
   }
 

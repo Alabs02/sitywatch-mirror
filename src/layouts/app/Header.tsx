@@ -1,19 +1,23 @@
 // src/components/Header.tsx
-import React, { Fragment, FC, useState, useEffect, useRef } from "react"
-import clsx from "clsx"
-import Link from "next/link"
-import HomeIcon from "@/components/atoms/HomeIcon"
-import Image from "next/image"
-import Skeleton from "react-loading-skeleton"
-import "react-loading-skeleton/dist/skeleton.css"
-import { useAuthStore } from "@/store"
-import { useRouter } from "next/router"
-import { signOut } from "@/libs/https.lib"
+import React, { Fragment, FC, useState, useEffect, useRef } from "react";
+import clsx from "clsx";
+import Link from "next/link";
+import HomeIcon from "@/components/atoms/HomeIcon";
+import Image from "next/image";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useAuthStore } from "@/store";
+import { useRouter } from "next/router";
+import { http } from "@/libs/https.lib";
+import { apiRoutes } from "@/constants/apiRoutes";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { successStatusCodes } from "@/constants";
 
 interface HeaderProps {
-  children?: React.ReactNode
-  className?: string
-  style?: React.CSSProperties
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const texts = [
@@ -21,68 +25,88 @@ const texts = [
   "Henry Oandoka has been announced as Best player of #NUGAFootbal 2024",
   "#SitwatchBeautyPageant2023 has released the list of finalists",
   "This would be the last in the array. #Extra.",
-]
+];
 
 const Header: FC<HeaderProps> = ({ children, className, style }) => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [fadeState, setFadeState] = useState("fade-enter")
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fadeState, setFadeState] = useState("fade-enter");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const router = useRouter()
-  const { logout: clearAuth } = useAuthStore() // Rename to clearAuth to avoid confusion
+  const router = useRouter();
+  // const { logout: clearAuth } = useAuthStore(); // Rename to clearAuth to avoid confusion
 
-  const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Simulated loading and dynamic text cycling
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false)
-    }, 3000)
+      setLoading(false);
+    }, 3000);
 
     // Cycle through texts every 3 seconds
     const textInterval = setInterval(() => {
-      setFadeState("fade-exit")
+      setFadeState("fade-exit");
       setTimeout(() => {
-        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
-        setFadeState("fade-enter")
-      }, 700) // Duration of fade-out
-    }, 3000)
+        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        setFadeState("fade-enter");
+      }, 700); // Duration of fade-out
+    }, 3000);
 
     return () => {
-      clearTimeout(timer)
-      clearInterval(textInterval)
+      clearTimeout(timer);
+      clearInterval(textInterval);
       if (redirectTimeoutRef.current) {
-        clearTimeout(redirectTimeoutRef.current)
+        clearTimeout(redirectTimeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const handleAvatarClick = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleLogout = async () => {
-    setIsLoggingOut(true) // Show loading during logout
+    setIsLoggingOut(true);
+
+    const headers = {
+      accept: "application/json",
+      "X-Session-Id": Cookies.get("X_SESSION_ID"),
+      Authorization: Cookies.get("ACCESS_TOKEN"),
+    };
 
     try {
-      await signOut() // Attempt to call signOut API
-      alert("You have successfully logged out.")
-    } catch (error: unknown) {
-      console.error("Error during logout:", error)
-      // Even if logout API fails, clear the auth state
-      clearAuth()
-      alert("You have been logged out.")
-    } finally {
-      // Redirect regardless of API success or failure
-      redirectTimeoutRef.current = setTimeout(() => {
-        router.replace("/") // Redirect after logout
-      }, 1000)
-      setIsLoggingOut(false) // Remove loading state after logout attempt
-    }
-  }
+      const response = await http.post(apiRoutes.SIGN_OUT, {}, { headers });
 
+      console.log({ response });
+
+      Cookies.remove("USER_ROLE");
+      Cookies.remove("IS_AUTHENTICATED");
+      Cookies.remove("X_SESSION_ID");
+      Cookies.remove("ACCESS_TOKEN");
+      Cookies.remove("REFRESH_TOKEN");
+
+      if (successStatusCodes.includes(response.status)) {
+        toast.success("You're logged out. See you next time!");
+
+        redirectTimeoutRef.current = setTimeout(() => {
+          setIsLoggingOut(false);
+          router.replace("/");
+        }, 1000);
+      } else {
+        setIsLoggingOut(false);
+        toast.error(
+          response?.data?.message || "An error occured. Please try again."
+        );
+      }
+    } catch (error: any) {
+      console.error("Error during sign out.", error);
+      toast.error(
+        error.response?.data?.message || "An error occured. Please try again."
+      );
+    }
+  };
 
   const currentText = texts[currentTextIndex].split(" ").map((word, index) =>
     word.startsWith("#") ? (
@@ -91,15 +115,15 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
       </span>
     ) : (
       word + " "
-    ),
-  )
+    )
+  );
 
   return (
     <Fragment>
       <header
         className={clsx(
           "h-[70px] lg:h-[100px] w-full px-2 md:px-4 sticky top-0 z-10 shadow-md md:shadow-none",
-          className,
+          className
         )}
         style={style}
       >
@@ -295,7 +319,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
         </div>
       )}
     </Fragment>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -7,6 +7,7 @@ import Layout from "@/layouts/Layout"
 import { useAuthStore } from "@/store"
 import { useRouter } from "next/router"
 import { http } from "@/libs/https.lib"
+import { Toaster } from 'react-hot-toast';
 import { apiRoutes } from "@/constants/apiRoutes"
 
 export default function App({ Component, pageProps, router }: AppProps) {
@@ -56,6 +57,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <Component {...pageProps} />
       ) : (
         <Layout>
+          <Toaster position={"top-center"}  />
           <Component {...pageProps} />
         </Layout>
       )}

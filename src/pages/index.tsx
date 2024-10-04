@@ -5,21 +5,37 @@ import { useRouter } from "next/router"
 import { useAuthStore } from "@/store"
 import { apiRoutes } from "@/constants/apiRoutes"
 import { http } from "@/libs/https.lib"
+import Cookies from "js-cookie";
+import { successStatusCodes } from "@/constants"
+import toast from 'react-hot-toast';
+import _toLower from "lodash/toLower"
+
+type TLoginResponse = {
+  message: string;
+  statusCode: number;
+  success: {
+    sessionId: string;
+    accessToken: string;
+    refreshToken: string;
+  };
+  error: any;
+}
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
-  const { setTokens, setUI, isLoggedIn, ui } = useAuthStore()
+  const { setTokens, setUI, ui } = useAuthStore()
   const router = useRouter()
 
+  // ! Remember to implement an authentication middleware
   // Redirect authenticated users to /welcome
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push("/welcome")
-    }
-  }, [isLoggedIn, router])
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.push("/welcome")
+  //   }
+  // }, [isLoggedIn, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,30 +47,46 @@ const LoginForm: FC = () => {
     }
 
     setUI("loading", true)
-    setUI("error", "")
 
     try {
-      const response = await http.post(apiRoutes.SIGN_IN, { email, password })
+      const response = await http.post<TLoginResponse>(apiRoutes.SIGN_IN, { email, password })
 
-      // Check response structure
-      if (response.data.statusCode === 200) {
-        const { sessionId, accessToken, refreshToken } = response.data.success
-        setTokens({ sessionId, accessToken, refreshToken })
-        router.push("/welcome")
+      if (successStatusCodes.includes(response.status)) {
+        Cookies.set("USER_ROLE", "sitizens");
+        Cookies.set("IS_AUTHENTICATED", JSON.stringify(true));
+        Cookies.set("X_SESSION_ID", response.data?.success?.sessionId);
+        Cookies.set("ACCESS_TOKEN", response.data?.success?.accessToken);
+        Cookies.set("REFRESH_TOKEN", response.data?.success?.refreshToken);
+
+        setUI("loading", false);
+        toast.success(response?.data?.message);
+
+        setTimeout(() => {
+          switch (_toLower(Cookies.get("USER_ROLE"))) {
+            case "sitizens":
+              router.push("/welcome")
+              break;
+            case "sitadels":
+              router.push("/sitadels/sitadel-profile")
+              break;
+          }
+        }, 500);
       } else {
-        setUI("error", response.data.message || "Login failed.")
+        setUI("loading", false);
+        setUI("error", "Login failed.")
+        toast.error(response?.data?.message || "An error occured. Please try again.");
       }
     } catch (error: any) {
+      setUI("loading", false);
+
       console.error("Login failed:", error)
+      toast.error(error.response?.data?.message || "An error occured. Please try again.");
       setUI("error", error.response?.data?.message || "Login failed.")
-    } finally {
-      setUI("loading", false)
     }
   }
 
   const handleGoogleLogin = () => {
-    // Handle Google login here
-    alert("Google login not yet implemented.")
+    // alert("Google login not yet implemented.")
   }
 
   const togglePasswordVisibility = () => {
