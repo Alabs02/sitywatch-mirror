@@ -109,11 +109,11 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
 
       try {
         authStore.setUI("loading", true)
+
         const response = await http.post(
           `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
           payload,
         )
-        // const token = response.data.message.match(/token=(.*)$/)?.[1]
 
         if ([200, 201].includes(response.status)) {
           const tokenMatch = response.data.message.match(/token=(.*)$/)
@@ -121,7 +121,8 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
 
           if (token) {
             authStore.setForm("emailToken", token)
-            onNext() // Move to next step
+            
+            onNext()
           } else {
             alert("Registration successful, but no token received.")
           }

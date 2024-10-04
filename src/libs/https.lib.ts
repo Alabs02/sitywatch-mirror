@@ -4,6 +4,7 @@ import axios, {
   AxiosHeaders,
 } from "axios"
 import { useAuthStore } from "@/store"
+import Cookies from "js-cookie";
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
 // Create an Axios instance
@@ -12,27 +13,11 @@ export const http = axios.create({
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",
+    "Authorization": Cookies.get("ACCESS_TOKEN")
   },
 })
 
-// Request interceptor to add the access token to headers
-http.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const { tokens } = useAuthStore.getState()
-    if (tokens?.accessToken && config.headers) {
-      // Use the set method on headers to avoid type mismatch
-      ;(config.headers as AxiosHeaders).set(
-        "Authorization",
-        `Bearer ${tokens.accessToken}`,
-      )
-    }
-    return config
-  },
-  (error: AxiosError) => Promise.reject(error),
-)
-
 // Function to refresh tokens
-// src/libs/https.lib.ts
 const refreshTokens = async (): Promise<string> => {
   const { tokens, setTokens, logout } = useAuthStore.getState()
 
@@ -69,52 +54,3 @@ const refreshTokens = async (): Promise<string> => {
     throw error;
   }
 };
-
-
-// Response interceptor to handle token refresh
-http.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config
-
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest.url.includes(apiRoutes.SIGN_IN)
-    ) {
-      originalRequest._retry = true
-      try {
-        const newAccessToken = await refreshTokens()
-        if (originalRequest.headers) {
-          // Use the set method on headers
-          ;(originalRequest.headers as AxiosHeaders).set(
-            "Authorization",
-            `Bearer ${newAccessToken}`,
-          )
-        }
-        return http(originalRequest)
-      } catch (refreshError) {
-        return Promise.reject(refreshError)
-      }
-    }
-
-    return Promise.reject(error)
-  },
-)
-
-// Sign out function
-export const signOut = async (): Promise<any> => {
-  try {
-    const response = await axios.post(
-      `${baseURI}${apiRoutes.SIGN_OUT}`,
-      {},
-      {
-        withCredentials: true, // if you are handling cookies or session credentials
-      },
-    )
-    return response.data
-  } catch (error) {
-    console.error("Error during sign out:", error)
-    throw error
-  }
-}
