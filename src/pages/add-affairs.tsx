@@ -234,7 +234,7 @@ const AddAffairs: FC = () => {
       options: [],
       country: "",
       state: "",
-      type: "tourney", 
+      type: "tourney",
       handle: "",
       description: "",
       startDate: "",
@@ -247,6 +247,7 @@ const AddAffairs: FC = () => {
       website: "",
       password: "",
       confirmPassword: "",
+      interests: [],
     },
     getCategorySteps,
   )
