@@ -2,9 +2,10 @@ import React, { FC, useEffect } from "react"
 import Link from "next/link"
 import { useFormSteps2 } from "../../hooks/useFormSteps2"
 import { FormData } from "@/types"
-import AffairsStepType from "@/components/contents/add-affairs-component copy/AffairsStepType"
+import _toLower from "lodash/toLower"
 
 // Import step components
+import AffairsStepType from "@/components/contents/add-affairs-component copy/AffairsStepType"
 import AffairsTourneyStep1 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep1"
 import AffairsTourneyStep2 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep2"
 import AffairsTourneyStep3 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep3"
@@ -25,8 +26,8 @@ import AffairsServiceStep2 from "@/components/contents/add-affairs-component cop
 import AffairsServiceStep3 from "@/components/contents/add-affairs-component copy/AffairsServiceStep3"
 import AffairsServiceStep4 from "@/components/contents/add-affairs-component copy/AffairsServiceStep4"
 import AffairsServiceStep5 from "@/components/contents/add-affairs-component copy/AffairsServiceStep5"
-import _toLower from "lodash/toLower"
 
+// Define step interface
 interface Step {
   component: FC<any>
   label: string
@@ -43,74 +44,72 @@ const categories: Record<string, Step[]> = {
       label: "Type",
       icon: "view_stream",
       description: "Step 1 Tourney Description",
-      validate: (formData: FormData) => true,
+      validate: () => true,
     },
     {
       component: AffairsTourneyStep2,
       label: "Category",
       icon: "category",
       description: "Step 2 Tourney Description",
-      validate: (formData: FormData) => !!formData.category,
+      validate: (formData) => !!formData.category,
     },
     {
       component: AffairsTourneyStep3,
       label: "Info",
       icon: "info",
       description: "Step 3 Tourney Description",
-      validate: (formData: FormData) => !!formData.info,
+      validate: (formData) => !!formData.info,
     },
     {
       component: AffairsTourneyStep4,
       label: "Image",
       icon: "image",
       description: "Step 4 Tourney Description",
-      validate: (formData: FormData) =>
-        !!formData.coverPhoto && !!formData.profilePhoto,
+      validate: (formData) => !!formData.coverPhoto && !!formData.profilePhoto,
     },
     {
       component: AffairsTourneyStep5,
       label: "Review",
       icon: "check",
       description: "Step 5 Tourney Description",
-      validate: (formData: FormData) => true,
+      validate: () => true,
     },
   ],
-  province: [
+  product: [
     {
       component: AffairsProductStep1,
       label: "Type",
       icon: "view_stream",
       description: "Step 1 Product Description",
-      validate: (formData: FormData) => !!formData.type,
+      validate: (formData) => !!formData.type,
     },
     {
       component: AffairsProductStep2,
       label: "Category",
       icon: "category",
       description: "Step 2 Product Description",
-      validate: (formData: FormData) => !!formData.category,
+      validate: (formData) => !!formData.category,
     },
     {
       component: AffairsProductStep3,
       label: "Info",
       icon: "info",
       description: "Step 3 Product Description",
-      validate: (formData: FormData) => !!formData.info,
+      validate: (formData) => !!formData.info,
     },
     {
       component: AffairsProductStep4,
       label: "Image",
       icon: "image",
       description: "Step 4 Product Description",
-      validate: (formData: FormData) =>
-        !!formData.coverPhoto && !!formData.profilePhoto,
+      validate: (formData) => !!formData.coverPhoto && !!formData.profilePhoto,
     },
     {
       component: AffairsProductStep5,
       label: "Review",
       icon: "check",
       description: "Step 5 Product Description",
-      validate: (formData: FormData) => true,
+      validate: () => true,
     },
   ],
   event: [
@@ -119,36 +118,35 @@ const categories: Record<string, Step[]> = {
       label: "Type",
       icon: "view_stream",
       description: "Step 1 Event Description",
-      validate: (formData: FormData) => !!formData.type,
+      validate: (formData) => !!formData.type,
     },
     {
       component: AffairsEventStep2,
       label: "Category",
       icon: "category",
       description: "Step 2 Event Description",
-      validate: (formData: FormData) => !!formData.category,
+      validate: (formData) => !!formData.category,
     },
     {
       component: AffairsEventStep3,
       label: "Info",
       icon: "info",
       description: "Step 3 Event Description",
-      validate: (formData: FormData) => !!formData.info,
+      validate: (formData) => !!formData.info,
     },
     {
       component: AffairsEventStep4,
       label: "Image",
       icon: "image",
       description: "Step 4 Event Description",
-      validate: (formData: FormData) =>
-        !!formData.coverPhoto && !!formData.profilePhoto,
+      validate: (formData) => !!formData.coverPhoto && !!formData.profilePhoto,
     },
     {
       component: AffairsEventStep5,
       label: "Review",
       icon: "check",
       description: "Step 5 Event Description",
-      validate: (formData: FormData) => true,
+      validate: () => true,
     },
   ],
   service: [
@@ -157,48 +155,44 @@ const categories: Record<string, Step[]> = {
       label: "Type",
       icon: "view_stream",
       description: "Step 1 Service Description",
-      validate: (formData: FormData) => !!formData.type,
+      validate: (formData) => !!formData.type,
     },
     {
       component: AffairsServiceStep2,
       label: "Category",
       icon: "category",
       description: "Step 2 Service Description",
-      validate: (formData: FormData) => !!formData.category,
+      validate: (formData) => !!formData.category,
     },
     {
       component: AffairsServiceStep3,
       label: "Info",
       icon: "info",
       description: "Step 3 Service Description",
-      validate: (formData: FormData) => !!formData.info,
+      validate: (formData) => !!formData.info,
     },
     {
       component: AffairsServiceStep4,
       label: "Image",
       icon: "image",
       description: "Step 4 Service Description",
-      validate: (formData: FormData) =>
-        !!formData.coverPhoto && !!formData.profilePhoto,
+      validate: (formData) => !!formData.coverPhoto && !!formData.profilePhoto,
     },
     {
       component: AffairsServiceStep5,
       label: "Review",
       icon: "check",
       description: "Step 5 Service Description",
-      validate: (formData: FormData) => true,
+      validate: () => true,
     },
   ],
 }
 
 // Get steps based on the form type
 const getCategorySteps = (formData: FormData): Step[] => {
-  console.log("Fetching steps for type: ", formData.type)
   const type = _toLower(formData.type) || "tourney"
-  console.log({ type })
   return categories[type] || []
 }
-
 
 const AddAffairs: FC = () => {
   const {
@@ -263,10 +257,10 @@ const AddAffairs: FC = () => {
   const handleSubmit = () => {
     console.log("Final Form Data:", formData)
   }
+
   useEffect(() => {
     console.log("Form Data Updated: ", formData)
   }, [formData])
-
 
   return (
     <div
@@ -288,79 +282,39 @@ const AddAffairs: FC = () => {
         </button>
       </Link>
 
-      <div className="relative w-full max-w-xl bg-white bg-opacity-80 shadow-lg rounded-lg p-6 md:w-1/2 h-screen mx-auto lg:mx-0 lg:h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gradient lg:absolute lg:top-10 lg:right-4 overflow-hidden md:px-20">
-        {/* Step Navigation */}
-        <div className="flex items-center justify-between mb-6">
-          {getCategorySteps(formData).map((step, index) => (
-            <React.Fragment key={index}>
-              <div className="flex flex-col items-center relative mb-8">
-                <div
-                  onClick={() => handleStepChange(index)}
-                  className={`flex flex-col items-center cursor-pointer mb-4 overflow-hidden ${
-                    index <= currentStep
-                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                      : "text-gray-500"
-                  }`}
-                >
-                  <div
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border-2 ${
-                      index <= currentStep
-                        ? "border-[#F24055] bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white"
-                        : "border-gray-200"
-                    }`}
-                  >
-                    <span className="material-symbols-outlined text-lg">
-                      {step.icon}
-                    </span>
-                  </div>
-                  <div className="mt-2 text-xs sm:text-sm text-center w-20">
-                    {step.label}
-                  </div>
-                </div>
-                {index < getCategorySteps(formData).length - 1 && (
-                  <div
-                    className={`h-0.5 ${
-                      index < currentStep
-                        ? "bg-gradient-to-r from-[#F24055] to-[#1E7881]"
-                        : "bg-gray-200"
-                    }`}
-                    style={{
-                      width: "1.9rem",
-                      marginLeft: "2.68rem",
-                      marginRight: "-2.0rem",
-                      marginTop: "-4.2rem",
-                      marginBottom: "-0.25rem",
-                    }}
-                  ></div>
-                )}
-              </div>
-            </React.Fragment>
-          ))}
+      <div className="relative w-full max-w-xl bg-white bg-opacity-50 backdrop-blur-md mx-auto shadow-md shadow-slate-600 min-h-screen pt-4 pb-20 lg:py-16 lg:rounded-lg lg:mt-12">
+        <div className="text-center w-full text-white font-semibold uppercase text-2xl lg:text-3xl tracking-wider">
+          Add Affairs
         </div>
-
-        {/* Display the current step */}
-        {CurrentStepComponent ? (
+        <div className="p-5 space-y-8 lg:p-8">
           <CurrentStepComponent
             formData={formData}
-            updateFormData={updateFormData}
+            onFormDataChange={updateFormData}
             onNext={handleNext}
-            handleBack={handleBack}
+            onBack={handleBack}
+            onSubmit={handleSubmit}
           />
-        ) : (
-          <div>No step available. Please select a type to proceed.</div>
-        )}
+        </div>
+        <div className="absolute flex justify-between w-full bottom-5 px-4 lg:px-8">
+          <button
+            className={`${
+              currentStep === 0 ? "opacity-20 cursor-not-allowed" : ""
+            } bg-tertiary-100 py-2 px-4 rounded-full shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1`}
+            disabled={currentStep === 0}
+            onClick={handleBack}
+          >
+            Previous
+          </button>
 
-        {/* Submit button for the last step */}
-        {currentStep === getCategorySteps(formData).length - 1 && (
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={handleSubmit}
-              className="bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white px-4 py-2 rounded"
-            >
-              Submit
-            </button>
-          </div>
-        )}
+          <button
+            className="bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white py-2 px-4 rounded-full shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1"
+            onClick={handleSubmit}
+          >
+            {currentStep === getCategorySteps(formData).length - 1
+              ? "Submit"
+              : "Next"}
+          </button>
+        </div>
       </div>
     </div>
   )

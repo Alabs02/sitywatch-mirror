@@ -218,3 +218,212 @@ const AddAffairs: FC = () => {
 }
 
 export default AddAffairs
+
+
+
+----------------------------------------------------------------------------------------
+
+import { useEffect } from "react";
+import { useAffairsStore } from "@/stores/affairs.store"; // Assuming you have a Zustand store
+import AffairsStepType from "@/components/contents/add-affairs-component copy/AffairsStepType";
+import AffairsTourneyStep1 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep1";
+import AffairsTourneyStep2 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep2";
+import AffairsTourneyStep3 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep3";
+import AffairsTourneyStep4 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep4";
+import AffairsTourneyStep5 from "@/components/contents/add-affairs-component copy/AffairsTourneyStep5";
+import AffairsProductStep1 from "@/components/contents/add-affairs-component copy/AffairsProductStep1";
+import AffairsProductStep2 from "@/components/contents/add-affairs-component copy/AffairsProductStep2";
+import AffairsProductStep3 from "@/components/contents/add-affairs-component copy/AffairsProductStep3";
+import AffairsProductStep4 from "@/components/contents/add-affairs-component copy/AffairsProductStep4";
+import AffairsProductStep5 from "@/components/contents/add-affairs-component copy/AffairsProductStep5";
+import AffairsEventStep1 from "@/components/contents/add-affairs-component copy/AffairsEventStep1";
+import AffairsEventStep2 from "@/components/contents/add-affairs-component copy/AffairsEventStep2";
+import AffairsEventStep3 from "@/components/contents/add-affairs-component copy/AffairsEventStep3";
+import AffairsEventStep4 from "@/components/contents/add-affairs-component copy/AffairsEventStep4";
+import AffairsEventStep5 from "@/components/contents/add-affairs-component copy/AffairsEventStep5";
+import AffairsServiceStep1 from "@/components/contents/add-affairs-component copy/AffairsServiceStep1";
+import AffairsServiceStep2 from "@/components/contents/add-affairs-component copy/AffairsServiceStep2";
+import AffairsServiceStep3 from "@/components/contents/add-affairs-component copy/AffairsServiceStep3";
+import AffairsServiceStep4 from "@/components/contents/add-affairs-component copy/AffairsServiceStep4";
+import AffairsServiceStep5 from "@/components/contents/add-affairs-component copy/AffairsServiceStep5";
+
+const AddAffairs = () => {
+  const affairsStore = useAffairsStore(); // Access your Zustand store
+
+  const renderAffairSteps = () => {
+    switch (affairsStore.ui.currentStep) {
+      case 0:
+        return <AffairsStepType />;
+      case 1:
+        if (affairsStore.ui.category === "tourney") {
+          return (
+            <AffairsTourneyStep1
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "product") {
+          return (
+            <AffairsProductStep1
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "event") {
+          return (
+            <AffairsEventStep1
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "service") {
+          return (
+            <AffairsServiceStep1
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        }
+        break;
+      case 2:
+        if (affairsStore.ui.category === "tourney") {
+          return (
+            <AffairsTourneyStep2
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "product") {
+          return (
+            <AffairsProductStep2
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "event") {
+          return (
+            <AffairsEventStep2
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "service") {
+          return (
+            <AffairsServiceStep2
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        }
+        break;
+      case 3:
+        if (affairsStore.ui.category === "tourney") {
+          return (
+            <AffairsTourneyStep3
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "product") {
+          return (
+            <AffairsProductStep3
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "event") {
+          return (
+            <AffairsEventStep3
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "service") {
+          return (
+            <AffairsServiceStep3
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        }
+        break;
+      case 4:
+        if (affairsStore.ui.category === "tourney") {
+          return (
+            <AffairsTourneyStep4
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "product") {
+          return (
+            <AffairsProductStep4
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "event") {
+          return (
+            <AffairsEventStep4
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "service") {
+          return (
+            <AffairsServiceStep4
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        }
+        break;
+      case 5:
+        if (affairsStore.ui.category === "tourney") {
+          return (
+            <AffairsTourneyStep5
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "product") {
+          return (
+            <AffairsProductStep5
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "event") {
+          return (
+            <AffairsEventStep5
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        } else if (affairsStore.ui.category === "service") {
+          return (
+            <AffairsServiceStep5
+              onBack={affairsStore.setPrevious}
+              onNext={affairsStore.setNext}
+            />
+          );
+        }
+        break;
+      default:
+        return <AffairsStepType />;
+    }
+  };
+
+  useEffect(() => {
+    // Example of handling side effects or data fetching if necessary
+  }, [affairsStore.ui.currentStep, affairsStore.ui.category]);
+
+  return (
+    <div>
+      {renderAffairSteps()}
+    </div>
+  );
+};
+
+export default AddAffairs;
+
