@@ -4,7 +4,7 @@ import Step2 from "@/components/contents/build-sitadel-component/Step2"
 import Step3 from "@/components/contents/build-sitadel-component/Step3"
 import Step4 from "@/components/contents/build-sitadel-component/Step4"
 import Link from "next/link"
-import { useFormSteps } from "../../hooks/useFormSteps" 
+import { useFormSteps } from "../../hooks/useFormSteps"
 
 const steps = [
   {
@@ -49,6 +49,7 @@ const BuildSitadel: FC = () => {
       info: "",
       coverPhoto: null,
       profilePhoto: null,
+      category: "sitadel", // This is required as per BaseFormData
     },
     steps,
   )
