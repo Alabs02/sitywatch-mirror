@@ -73,7 +73,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     const headers = {
       accept: "application/json",
       "X-Session-Id": Cookies.get("X_SESSION_ID"),
-      Authorization: Cookies.get("ACCESS_TOKEN"),
+      Authorization: `Bearer ${Cookies.get("ACCESS_TOKEN")}`,
     };
 
     try {

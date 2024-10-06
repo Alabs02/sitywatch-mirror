@@ -13,7 +13,7 @@ export const http = axios.create({
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": Cookies.get("ACCESS_TOKEN")
+    "Authorization": `Bearer ${Cookies.get("ACCESS_TOKEN")}`
   },
 })
 
