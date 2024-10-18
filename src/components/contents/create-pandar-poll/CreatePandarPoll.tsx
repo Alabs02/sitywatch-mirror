@@ -59,7 +59,7 @@ const CreatePandarPoll: React.FC = () => {
         <label className="block text-sm font-bold text-secondary mb-1">
           Pandar poll description (optional)
         </label>
-        <p className="text-sm text-black mb-2">
+        <p className="text-xs text-black mb-2">
           Here you can give a general description or note about what the poll is
           about or what you want people to know.
         </p>
@@ -97,15 +97,15 @@ const CreatePandarPoll: React.FC = () => {
           {/* Options */}
           {station.options.map((option, optionIndex) => (
             <div key={optionIndex} className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-tertiary-300">
+              <div className="flex items-center  mb-2">
+                <label className="block text-tertiary-300 mr-4">
                   Option {optionIndex + 1}
                 </label>
                 {/* Capsule-y Toggle Button */}
                 <div className="flex space-x-2 items-center">
                   <div className="flex border rounded-full bg-neutral-100">
                     <button
-                      className={`px-4 py-1 rounded-full ${
+                      className={`px-2  rounded-full ${
                         option.type === "text"
                           ? "bg-secondary text-white"
                           : "text-secondary"
@@ -117,7 +117,7 @@ const CreatePandarPoll: React.FC = () => {
                       Text
                     </button>
                     <button
-                      className={`px-4 py-1 rounded-full ${
+                      className={`px-2  rounded-full ${
                         option.type === "image"
                           ? "bg-secondary text-white"
                           : "text-secondary"
@@ -153,7 +153,7 @@ const CreatePandarPoll: React.FC = () => {
 
                   {/* Caption Input - Editable line with centered description */}
                   <div className="flex flex-col items-center">
-                    <p className="mb-1">
+                    <p className="mb-1 text-xs">
                       Write caption for image here (optional):
                     </p>
                     <div
