@@ -3,6 +3,7 @@ import React, { useState } from "react"
 interface PollOption {
   text: string
   type: "text" | "image"
+  images?: string[] // To store image URLs or file paths
 }
 
 const CreatePandarPoll: React.FC = () => {
@@ -10,6 +11,7 @@ const CreatePandarPoll: React.FC = () => {
   const defaultOption = (): PollOption => ({
     text: "",
     type: "text", // Default to text
+    images: [], // Default to empty array for images
   })
 
   // State for stations
@@ -39,7 +41,38 @@ const CreatePandarPoll: React.FC = () => {
   ) => {
     const updatedStations = [...stations]
     updatedStations[stationIndex].options[optionIndex].type = type
+
+    // If toggling to image, initialize with one empty image container
+    if (
+      type === "image" &&
+      updatedStations[stationIndex].options[optionIndex].images?.length === 0
+    ) {
+      updatedStations[stationIndex].options[optionIndex].images = [""]
+    }
+
     setStations(updatedStations)
+  }
+
+  // Handle image selection
+  const handleImageChange = (
+    stationIndex: number,
+    optionIndex: number,
+    imageIndex: number,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const updatedStations = [...stations]
+      const reader = new FileReader()
+
+      reader.onloadend = () => {
+        updatedStations[stationIndex].options[optionIndex].images![imageIndex] =
+          reader.result as string
+        setStations(updatedStations)
+      }
+
+      reader.readAsDataURL(file)
+    }
   }
 
   // Handle caption changes
@@ -48,6 +81,13 @@ const CreatePandarPoll: React.FC = () => {
       ...captions,
       [stationId]: value,
     })
+  }
+
+  // Add another image container for a specific option
+  const addImageContainer = (stationIndex: number, optionIndex: number) => {
+    const updatedStations = [...stations]
+    updatedStations[stationIndex].options[optionIndex].images!.push("") // Add an empty image container
+    setStations(updatedStations)
   }
 
   return (
@@ -142,60 +182,83 @@ const CreatePandarPoll: React.FC = () => {
               ) : (
                 <div className="mb-4">
                   {/* Image picker box */}
-                  <div
-                    className="w-24 h-24 border border-dashed border-gray-300 rounded mx-auto flex items-center justify-center cursor-pointer mb-4"
-                    onClick={() => alert("Image picker clicked")}
-                  >
-                    <span className="material-symbols-outlined text-3xl text-secondary">
-                      library_add
-                    </span>
+                  <div className="flex justify-center mb-4">
+                    {option.images?.map((image, imageIndex) => (
+                      <div
+                        key={imageIndex}
+                        className="flex flex-col items-center mx-2"
+                      >
+                        <label className="cursor-pointer">
+                          <div className="w-24 h-24 border border-dashed border-gray-300 rounded flex items-center justify-center">
+                            {image ? (
+                              <img
+                                src={image}
+                                alt={`Option ${optionIndex + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="material-symbols-outlined text-3xl text-secondary">
+                                library_add
+                              </span>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(event) =>
+                              handleImageChange(
+                                stationIndex,
+                                optionIndex,
+                                imageIndex,
+                                event,
+                              )
+                            }
+                          />
+                        </label>
+
+                        {/* Caption Input */}
+                        <div className="flex flex-col items-center mt-2">
+                          <p className="mb-1 text-xs">
+                            Write caption for image here (optional):
+                          </p>
+                          <div
+                            className={`w-full max-w-xs border-b border-gray-300 text-center cursor-text ${
+                              captions[station.id]
+                                ? "text-black"
+                                : "text-gray-400"
+                            }`}
+                            contentEditable
+                            suppressContentEditableWarning={true} // For React contentEditable
+                            onInput={(e) =>
+                              handleCaptionChange(
+                                station.id,
+                                (e.target as HTMLDivElement).innerText,
+                              )
+                            }
+                          >
+                            {captions[station.id] || ""}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Caption Input - Editable line with centered description */}
-                  <div className="flex flex-col items-center">
-                    <p className="mb-1 text-xs">
-                      Write caption for image here (optional):
-                    </p>
-                    <div
-                      className={`w-full max-w-xs border-b border-gray-300 text-center cursor-text ${
-                        captions[station.id] ? "text-black" : "text-gray-400"
-                      }`}
-                      contentEditable
-                      suppressContentEditableWarning={true} // For React contentEditable
-                      onInput={(e) =>
-                        handleCaptionChange(
-                          station.id,
-                          (e.target as HTMLDivElement).innerText,
-                        )
-                      }
-                    >
-                      {captions[station.id] || ""}
-                    </div>
-                  </div>
+                  {/* Add Another Image */}
+                  <button
+                    type="button"
+                    className="flex items-center text-secondary mx-auto"
+                    onClick={() => addImageContainer(stationIndex, optionIndex)}
+                  >
+                    <span className="material-symbols-outlined">
+                      add_circle
+                    </span>
+                    <span className="ml-1">Add Another Image</span>
+                  </button>
                 </div>
               )}
             </div>
           ))}
-
-          {/* Add Option */}
-          <div className="mb-4">
-            <button
-              type="button"
-              className="flex items-center text-secondary"
-              onClick={() =>
-                setStations(
-                  stations.map((st, idx) =>
-                    idx === stationIndex
-                      ? { ...st, options: [...st.options, defaultOption()] }
-                      : st,
-                  ),
-                )
-              }
-            >
-              <span className="material-symbols-outlined">add_circle</span>
-              <span className="ml-1">Add Option</span>
-            </button>
-          </div>
 
           <hr className="my-4" />
         </div>
