@@ -71,8 +71,8 @@ const pandaImagePoll = {
       author: "Panda_Image",
       question: "Which panda looks cooler?",
       options: [
-        { imageSrc: "/dummyImages/panda1.jpg", votes: 50 },
-        { imageSrc: "/dummyImages/panda2.jpg", votes: 70 },
+        { imageSrc: "/arya.png", votes: 50 },
+        { imageSrc: "/riri.png", votes: 70 },
       ],
       remainingTime: "12 hrs 30 mins remaining",
     },
