@@ -69,7 +69,7 @@ const pandaImagePoll = {
     {
       id: 2,
       author: "Panda_Image",
-      question: "Which panda looks cooler?",
+      question: "And the mini skirt award goes to...?",
       options: [
         { imageSrc: "/arya.png", votes: 50 },
         { imageSrc: "/riri.png", votes: 70 },
@@ -151,7 +151,6 @@ const PandaPollCard1: React.FC = () => {
             <p className="mb-4 text-sm md:text-lg font-semibold">
               {poll.question}
             </p>
-
             {/* Poll Options */}
             <div className="flex flex-col space-y-2 items-center">
               {poll.options.map((option, index) => {
