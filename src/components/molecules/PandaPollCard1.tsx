@@ -118,7 +118,7 @@ const PandaPollCard1: React.FC = () => {
         return (
           <div
             key={poll.id}
-            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-32 md:mb-36 text-sm md:text-base relative"
+            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
           >
             {/* Author Information and Overlay Toggle */}
             <div className="flex items-center justify-between mb-4">
