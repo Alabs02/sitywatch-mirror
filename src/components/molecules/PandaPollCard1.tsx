@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import PandaPollOverlay from "./PandaPollOverlay"
+import { usePandarPollStore } from "@/store/pandar.store"
 
 interface Option {
   text?: string
@@ -80,12 +81,28 @@ const pandaImagePoll = {
 }
 
 const PandaPollCard1: React.FC = () => {
+    const { pollData, fetchPollData, isFetching, error } = usePandarPollStore() 
   const [showOverlay, setShowOverlay] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number | null
   }>({})
   const [showResults, setShowResults] = useState<{ [key: string]: boolean }>({})
   const [expanded, setExpanded] = useState<{ [key: number]: boolean }>({})
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchPollData() 
+    }
+
+    fetchData()
+  }, [fetchPollData])
+
+  useEffect(() => {
+    // Log the fetched data to console
+    console.log("Fetched Poll Data:", pollData)
+  }, [pollData])
 
   // Toggle the overlay visibility
   const toggleOverlay = () => {

@@ -3,14 +3,14 @@ import React, { useState } from "react"
 interface PollOption {
   text: string
   type: "text" | "image"
-  image?: string // Only one image allowed
+  image?: string 
 }
 
 const CreatePandarPoll: React.FC = () => {
   const defaultOption = (): PollOption => ({
     text: "",
-    type: "text", // Default to text
-    image: "", // Default to an empty string for image
+    type: "text", 
+    image: "", 
   })
 
   const [stations, setStations] = useState([

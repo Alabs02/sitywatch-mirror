@@ -1,88 +1,86 @@
 import { create } from "zustand"
-import { apiRoutes } from "@/constants/apiRoutes"
 import Cookies from "js-cookie"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
-// Types for Poll and Answer Options
+// Define interfaces for the data structure
+interface Interaction {
+  id: string
+  pollInteractionId: string
+  answerOptionId: string
+  createdAt: string
+}
+
 interface AnswerOption {
-  questionNumber: number
+  id: string
   text: string
-  file: string
+  file?: string
+  interactions: Interaction[]
 }
 
 interface Station {
+  id: string
   questionNumber: number
   questionText: string
   descriptionText: string
-  file: string
+  file?: string
   answerOptions: AnswerOption[]
 }
 
+interface PollInteraction {
+  id: string
+  pandarAlias: string
+  selectedAnswers: { id: string; answerOptionId: string }[]
+}
+
 interface PollData {
+  id: string
+  pollOwnerAlias: string
   stations: Station[]
+  expiresAt: string
+  pollInteractions: PollInteraction[]
 }
 
 interface PandarPollState {
-  pollData: PollData
-  isSubmitting: boolean
+  pollData: PollData[]
+  isFetching: boolean
   error: string | null
-  success: boolean
-  setPollData: (pollData: PollData) => void
-  submitPoll: () => Promise<void>
+  fetchPollData: () => Promise<void>
 }
 
-// Create Zustand store for managing poll state
-export const usePandarPollStore = create<PandarPollState>((set, get) => ({
-  pollData: {
-    stations: [
-      {
-        questionNumber: 0,
-        questionText: "",
-        descriptionText: "",
-        file: "",
-        answerOptions: [
-          {
-            questionNumber: 0,
-            text: "",
-            file: "",
-          },
-        ],
-      },
-    ],
-  },
-  isSubmitting: false,
+// Create Zustand store
+export const usePandarPollStore = create<PandarPollState>((set) => ({
+  pollData: [],
+  isFetching: false,
   error: null,
-  success: false,
 
-  // Function to set poll data
-  setPollData: (pollData: PollData) => set({ pollData }),
-
-  // Function to submit poll data
-  submitPoll: async () => {
-    set({ isSubmitting: true, error: null, success: false })
-
-    const { pollData } = get()
-
-    // Get tokens from cookies
-    const accessToken = Cookies.get("ACCESS_TOKEN")
+  fetchPollData: async () => {
+    set({ isFetching: true, error: null })
 
     try {
-      const response = await fetch(`${apiRoutes.PANDAR_POLLS}`, {
-        method: "POST",
+      const accessToken = Cookies.get("ACCESS_TOKEN")
+      const url = `${baseURI}${apiRoutes.PANDAR_POLLS}`
+
+      const response = await fetch(url, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`, // Send the token in Authorization header
+          Authorization: `Bearer ${accessToken}`, 
+          "Content-Type": "application/json", 
         },
-        body: JSON.stringify(pollData),
       })
 
+      // Check if the response is not OK and throw an error
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData?.message || "Submission failed")
+        throw new Error(errorData?.message || "Failed to fetch polls")
       }
 
-      set({ isSubmitting: false, success: true })
+      // Parse the response data
+      const pollData: PollData[] = await response.json()
+
+      // Set the state with the fetched poll data
+      set({ pollData, isFetching: false })
     } catch (error) {
-      set({ isSubmitting: false, error: (error as Error).message })
+      // Set error state in case of failure
+      set({ error: (error as Error).message, isFetching: false })
     }
   },
 }))
