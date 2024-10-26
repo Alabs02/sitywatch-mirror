@@ -25,6 +25,15 @@ interface Station {
   answerOptions: Option[]
 }
 
+interface Poll {
+  id: number
+  author: string
+  question: string
+  options: Option[]
+  remainingTime: string
+  stations?: Station[]
+}
+
 const PandaPollCard1: React.FC = () => {
   const { pollData, fetchPollData, isFetching, error } = usePandarPollStore()
   const [showOverlay, setShowOverlay] = useState(false)
@@ -73,212 +82,259 @@ const PandaPollCard1: React.FC = () => {
       {pollData.map((poll) => {
         const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
 
-        return (
-          <div
-            key={poll.id}
-            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <Image
-                  src="/coreAssets/PandarUs/panda.gif"
-                  alt={poll.pollOwnerAlias}
-                  width={70}
-                  height={70}
-                  className="rounded-full mr-4"
-                />
-                <div className="flex-grow">
-                  <p className="font-bold text-sm md:text-base">
-                    {poll.pollOwnerAlias}
-                  </p>
-                  <p className="text-gray-800 text-xs md:text-sm">
-                    {poll.expiresAt}
-                  </p>
-                </div>
-              </div>
-              <span
-                className="material-symbols-outlined cursor-pointer"
-                onClick={toggleOverlay}
-              >
-                more_horiz
-              </span>
-            </div>
+       return (
+         <>
+           {pollData.map((poll) => {
+             const pollTotalVotes = getTotalVotes(
+               poll.stations[0].answerOptions,
+             )
 
-            <p className="mb-4 text-sm md:text-lg font-semibold">
-              {poll.stations[0].questionText}
-            </p>
+             return (
+               <div
+                 key={poll.id}
+                 className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
+               >
+                 <div className="flex items-center justify-between mb-4">
+                   <div className="flex items-center">
+                     <Image
+                       src="/coreAssets/PandarUs/panda.gif"
+                       alt={poll.pollOwnerAlias}
+                       width={70}
+                       height={70}
+                       className="rounded-full mr-4"
+                     />
+                     <div>
+                       <p className="font-bold text-sm md:text-base">
+                         {poll.pollOwnerAlias}
+                       </p>
+                       <p className="text-gray-800 text-xs md:text-sm">
+                         {poll.expiresAt}
+                       </p>
+                     </div>
+                   </div>
+                   <span
+                     className="material-symbols-outlined cursor-pointer"
+                     onClick={toggleOverlay}
+                   >
+                     more_horiz
+                   </span>
+                 </div>
 
-            <div className="flex flex-col space-y-2 items-center">
-              {poll.stations[0].answerOptions.map((option, index) => {
-                const optionKey = `poll-${poll.id}-option-${index}`
-                return (
-                  <div key={index} className="flex flex-col w-full">
-                    <div className="flex items-center">
-                      <input
-                        type="radio"
-                        id={optionKey}
-                        name={`poll-${poll.id}`}
-                        className="mr-2"
-                        onChange={() =>
-                          handleOptionSelect(`poll-${poll.id}`, index)
-                        }
-                        disabled={!!selectedOptions[`poll-${poll.id}`]}
-                      />
-                      <label
-                        htmlFor={optionKey}
-                        className="text-xs md:text-sm w-full"
-                      >
-                        {option.text || (
-                          <Image
-                            src={option.file || ""}
-                            alt="Option image"
-                            width={50}
-                            height={50}
-                          />
-                        )}
-                      </label>
-                    </div>
+                 <p className="mb-4 text-sm md:text-lg font-semibold">
+                   {poll.stations[0].questionText}
+                 </p>
 
-                    {showResults[`poll-${poll.id}`] && (
-                      <div className="w-full flex items-center mt-1">
-                        <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
-                          <motion.div
-                            className="bg-secondary h-2.5 rounded-full"
-                            initial={{ width: 0 }}
-                            animate={{
-                              width: `${getPercentage(
-                                option.interactions?.length || 0,
-                                pollTotalVotes,
-                              )}%`,
-                            }}
-                            transition={{ duration: 0.5 }}
-                          />
-                        </div>
-                        <span className="text-xs text-secondary">
-                          {getPercentage(
-                            option.interactions?.length || 0,
-                            pollTotalVotes,
-                          )}
-                          %
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+                 <div className="flex flex-col space-y-2 items-center">
+                   {poll.stations[0].answerOptions.map((option, index) => {
+                     const optionKey = `poll-${poll.id}-option-${index}`
+                     return (
+                       <div key={index} className="w-full">
+                         <div className="flex items-center">
+                           <input
+                             type="radio"
+                             id={optionKey}
+                             name={`poll-${poll.id}`}
+                             className="mr-2"
+                             onChange={() =>
+                               handleOptionSelect(`poll-${poll.id}`, index)
+                             }
+                             disabled={!!selectedOptions[`poll-${poll.id}`]}
+                           />
+                           <label
+                             htmlFor={optionKey}
+                             className="text-xs md:text-sm w-full"
+                           >
+                             {option.text || (
+                               <Image
+                                 src={option.file || ""}
+                                 alt="Option image"
+                                 width={50}
+                                 height={50}
+                               />
+                             )}
+                           </label>
+                         </div>
+                         {showResults[`poll-${poll.id}`] && (
+                           <div className="flex items-center mt-1">
+                             <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
+                               <motion.div
+                                 className="bg-secondary h-2.5 rounded-full"
+                                 initial={{ width: 0 }}
+                                 animate={{
+                                   width: `${getPercentage(
+                                     option.interactions?.length || 0,
+                                     pollTotalVotes,
+                                   )}%`,
+                                 }}
+                                 transition={{ duration: 0.5 }}
+                               />
+                             </div>
+                             <span className="text-xs text-secondary">
+                               {getPercentage(
+                                 option.interactions?.length || 0,
+                                 pollTotalVotes,
+                               )}
+                               %
+                             </span>
+                           </div>
+                         )}
+                       </div>
+                     )
+                   })}
+                 </div>
 
-            <div className="flex justify-center mt-6">
-              <div
-                className="p-1 inline-flex bg-neutral-300 rounded-lg shadow-md items-center justify-center w-full cursor-pointer"
-                onClick={() => toggleExpandedPoll(poll.id)}
-              >
-                <span className="text-xs md:text-sm text-secondary flex items-center justify-center">
-                  {expanded[poll.id]
-                    ? "Hide additional stations"
-                    : "This pandar poll has multiple stations, see all stations "}
-                  <span className="material-symbols-outlined ml-2">
-                    {expanded[poll.id]
-                      ? "arrow_circle_up"
-                      : "arrow_circle_down"}
-                  </span>
-                </span>
-              </div>
-            </div>
+                 <div className="flex justify-center mt-6">
+                   <div
+                     className="p-1 inline-flex bg-neutral-300 rounded-lg shadow-md items-center justify-center w-full cursor-pointer"
+                     onClick={() => toggleExpandedPoll(poll.id)}
+                   >
+                     <span className="text-xs md:text-sm text-secondary flex items-center justify-center">
+                       {expanded[poll.id]
+                         ? "Hide additional stations"
+                         : "This pandar poll has multiple stations, see all stations "}
+                       <span className="material-symbols-outlined ml-2">
+                         {expanded[poll.id]
+                           ? "arrow_circle_up"
+                           : "arrow_circle_down"}
+                       </span>
+                     </span>
+                   </div>
+                 </div>
 
-            <AnimatePresence>
-              {expanded[poll.id] && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden mt-4"
-                >
-                  {poll.stations.map((station) => (
-                    <div
-                      key={station.id}
-                      className="border-t border-gray-500 pt-4 mt-4"
-                    >
-                      <p className="mb-2 text-sm md:text-lg font-semibold">
-                        {station.questionText}
-                      </p>
-                      <div className="flex flex-col space-y-2 items-center">
-                        {station.answerOptions.map((option, idx) => {
-                          const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`
-                          return (
-                            <div key={idx} className="flex flex-col w-full">
-                              <div className="flex items-center">
-                                <input
-                                  type="radio"
-                                  id={stationOptionKey}
-                                  name={`poll-${poll.id}-station-${station.id}`}
-                                  className="mr-2"
-                                  onChange={() =>
-                                    handleOptionSelect(
-                                      `poll-${poll.id}-station-${station.id}`,
-                                      idx,
-                                    )
-                                  }
-                                  disabled={
-                                    !!selectedOptions[
-                                      `poll-${poll.id}-station-${station.id}`
-                                    ]
-                                  }
-                                />
-                                <label
-                                  htmlFor={stationOptionKey}
-                                  className="text-xs md:text-sm w-full"
-                                >
-                                  {option.text || (
-                                    <Image
-                                      src={option.file || ""}
-                                      alt="Option image"
-                                      width={50}
-                                      height={50}
-                                    />
-                                  )}
-                                </label>
-                              </div>
+                 <AnimatePresence>
+                   {expanded[poll.id] && (
+                     <motion.div
+                       initial={{ opacity: 0, height: 0 }}
+                       animate={{ opacity: 1, height: "auto" }}
+                       exit={{ opacity: 0, height: 0 }}
+                       className="overflow-hidden mt-4"
+                     >
+                       {poll.stations.map((station) => (
+                         <div
+                           key={station.id}
+                           className="border-t border-gray-500 pt-4 mt-4"
+                         >
+                           <p className="mb-2 text-sm md:text-lg font-semibold">
+                             {station.questionText}
+                           </p>
+                           <div className="flex flex-col space-y-2 items-center">
+                             {station.answerOptions.map((option, idx) => {
+                               const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`
+                               return (
+                                 <div key={idx} className="w-full">
+                                   <div className="flex items-center">
+                                     <input
+                                       type="radio"
+                                       id={stationOptionKey}
+                                       name={`poll-${poll.id}-station-${station.id}`}
+                                       className="mr-2"
+                                       onChange={() =>
+                                         handleOptionSelect(
+                                           `poll-${poll.id}-station-${station.id}`,
+                                           idx,
+                                         )
+                                       }
+                                       disabled={
+                                         !!selectedOptions[
+                                           `poll-${poll.id}-station-${station.id}`
+                                         ]
+                                       }
+                                     />
+                                     <label
+                                       htmlFor={stationOptionKey}
+                                       className="text-xs md:text-sm w-full"
+                                     >
+                                       {option.text || (
+                                         <Image
+                                           src={option.file || ""}
+                                           alt="Option image"
+                                           width={50}
+                                           height={50}
+                                         />
+                                       )}
+                                     </label>
+                                   </div>
+                                   {showResults[
+                                     `poll-${poll.id}-station-${station.id}`
+                                   ] && (
+                                     <div className="flex items-center mt-1">
+                                       <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
+                                         <motion.div
+                                           className="bg-secondary h-2.5 rounded-full"
+                                           initial={{ width: 0 }}
+                                           animate={{
+                                             width: `${getPercentage(
+                                               option.interactions?.length || 0,
+                                               pollTotalVotes,
+                                             )}%`,
+                                           }}
+                                           transition={{ duration: 0.5 }}
+                                         />
+                                       </div>
+                                       <span className="text-xs text-secondary">
+                                         {getPercentage(
+                                           option.interactions?.length || 0,
+                                           pollTotalVotes,
+                                         )}
+                                         %
+                                       </span>
+                                     </div>
+                                   )}
+                                 </div>
+                               )
+                             })}
+                           </div>
+                         </div>
+                       ))}
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
 
-                              {showResults[
-                                `poll-${poll.id}-station-${station.id}`
-                              ] && (
-                                <div className="w-full flex items-center mt-1">
-                                  <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
-                                    <motion.div
-                                      className="bg-secondary h-2.5 rounded-full"
-                                      initial={{ width: 0 }}
-                                      animate={{
-                                        width: `${getPercentage(
-                                          option.interactions?.length || 0,
-                                          pollTotalVotes,
-                                        )}%`,
-                                      }}
-                                      transition={{ duration: 0.5 }}
-                                    />
-                                  </div>
-                                  <span className="text-xs text-secondary">
-                                    {getPercentage(
-                                      option.interactions?.length || 0,
-                                      pollTotalVotes,
-                                    )}
-                                    %
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                 <div className="flex items-center justify-center space-x-4 mt-4">
+                   <span className="material-symbols-outlined">cognition</span>
+                   <span className="material-symbols-outlined">repeat</span>
+                   <span className="material-symbols-outlined">bookmark</span>
+                   <span className="material-symbols-outlined">send</span>
+                 </div>
 
-            {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
-          </div>
-        )
+                 <div className="flex border-t border-b border-gray-400 p-1 mx-4 items-center justify-between my-6">
+                   <div className="flex items-center">
+                     <Image
+                       src="/coreAssets/PandarUs/Poll1/panda.png"
+                       alt={poll.pollOwnerAlias}
+                       width={20}
+                       height={20}
+                       className="rounded-full mr-4"
+                     />
+                     <p className="text-xs md:text-sm">34 pandas</p>
+                   </div>
+                   <div className="flex gap-x-2">
+                     <div className="flex items-center">
+                       <span className="material-symbols-outlined">
+                         cognition
+                       </span>
+                       <p className="text-xs md:text-sm">5</p>
+                     </div>
+                     <div className="flex items-center">
+                       <span className="material-symbols-outlined">repeat</span>
+                       <p className="text-xs md:text-sm">5</p>
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className="flex w-full mx-auto items-center justify-center mb-4">
+                   <button className="rounded-full text-xs md:text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100 font-semibold">
+                     PANDAR
+                   </button>
+                 </div>
+
+                 {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
+               </div>
+             )
+           })}
+         </>
+       )
+
       })}
     </>
   )
