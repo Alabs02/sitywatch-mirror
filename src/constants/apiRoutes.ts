@@ -7,5 +7,6 @@ export const apiRoutes = {
   SIGN_IN: "/auth/signin",
   SIGN_OUT: "auth/signout",
   REFRESH_TOKEN: "auth/tokens",
-  PANDAR_POLLS: "pandar-polls"
+  PANDAR_POLLS: "pandar-polls",
+  PANDAR_POLLS_INTERACTIONS: (id:string) => `pandar-polls/${id}/interactions` 
 }

@@ -3,6 +3,8 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import PandaPollOverlay from "./PandaPollOverlay"
 import { usePandarPollStore } from "@/store/pandar.store"
+import {http} from "@/libs"
+import { apiRoutes } from "@/constants/apiRoutes"
 
 // Define option and station types
 interface Option {
@@ -67,16 +69,40 @@ const PandaPollCard1: React.FC = () => {
     setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
   }
 
+
+
   // Calculate the total votes for a set of options, handling undefined interactions
   const getTotalVotes = (options: Option[]) =>
     options.reduce((sum, option) => sum + (option.interactions?.length || 0), 0)
 
   const getPercentage = (votes: number, total: number) =>
     total > 0 ? ((votes / total) * 100).toFixed(1) : "0"
+  
+const onSubmitPoll = async (id:string) => {
+  try {
+    const customOptions = {
+      headers: {
+        id
+      },
+    }
+    const response = await http
+      .post(apiRoutes.PANDAR_POLLS_INTERACTIONS(id), selectedOptions, customOptions)
+      .then((response) => {
+        console.log("Response data:", response.data)
+      })
+      .catch((error) => {
+        console.error("Error in POST request:", error)
+      })
+  } catch (error: any) {
+    console.error({ error })
+  }
+}
+
 
   if (isFetching) return <div>Loading polls...</div>
   if (error) return <div>Error loading polls: {error}</div>
 
+  
   return (
     <>
       {pollData.map((poll) => {
@@ -323,7 +349,7 @@ const PandaPollCard1: React.FC = () => {
                  </div>
 
                  <div className="flex w-full mx-auto items-center justify-center mb-4">
-                   <button className="rounded-full text-xs md:text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100 font-semibold">
+                   <button onClick={() => onSubmitPoll(poll.id) } className="rounded-full text-xs md:text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100 font-semibold">
                      PANDAR
                    </button>
                  </div>

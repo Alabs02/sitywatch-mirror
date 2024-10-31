@@ -77,7 +77,7 @@ const Header: FC<HeaderProps> = ({ children, className, style }) => {
     };
 
     try {
-      const response = await http.post(apiRoutes.SIGN_OUT, {}, { headers });
+      const response = await http.post<any>(apiRoutes.SIGN_OUT, {}, { headers });
 
       console.log({ response });
 
