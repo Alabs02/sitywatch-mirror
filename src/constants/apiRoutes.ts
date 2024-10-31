@@ -4,7 +4,7 @@ export const apiRoutes = {
   SITIZENS_SIGN_UP: "sitizens",
   VERIFY_EMAIL: "auth/verifyEmail",
   SITADELS_SIGN_UP: "sitadels",
-  SIGN_IN: "/auth/signin",
+  SIGN_IN: "auth/signin",
   SIGN_OUT: "auth/signout",
   REFRESH_TOKEN: "auth/tokens",
   PANDAR_POLLS: "pandar-polls",

@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { useAuthStore } from "@/store";
 import { apiRoutes, baseURI } from "@/constants/apiRoutes";
 
+
 class HttpService {
   private http: AxiosInstance;
 
@@ -24,10 +25,10 @@ class HttpService {
     });
 
     // Set up request interceptor for authentication
-    this.http.interceptors.request.use(
-      this.handleRequest.bind(this),
-      this.handleError.bind(this)
-    );
+    // this.http.interceptors.request.use(
+    //   this.handleRequest.bind(this),
+    //   this.handleError.bind(this)
+    // );
 
     // Set up response interceptor to refresh token on 401 error
     this.http.interceptors.response.use(
@@ -43,14 +44,13 @@ class HttpService {
 
   private setupHeaders(hasAttachment = false, customHeaders: any = {}): any {
     return hasAttachment
-      ? { "Content-Type": "multipart/form-data", ...this.getAuthorization, ...customHeaders }
-      : { "Content-Type": "application/json", ...this.getAuthorization, ...customHeaders };
+      ? { "Content-Type": "multipart/form-data", ...this.getAuthorization(), ...customHeaders }
+      : { "Content-Type": "application/json", ...this.getAuthorization(), ...customHeaders };
   }
 
-  private get getAuthorization() {
-    const { tokens } = useAuthStore.getState();
-    alert(tokens.accessToken);
-    return tokens ? { Authorization: `Bearer ${tokens.accessToken}` } : {};
+  private getAuthorization() {
+    const token = Cookies.get("ACCESS_TOKEN")
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   private async handleRequest(config: InternalAxiosRequestConfig): Promise<any> {

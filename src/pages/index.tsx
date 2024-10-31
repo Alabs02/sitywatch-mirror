@@ -36,7 +36,6 @@ const LoginForm: FC = () => {
   //     router.push("/welcome")
   //   }
   // }, [isLoggedIn, router])
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -49,7 +48,8 @@ const LoginForm: FC = () => {
     setUI("loading", true)
 
     try {
-      const response = await http.post<TLoginResponse>(apiRoutes.SIGN_IN, { email, password })
+      const response = await http.service().post<TLoginResponse>(apiRoutes.SIGN_IN, { email, password })
+      console.log("response: ", response)
 
       if (successStatusCodes.includes(response.status)) {
         Cookies.set("USER_ROLE", "sitizens");
