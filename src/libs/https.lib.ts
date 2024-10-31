@@ -36,7 +36,7 @@ class HttpService {
     );
   }
 
-  service(hasAttachment: boolean = false, customHeaders: any = {}) {
+  public service(hasAttachment: boolean = false, customHeaders: any = {}) {
     this.http.defaults.headers = this.setupHeaders(hasAttachment, customHeaders);
     return this;
   }
@@ -49,17 +49,19 @@ class HttpService {
 
   private get getAuthorization() {
     const { tokens } = useAuthStore.getState();
+    alert(tokens.accessToken);
     return tokens ? { Authorization: `Bearer ${tokens.accessToken}` } : {};
   }
 
-  private async handleRequest(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
-    const { tokens } = useAuthStore.getState();
-    if (tokens?.accessToken) {
-      // Create or cast headers as AxiosHeaders to ensure compatibility
-      const headers = config.headers as AxiosHeaders;
-      headers.set("Authorization", `Bearer ${tokens.accessToken}`);
-    }
-    return config;
+  private async handleRequest(config: InternalAxiosRequestConfig): Promise<any> {
+    // const { tokens } = useAuthStore.getState();
+    // if (tokens?.accessToken) {
+    //   // Create or cast headers as AxiosHeaders to ensure compatibility
+    //   const headers = config.headers as AxiosHeaders;
+    //   headers.set("Authorization", `Bearer ${tokens.accessToken}`);
+    // }
+    // return config;
+    return;
   }
 
   private handleError(error: AxiosError): Promise<never> {
