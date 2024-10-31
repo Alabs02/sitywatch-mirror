@@ -36,6 +36,22 @@ class HttpService {
     );
   }
 
+  service(hasAttachment: boolean = false, customHeaders: any = {}) {
+    this.http.defaults.headers = this.setupHeaders(hasAttachment, customHeaders);
+    return this;
+  }
+
+  private setupHeaders(hasAttachment = false, customHeaders: any = {}): any {
+    return hasAttachment
+      ? { "Content-Type": "multipart/form-data", ...this.getAuthorization, ...customHeaders }
+      : { "Content-Type": "application/json", ...this.getAuthorization, ...customHeaders };
+  }
+
+  private get getAuthorization() {
+    const { tokens } = useAuthStore.getState();
+    return tokens ? { Authorization: `Bearer ${tokens.accessToken}` } : {};
+  }
+
   private async handleRequest(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
     const { tokens } = useAuthStore.getState();
     if (tokens?.accessToken) {

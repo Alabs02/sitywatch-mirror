@@ -80,19 +80,11 @@ const PandaPollCard1: React.FC = () => {
   
 const onSubmitPoll = async (id:string) => {
   try {
-    const customOptions = {
-      headers: {
-        id
-      },
-    }
     const response = await http
-      .post(apiRoutes.PANDAR_POLLS_INTERACTIONS(id), selectedOptions, customOptions)
-      .then((response) => {
-        console.log("Response data:", response.data)
-      })
-      .catch((error) => {
-        console.error("Error in POST request:", error)
-      })
+      .service(false, { id })
+      .post(apiRoutes.PANDAR_POLLS_INTERACTIONS(id), selectedOptions);
+
+    console.log({ response });
   } catch (error: any) {
     console.error({ error })
   }
