@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    domains: ["sitywatch-backend.onrender.com"],
+  },
+  // Add other configurations here...
+}
 
-export default nextConfig;
+export default nextConfig
