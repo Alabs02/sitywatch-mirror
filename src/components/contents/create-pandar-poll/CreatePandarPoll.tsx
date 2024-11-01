@@ -1,39 +1,69 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { usePandarPollStore } from "@/store/pandar.store"
+import { http } from "@/libs"
+import { apiRoutes } from "@/constants/apiRoutes"
 
 interface PollOption {
   text: string
   type: "text" | "image"
-  image?: string 
+  imageUrl?: string
+}
+
+interface Station {
+  id: number
+  questionText: string
+  descriptionText?: string
+  options: PollOption[]
+  isTextOnly: boolean
 }
 
 const CreatePandarPoll: React.FC = () => {
-  const defaultOption = (): PollOption => ({
-    text: "",
-    type: "text", 
-    image: "", 
-  })
+  const { fetchPollData } = usePandarPollStore()
 
-  const [stations, setStations] = useState([
-    { id: 1, options: [defaultOption()] },
+  const [stations, setStations] = useState<Station[]>([
+    {
+      id: 1,
+      questionText: "",
+      descriptionText: "",
+      options: [{ text: "", type: "text" }],
+      isTextOnly: true,
+    },
   ])
-  const [captions, setCaptions] = useState<{ [key: string]: string }>({})
   const [showWarning, setShowWarning] = useState(false)
   const [toggleDetails, setToggleDetails] = useState({
     stationIndex: -1,
     optionIndex: -1,
     targetType: "text" as "text" | "image",
   })
+  const [captions, setCaptions] = useState<{ [key: number]: string }>({})
+  const [description, setDescription] = useState<string>("")
+  const [isButtonActive, setIsButtonActive] = useState(false)
+
+  useEffect(() => {
+    fetchPollData()
+  }, [fetchPollData])
+
+  const defaultOption = (): PollOption => ({
+    text: "",
+    type: "text",
+    imageUrl: "",
+  })
 
   const addStation = () => {
     setStations([
       ...stations,
-      { id: stations.length + 1, options: [defaultOption()] },
+      {
+        id: stations.length + 1,
+        questionText: "",
+        descriptionText: "",
+        options: [defaultOption()],
+        isTextOnly: true,
+      },
     ])
   }
 
-  const removeStation = (id: number) => {
+  const removeStation = (id: number) =>
     setStations(stations.filter((station) => station.id !== id))
-  }
 
   const addOption = (stationIndex: number) => {
     const updatedStations = [...stations]
@@ -56,7 +86,7 @@ const CreatePandarPoll: React.FC = () => {
     const hasContent =
       currentOption.type === "text"
         ? !!currentOption.text
-        : !!currentOption.image
+        : !!currentOption.imageUrl
 
     if (hasContent) {
       setShowWarning(true)
@@ -72,46 +102,85 @@ const CreatePandarPoll: React.FC = () => {
     type: "text" | "image",
   ) => {
     const updatedStations = [...stations]
-    updatedStations[stationIndex].options[optionIndex].type = type
+    const station = updatedStations[stationIndex]
 
-    if (type === "image") {
-      updatedStations[stationIndex].options[optionIndex].image = ""
-    }
+    if (optionIndex === 0) station.isTextOnly = type === "text"
+    if (
+      (station.isTextOnly && type === "image") ||
+      (!station.isTextOnly && type === "text")
+    )
+      return
+
+    station.options[optionIndex].type = type
+    if (type === "image") station.options[optionIndex].imageUrl = ""
 
     setStations(updatedStations)
+    setIsButtonActive(true)
   }
 
-  const handleImageChange = (
-    stationIndex: number,
-    optionIndex: number,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const updatedStations = [...stations]
-      const reader = new FileReader()
+   const handleImageChange = async (
+     stationIndex: number,
+     optionIndex: number,
+     event: React.ChangeEvent<HTMLInputElement>,
+   ) => {
+     const file = event.target.files?.[0]
+     if (file) {
+       const formData = new FormData()
+       formData.append("file", file)
 
-      reader.onloadend = () => {
-        updatedStations[stationIndex].options[optionIndex].image =
-          reader.result as string
-        setStations(updatedStations)
-      }
+       try {
+         const { data } = await http
+           .service(true)
+           .post<{ url: string }>(apiRoutes.UPLOAD_IMAGE, formData)
+         const updatedStations = [...stations]
+         updatedStations[stationIndex].options[optionIndex].imageUrl = data.url
+         setStations(updatedStations)
+         setIsButtonActive(true)
+       } catch (error) {
+         console.error("Error uploading image:", error)
+       }
+     }
+   }
 
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleCaptionChange = (stationId: number, value: string) => {
-    setCaptions({
-      ...captions,
-      [stationId]: value,
-    })
-  }
-
+ const handleCaptionChange = (stationId: number, text: string) => {
+   setCaptions((prevCaptions) => ({ ...prevCaptions, [stationId]: text }))
+ }
   const confirmToggle = () => {
     const { stationIndex, optionIndex, targetType } = toggleDetails
     applyOptionToggle(stationIndex, optionIndex, targetType)
     setShowWarning(false)
+  }
+
+  const handleSubmit = async () => {
+    const formattedStations = stations.map((station) => ({
+      questionNumber: station.id,
+      questionText: station.questionText,
+      descriptionText: station.descriptionText,
+      answerOptions: station.options.map((option) => ({
+        questionNumber: station.id,
+        text: option.text,
+        file: option.type === "image" ? option.imageUrl : undefined,
+      })),
+    }))
+
+    try {
+      await http
+        .service()
+        .post(apiRoutes.PANDAR_POLLS, { stations: formattedStations, description })
+      setStations([
+        {
+          id: 1,
+          questionText: "",
+          descriptionText: "",
+          options: [defaultOption()],
+          isTextOnly: true,
+        },
+      ])
+      setIsButtonActive(false)
+      console.log("Poll created successfully")
+    } catch (error) {
+      console.error("Error creating poll:", error)
+    }
   }
 
   return (
@@ -149,6 +218,8 @@ const CreatePandarPoll: React.FC = () => {
           about.
         </p>
         <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
           placeholder="Add a description..."
         />
@@ -175,7 +246,6 @@ const CreatePandarPoll: React.FC = () => {
             placeholder="Ask your question here..."
           />
 
-          {/* Options */}
           {station.options.map((option, optionIndex) => (
             <div key={optionIndex} className="mb-6">
               <div className="flex items-center mb-2">
@@ -217,6 +287,12 @@ const CreatePandarPoll: React.FC = () => {
                   type="text"
                   className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
                   placeholder="Enter your option text..."
+                  onChange={(e) => {
+                    const updatedStations = [...stations]
+                    updatedStations[stationIndex].options[optionIndex].text =
+                      e.target.value
+                    setStations(updatedStations)
+                  }}
                 />
               ) : (
                 <div className="mb-4">
@@ -224,9 +300,9 @@ const CreatePandarPoll: React.FC = () => {
                     <div className="flex flex-col items-center mx-2">
                       <label className="cursor-pointer">
                         <div className="w-24 h-24 border border-dashed border-gray-300 rounded flex items-center justify-center">
-                          {option.image ? (
+                          {option.imageUrl ? (
                             <img
-                              src={option.image}
+                              src={option.imageUrl}
                               alt={`Option ${optionIndex + 1}`}
                               className="w-full h-full object-cover"
                             />
@@ -245,7 +321,6 @@ const CreatePandarPoll: React.FC = () => {
                           }
                         />
                       </label>
-
                       <div className="flex flex-col items-center mt-2">
                         <p className="mb-1 text-xs">
                           Write caption for image here (optional):
@@ -261,7 +336,7 @@ const CreatePandarPoll: React.FC = () => {
                           onInput={(e) =>
                             handleCaptionChange(
                               station.id,
-                              (e.target as HTMLDivElement).innerText,
+                              (e.target as HTMLElement).innerText, 
                             )
                           }
                         >
@@ -273,10 +348,9 @@ const CreatePandarPoll: React.FC = () => {
                 </div>
               )}
 
-              {/* Remove Option Button on the far right */}
               {station.options.length > 1 && (
                 <div className="flex justify-between">
-                  <div className="flex-1"></div> {/* Empty div for spacing */}
+                  <div className="flex-1"></div>
                   <button
                     type="button"
                     className="flex items-center text-secondary font-bold"
@@ -292,7 +366,6 @@ const CreatePandarPoll: React.FC = () => {
             </div>
           ))}
 
-          {/* Add Option Button always on the left under the last option */}
           <div className="flex justify-start">
             <button
               type="button"
@@ -317,17 +390,18 @@ const CreatePandarPoll: React.FC = () => {
         </button>
       </div>
 
-      {/* Submit Button */}
       <div className="mt-2 mb-16">
         <button
           type="submit"
           className="w-full py-2 px-4 bg-gradient-to-r from-secondary-100 to-tertiary-100 text-white rounded-md"
+          onClick={handleSubmit}
         >
           Create Poll
         </button>
       </div>
     </div>
   )
+
 }
 
 export default CreatePandarPoll
