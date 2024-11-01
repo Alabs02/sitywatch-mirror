@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import PandaPollOverlay from "./PandaPollOverlay";
 import { usePandarPollStore } from "@/store/pandar.store";
 import { http } from "@/libs";
-import { apiRoutes } from "@/constants/apiRoutes";
+import { apiRoutes,baseURI } from "@/constants/apiRoutes";
+import Cookies from "js-cookie"
+
 
 // Define option and station types
 interface Option {
@@ -81,17 +83,47 @@ const PandaPollCard1: React.FC = () => {
   const getPercentage = (votes: number, total: number) =>
     total > 0 ? ((votes / total) * 100).toFixed(1) : "0";
 
-  const onSubmitPoll = async (id: string) => {
-    try {
-      const response = await http
-        .service(false, { id })
-        .post(apiRoutes.PANDAR_POLLS_INTERACTIONS(id), selectedOptions);
+ const onSubmitPoll = async (id: string) => {
+   const accessToken = Cookies.get("ACCESS_TOKEN")
 
-      console.log({ response });
-    } catch (error: any) {
-      console.error({ error });
-    }
-  };
+   const selectedAnswers = Object.entries(selectedOptions)
+     .map(([key, optionIndex]) => {
+       if (optionIndex === null) return null
+       const poll = pollData.find((poll) => poll.id === id)
+       if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+         return null
+       return {
+         answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
+       }
+     })
+     .filter((answer) => answer && answer.answerOptionId !== null)
+
+   const payload = {
+     id,
+     selectedAnswers,
+   }
+
+   try {
+    const response = await http
+      .service(false)
+      .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        withCredentials: true, 
+      })
+      delete response.config.headers.id
+
+
+
+     console.log({ response })
+   } catch (error: any) {
+     console.error({ error })
+   }
+ }
+
+
+
 
   if (isFetching) return <div>Loading polls...</div>;
   if (error) return <div>Error loading polls: {error}</div>;
