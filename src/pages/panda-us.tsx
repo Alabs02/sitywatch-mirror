@@ -14,8 +14,8 @@ const pandaSection = {
       id: 1,
       icon: "add_circle",
       image: "/coreAssets/PandarUs/CreatePollHeader/poll.svg",
-      title: "Card Title",
-      description: "Card Description",
+      title: "Create Pandar Poll",
+      description: "Set up your own pandar poll to help others find their soul_pandars.You can ask those questions you don’t wanna ask in person andno one will know its you ... not even us."
     },
   ],
   polls: [
@@ -115,7 +115,7 @@ const PandaUs = () => {
                     exit={{ opacity: 0 }} 
                     transition={{ duration: 0.5 }} 
                   >
-                    <CreatePandarPoll /> {/* Smooth fade transition */}
+                    <CreatePandarPoll />
                   </motion.div>
                 )}
               </div>

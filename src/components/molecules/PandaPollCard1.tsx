@@ -39,106 +39,130 @@ interface Poll {
 }
 
 const PandaPollCard1: React.FC = () => {
-  const { pollData, fetchPollData, isFetching, error } = usePandarPollStore();
-  const [showOverlay, setShowOverlay] = useState(false);
+  const { pollData, fetchPollData, isFetching, error } = usePandarPollStore()
+  const [showOverlay, setShowOverlay] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: number | null;
-  }>({});
-  const [showResults, setShowResults] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
+    [key: string]: number | null
+  }>({})
+  const [showResults, setShowResults] = useState<{ [key: string]: boolean }>({})
+  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({})
+
+  const [countdowns, setCountdowns] = useState<{ [key: string]: string }>({})
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchPollData();
-    };
-    fetchData();
-  }, [fetchPollData]);
+      await fetchPollData()
+    }
+    fetchData()
+  }, [fetchPollData])
+
+  // Update countdowns for each poll every minute
+  useEffect(() => {
+    const calculateCountdown = (expiresAt: string) => {
+      const now = new Date().getTime()
+      const end = new Date(expiresAt).getTime()
+      const diff = end - now
+
+      if (diff <= 0) return "Expired"
+
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      )
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      return `${hours} hrs ${minutes} mins remaining`
+    }
+
+    const updateCountdowns = () => {
+      const updatedCountdowns: { [key: string]: string } = {}
+      pollData.forEach((poll) => {
+        updatedCountdowns[poll.id] = calculateCountdown(poll.expiresAt)
+      })
+      setCountdowns(updatedCountdowns)
+    }
+
+    updateCountdowns()
+    // Update every 1 minute
+    const intervalId = setInterval(updateCountdowns, 60000)
+    // Cleanup on component unmount
+    return () => clearInterval(intervalId)
+  }, [pollData])
 
   useEffect(() => {
-    console.log("Fetched Poll Data:", pollData);
-  }, [pollData]);
+    console.log("Fetched Poll Data:", pollData)
+  }, [pollData])
 
   const toggleOverlay = () => {
-    setShowOverlay(!showOverlay);
-  };
+    setShowOverlay(!showOverlay)
+  }
 
   const handleOptionSelect = (key: string, optionIndex: number) => {
-    setSelectedOptions((prev) => ({ ...prev, [key]: optionIndex }));
-    setShowResults((prev) => ({ ...prev, [key]: true }));
-  };
+    setSelectedOptions((prev) => ({ ...prev, [key]: optionIndex }))
+    setShowResults((prev) => ({ ...prev, [key]: true }))
+  }
 
   const toggleExpandedPoll = (pollId: string) => {
-    setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }));
-  };
+    setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
+  }
 
   // Calculate the total votes for a set of options, handling undefined interactions
   const getTotalVotes = (options: Option[]) =>
-    options.reduce(
-      (sum, option) => sum + (option.interactions?.length || 0),
-      0
-    );
+    options.reduce((sum, option) => sum + (option.interactions?.length || 0), 0)
 
   const getPercentage = (votes: number, total: number) =>
-    total > 0 ? ((votes / total) * 100).toFixed(1) : "0";
+    total > 0 ? ((votes / total) * 100).toFixed(1) : "0"
 
- const onSubmitPoll = async (id: string) => {
-   const accessToken = Cookies.get("ACCESS_TOKEN")
+  const onSubmitPoll = async (id: string) => {
+    const accessToken = Cookies.get("ACCESS_TOKEN")
 
-   const selectedAnswers = Object.entries(selectedOptions)
-     .map(([key, optionIndex]) => {
-       if (optionIndex === null) return null
-       const poll = pollData.find((poll) => poll.id === id)
-       if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
-         return null
-       return {
-         answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
-       }
-     })
-     .filter((answer) => answer && answer.answerOptionId !== null)
-
-   const payload = {
-     id,
-     selectedAnswers,
-   }
-
-   try {
-    const response = await http
-      .service(false)
-      .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true, 
+    const selectedAnswers = Object.entries(selectedOptions)
+      .map(([key, optionIndex]) => {
+        if (optionIndex === null) return null
+        const poll = pollData.find((poll) => poll.id === id)
+        if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+          return null
+        return {
+          answerOptionId:
+            poll.stations[0].answerOptions[optionIndex].id || null,
+        }
       })
+      .filter((answer) => answer && answer.answerOptionId !== null)
+
+    const payload = {
+      id,
+      selectedAnswers,
+    }
+
+    try {
+      const response = await http
+        .service(false)
+        .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        })
       delete response.config.headers.id
 
+      console.log({ response })
+    } catch (error: any) {
+      console.error({ error })
+    }
+  }
 
-
-     console.log({ response })
-   } catch (error: any) {
-     console.error({ error })
-   }
- }
-
-
-
-
-  if (isFetching) return <div>Loading polls...</div>;
-  if (error) return <div>Error loading polls: {error}</div>;
+  if (isFetching) return <div>Loading polls...</div>
+  if (error) return <div>Error loading polls: {error}</div>
 
   return (
-    <>
+    <div className="-mb-32">
       {pollData.map((poll) => {
-        const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions);
+        const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
 
         return (
           <>
             {pollData.map((poll) => {
               const pollTotalVotes = getTotalVotes(
-                poll.stations[0].answerOptions
-              );
+                poll.stations[0].answerOptions,
+              )
 
               return (
                 <div
@@ -148,7 +172,7 @@ const PandaPollCard1: React.FC = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
                       <Image
-                        src="/coreAssets/PandarUs/panda.gif"
+                        src="/pandar-img.png"
                         alt={poll.pollOwnerAlias}
                         width={70}
                         height={70}
@@ -159,7 +183,7 @@ const PandaPollCard1: React.FC = () => {
                           {poll.pollOwnerAlias}
                         </p>
                         <p className="text-gray-800 text-xs md:text-sm">
-                          {poll.expiresAt}
+                          {countdowns[poll.id]}
                         </p>
                       </div>
                     </div>
@@ -177,7 +201,7 @@ const PandaPollCard1: React.FC = () => {
 
                   <div className="flex flex-col space-y-2 items-center">
                     {poll.stations[0].answerOptions.map((option, index) => {
-                      const optionKey = `poll-${poll.id}-option-${index}`;
+                      const optionKey = `poll-${poll.id}-option-${index}`
                       return (
                         <div key={index} className="w-full">
                           <div className="flex items-center">
@@ -214,7 +238,7 @@ const PandaPollCard1: React.FC = () => {
                                   animate={{
                                     width: `${getPercentage(
                                       option.interactions?.length || 0,
-                                      pollTotalVotes
+                                      pollTotalVotes,
                                     )}%`,
                                   }}
                                   transition={{ duration: 0.5 }}
@@ -223,14 +247,14 @@ const PandaPollCard1: React.FC = () => {
                               <span className="text-xs text-secondary">
                                 {getPercentage(
                                   option.interactions?.length || 0,
-                                  pollTotalVotes
+                                  pollTotalVotes,
                                 )}
                                 %
                               </span>
                             </div>
                           )}
                         </div>
-                      );
+                      )
                     })}
                   </div>
 
@@ -270,7 +294,7 @@ const PandaPollCard1: React.FC = () => {
                             </p>
                             <div className="flex flex-col space-y-2 items-center">
                               {station.answerOptions.map((option, idx) => {
-                                const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`;
+                                const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`
                                 return (
                                   <div key={idx} className="w-full">
                                     <div className="flex items-center">
@@ -282,7 +306,7 @@ const PandaPollCard1: React.FC = () => {
                                         onChange={() =>
                                           handleOptionSelect(
                                             `poll-${poll.id}-station-${station.id}`,
-                                            idx
+                                            idx,
                                           )
                                         }
                                         disabled={
@@ -317,7 +341,7 @@ const PandaPollCard1: React.FC = () => {
                                               width: `${getPercentage(
                                                 option.interactions?.length ||
                                                   0,
-                                                pollTotalVotes
+                                                pollTotalVotes,
                                               )}%`,
                                             }}
                                             transition={{ duration: 0.5 }}
@@ -326,14 +350,14 @@ const PandaPollCard1: React.FC = () => {
                                         <span className="text-xs text-secondary">
                                           {getPercentage(
                                             option.interactions?.length || 0,
-                                            pollTotalVotes
+                                            pollTotalVotes,
                                           )}
                                           %
                                         </span>
                                       </div>
                                     )}
                                   </div>
-                                );
+                                )
                               })}
                             </div>
                           </div>
@@ -387,13 +411,13 @@ const PandaPollCard1: React.FC = () => {
 
                   {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
                 </div>
-              );
+              )
             })}
           </>
-        );
+        )
       })}
-    </>
-  );
+    </div>
+  )
 };
 
 export default PandaPollCard1;

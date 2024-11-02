@@ -44,7 +44,7 @@ const SoulPanda = () => {
             <span className="material-symbols-outlined text-lg mr-1">
               send_money
             </span>{" "}
-            PANDAR
+            SCENT
           </button>
           <button className="rounded-full text-[10px] md:text-[12px] px-[35%] md:px-[42%] py-[2%] md:py-[2%] inline-flex items-center mb-4 text-[#F24055] font-semibold border border-[#F24055] hover:bg-gradient-to-b hover:from-[#F24055] hover:to-[#1E7881] hover:text-white">
             VIEW POLL
@@ -91,7 +91,7 @@ const SoulPanda = () => {
             <span className="material-symbols-outlined text-lg mr-1">
               send_money
             </span>{" "}
-            PANDAR
+            SCENT
           </button>
           <button className="rounded-full text-[10px] md:text-[12px] px-[35%] md:px-[42%] py-[2%] md:py-[2%] inline-flex items-center mb-4 text-[#F24055] font-semibold border border-[#F24055] hover:bg-gradient-to-b hover:from-[#F24055] hover:to-[#1E7881] hover:text-white">
             VIEW POLL
