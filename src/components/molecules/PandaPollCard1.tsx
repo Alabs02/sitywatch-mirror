@@ -48,6 +48,15 @@ const PandaPollCard1: React.FC = () => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({})
 
   const [countdowns, setCountdowns] = useState<{ [key: string]: string }>({})
+  const [isSubmitting, setIsSubmitting] = useState<{ [key: string]: boolean }>(
+    {},
+  )
+  const [expiredPolls, setExpiredPolls] = useState<{ [key: string]: boolean }>(
+    {},
+  )
+   const [isPandering, setIsPandering] = useState<{ [key: string]: boolean }>(
+     {},
+   )
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,10 +83,15 @@ const PandaPollCard1: React.FC = () => {
 
     const updateCountdowns = () => {
       const updatedCountdowns: { [key: string]: string } = {}
+      const updatedExpiredPolls: { [key: string]: boolean } = {}
       pollData.forEach((poll) => {
-        updatedCountdowns[poll.id] = calculateCountdown(poll.expiresAt)
+        const countdown = calculateCountdown(poll.expiresAt)
+        updatedCountdowns[poll.id] = countdown
+        updatedExpiredPolls[poll.id] = countdown === "Expired"
       })
+
       setCountdowns(updatedCountdowns)
+      setExpiredPolls(updatedExpiredPolls)
     }
 
     updateCountdowns()
@@ -111,8 +125,9 @@ const PandaPollCard1: React.FC = () => {
   const getPercentage = (votes: number, total: number) =>
     total > 0 ? ((votes / total) * 100).toFixed(1) : "0"
 
-  const onSubmitPoll = async (id: string) => {
-    const accessToken = Cookies.get("ACCESS_TOKEN")
+ const onSubmitPoll = async (id: string) => {
+   setIsPandering((prev) => ({ ...prev, [id]: true }))
+   const accessToken = Cookies.get("ACCESS_TOKEN")
 
     const selectedAnswers = Object.entries(selectedOptions)
       .map(([key, optionIndex]) => {
@@ -127,42 +142,56 @@ const PandaPollCard1: React.FC = () => {
       })
       .filter((answer) => answer && answer.answerOptionId !== null)
 
-    const payload = {
-      id,
-      selectedAnswers,
-    }
+    const payload = { id, selectedAnswers }
 
-    try {
-      const response = await http
-        .service(false)
-        .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          withCredentials: true,
-        })
-      delete response.config.headers.id
 
-      console.log({ response })
-    } catch (error: any) {
-      console.error({ error })
+   try {
+     const response = await http
+       .service(false)
+       .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+         headers: {
+           Authorization: `Bearer ${accessToken}`,
+         },
+         withCredentials: true,
+       })
+     delete response.config.headers.id
+
+     console.log({ response })
+   } catch (error: any) {
+     console.error({ error })
+   } finally {
+     setIsSubmitting((prev) => ({ ...prev, [id]: false }))
+   }
+ }
+
+ // Styles for the ellipsis animation
+ const ellipsisStyle = `
+    @keyframes ellipsis {
+      0% { opacity: 0; }
+      33% { opacity: 1; }
+      66% { opacity: 0; }
     }
-  }
+    .dot1 { animation: ellipsis 1s infinite; animation-delay: 0s; }
+    .dot2 { animation: ellipsis 1s infinite; animation-delay: 0.33s; }
+    .dot3 { animation: ellipsis 1s infinite; animation-delay: 0.66s; }
+  `
+
 
   if (isFetching) return <div>Loading polls...</div>
   if (error) return <div>Error loading polls: {error}</div>
 
   return (
     <div className="-mb-32">
+      <style>{ellipsisStyle}</style>
       {pollData.map((poll) => {
         const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
-
-        return (
-          <>
-            {pollData.map((poll) => {
-              const pollTotalVotes = getTotalVotes(
-                poll.stations[0].answerOptions,
-              )
+        const isPollExpired = expiredPolls[poll.id]
+        // return (
+        //   <>
+        //     {pollData.map((poll) => {
+        //       const pollTotalVotes = getTotalVotes(
+        //         poll.stations[0].answerOptions,
+        //       )
 
               return (
                 <div
@@ -403,9 +432,28 @@ const PandaPollCard1: React.FC = () => {
                   <div className="flex w-full mx-auto items-center justify-center mb-4">
                     <button
                       onClick={() => onSubmitPoll(poll.id)}
-                      className="rounded-full text-xs md:text-sm px-[42%] py-[2%] bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100 font-semibold"
+                      className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
+                        isPandering[poll.id] ||
+                        countdowns[poll.id] === "Expired"
+                          ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                          : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
+                      }`}
+                      disabled={
+                        isPandering[poll.id] ||
+                        countdowns[poll.id] === "Expired"
+                      }
                     >
-                      PANDAR
+                      {countdowns[poll.id] === "Expired" ? (
+                        "Expired"
+                      ) : isPandering[poll.id] ? (
+                        <>
+                          Pandaring<span className="dot1">.</span>
+                          <span className="dot2">.</span>
+                          <span className="dot3">.</span>
+                        </>
+                      ) : (
+                        "PANDAR"
+                      )}
                     </button>
                   </div>
 
@@ -413,9 +461,9 @@ const PandaPollCard1: React.FC = () => {
                 </div>
               )
             })}
-          </>
+          {/* </>
         )
-      })}
+      })} */}
     </div>
   )
 };

@@ -188,15 +188,32 @@ const CreatePandarPoll: React.FC = () => {
   }
 
   return (
-    <div className="border rounded-lg p-6 bg-neutral-100 shadow-md my-4">
-      <h2 className="text-lg font-bold mb-4">Create a New Poll</h2>
-
+    <div className="border rounded-lg p-6 bg-neutral-100 shadow-md mb-32">
+      <div className="flex items-center justify-center mb-4">
+        <div className="mr-2 rounded-full">
+          <img src="/create-poll-img.png" alt="poll top img" />
+        </div>
+        <div className="flex flex-col">
+          <h2 className="text-sm font-bold">Create your pandar poll</h2>
+          <span className="text-[10px] text-tertiary-200 font-semibold">
+            All pandar polls disappear after 24 hours
+          </span>
+        </div>
+      </div>
+      {/* Description Text Field */}
+      {/* <textarea
+        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+        placeholder="Write a short description for your poll..."
+        value={station.descriptionText} 
+        onChange={(e) => {
+          const updatedStations = [...stations]
+          updatedStations[stationIndex].descriptionText = e.target.value
+          setStations(updatedStations)
+        }}
+      /> */}
       {showWarning && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div
-            className="bg-white   
- p-4 rounded-md text-center"
-          >
+          <div className="bg-white p-4 rounded-md text-center">
             <p className="mb-4">
               You will lose your current input if you switch. Proceed?
             </p>
@@ -221,28 +238,18 @@ const CreatePandarPoll: React.FC = () => {
         <div key={station.id} className="mb-6">
           {/* Station details */}
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-lg font-medium">
+            <label className="block text-sm font-semibold text-secondary">
               Station {station.id}
             </label>
             <span
-              className="text-sm flex items-center cursor-pointer text-secondary"
+              className="flex items-center cursor-pointer text-[10px] text-tertiary-200 font-semibold"
               onClick={() => removeStation(station.id)}
             >
               Remove station
               <span className="material-symbols-outlined ml-1">more_horiz</span>
             </span>
           </div>
-          {/* Description Text Field */}
-          <textarea
-            className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-            placeholder="Write a short description for your poll..."
-            value={station.descriptionText} // Bind to descriptionText
-            onChange={(e) => {
-              const updatedStations = [...stations]
-              updatedStations[stationIndex].descriptionText = e.target.value
-              setStations(updatedStations)
-            }}
-          />
+          {/* Description Text comes here if needed */}
           {/* Question Text Field */}
 
           <textarea
@@ -260,7 +267,7 @@ const CreatePandarPoll: React.FC = () => {
           {station.options.map((option, optionIndex) => (
             <div key={optionIndex} className="mb-6">
               <div className="flex items-center mb-2">
-                <label className="block text-tertiary-300 mr-4">
+                <label className="block mr-4 text-[12px] text-tertiary-200 font-semibold">
                   Option {optionIndex + 1}
                 </label>
                 <div className="flex space-x-2 items-center">
@@ -400,10 +407,10 @@ const CreatePandarPoll: React.FC = () => {
         </button>
       </div>
 
-      <div className="mt-2 mb-16">
+      <div className="mt-4">
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-gradient-to-r from-secondary-100 to-tertiary-100 text-white rounded-md"
+          className="w-full py-2 px-4 bg-secondary text-white rounded-full"
           onClick={handleSubmit}
         >
           Create Poll
@@ -414,5 +421,3 @@ const CreatePandarPoll: React.FC = () => {
 }
 
 export default CreatePandarPoll
-
-

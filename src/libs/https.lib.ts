@@ -4,146 +4,183 @@ import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
-  AxiosHeaders,
-} from "axios";
-import Cookies from "js-cookie";
-import { useAuthStore } from "@/store";
-import { apiRoutes, baseURI } from "@/constants/apiRoutes";
-
+  HeadersDefaults,
+} from "axios"
+import Cookies from "js-cookie"
+import { useAuthStore } from "@/store"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
 class HttpService {
-  private http: AxiosInstance;
+  private http: AxiosInstance
 
   constructor(baseURL: string = baseURI) {
-    // Create an Axios instance with default settings
     this.http = axios.create({
       baseURL,
-      withCredentials: false,
-      headers: new AxiosHeaders({
-        "Content-Type": "application/json",
-      }) as AxiosHeaders,
-    });
+      withCredentials: true, // Enable credentials for cross-origin requests
+      headers: {
+        common: {
+          "Content-Type": "application/json",
+          ...this.getAuthorization(),
+        },
+      } as HeadersDefaults,
+    })
 
-    // Set up request interceptor for authentication
-    // this.http.interceptors.request.use(
-    //   this.handleRequest.bind(this),
-    //   this.handleError.bind(this)
-    // );
-
-    // Set up response interceptor to refresh token on 401 error
     this.http.interceptors.response.use(
-      response => response,
-      this.handleResponseError.bind(this)
-    );
+      (response) => response,
+      this.handleResponseError.bind(this),
+    )
   }
 
-  public service(hasAttachment: boolean = false, customHeaders: any = {}) {
-    this.http.defaults.headers = this.setupHeaders(hasAttachment, customHeaders);
-    return this;
+  public service(
+    hasAttachment: boolean = false,
+    customHeaders: Record<string, string> = {},
+  ) {
+    this.http.defaults.headers.common = this.setupHeaders(
+      hasAttachment,
+      customHeaders,
+    )
+    return this
   }
 
-  private setupHeaders(hasAttachment = false, customHeaders: any = {}): any {
-    return hasAttachment
-      ? { "Content-Type": "multipart/form-data", ...this.getAuthorization(), ...customHeaders }
-      : { "Content-Type": "application/json", ...this.getAuthorization(), ...customHeaders };
+  private setupHeaders(
+    hasAttachment = false,
+    customHeaders: Record<string, string> = {},
+  ): Record<string, string> {
+    const headers: Record<string, string> = hasAttachment
+      ? {
+          "Content-Type": "multipart/form-data",
+          ...this.getAuthorization(),
+          ...customHeaders,
+        }
+      : {
+          "Content-Type": "application/json",
+          ...this.getAuthorization(),
+          ...customHeaders,
+        }
+
+    console.log("Setting up headers:", headers)
+    return Object.fromEntries(
+      Object.entries(headers).filter(([, value]) => value !== undefined),
+    )
   }
 
-  private getAuthorization() {
+  private getAuthorization(): Record<string, string> {
     const token = Cookies.get("ACCESS_TOKEN")
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-
-  private async handleRequest(config: InternalAxiosRequestConfig): Promise<any> {
-    // const { tokens } = useAuthStore.getState();
-    // if (tokens?.accessToken) {
-    //   // Create or cast headers as AxiosHeaders to ensure compatibility
-    //   const headers = config.headers as AxiosHeaders;
-    //   headers.set("Authorization", `Bearer ${tokens.accessToken}`);
-    // }
-    // return config;
-    return;
-  }
-
-  private handleError(error: AxiosError): Promise<never> {
-    return Promise.reject(error);
+    console.log("Retrieved access token:", token) // Debugging log
+    return token ? { Authorization: `Bearer ${token}` } : {}
   }
 
   private async handleResponseError(error: AxiosError): Promise<any> {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+      originalRequest._retry = true
       try {
-        const newAccessToken = await refreshTokens();
-        // Set new Authorization header using AxiosHeaders
-        const headers = originalRequest.headers as AxiosHeaders;
-        headers.set("Authorization", `Bearer ${newAccessToken}`);
-        return this.http(originalRequest);
+        console.log("Attempting token refresh after 401 error") // Debugging log
+        const newAccessToken = await refreshTokens()
+        originalRequest.headers = originalRequest.headers || {}
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
+        return this.http(originalRequest)
       } catch (err) {
-        useAuthStore.getState().logout();
-        return Promise.reject(err);
+        console.error("Token refresh failed, logging out") // Debugging log
+        useAuthStore.getState().logout()
+        return Promise.reject(err)
       }
     }
-    return Promise.reject(error);
+    console.error("Request failed with error:", error) // Debugging log
+    return Promise.reject(error)
   }
 
-  // Method for GET requests
-  public get<T>(url: string, params?: object, options?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.http.get<T>(url, { ...options, params });
+  public get<T>(
+    url: string,
+    params?: object,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    console.log(`GET request to ${url} with params`, params) // Debugging log
+    return this.http.get<T>(url, { ...options, params })
   }
 
-  // Method for POST requests
-  public post<T>(url: string, data?: object, options?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.http.post<T>(url, data, options);
+  public post<T>(
+    url: string,
+    data?: object,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    console.log(`POST request to ${url} with data`, data) // Debugging log
+    return this.http.post<T>(url, data, options)
   }
 
-  // Method for PUT requests
-  public put<T>(url: string, data?: object, options?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.http.put<T>(url, data, options);
+  public put<T>(
+    url: string,
+    data?: object,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    console.log(`PUT request to ${url} with data`, data) // Debugging log
+    return this.http.put<T>(url, data, options)
   }
 
-  // Method for DELETE requests
-  public delete<T>(url: string, options?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.http.delete<T>(url, options);
+  public delete<T>(
+    url: string,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    console.log(`DELETE request to ${url}`) // Debugging log
+    return this.http.delete<T>(url, options)
   }
 }
 
-export const http = new HttpService();
+export const http = new HttpService()
 
 // Function to refresh tokens
 const refreshTokens = async (): Promise<string> => {
-  const { tokens, setTokens, logout } = useAuthStore.getState();
+  const { tokens, setTokens, logout } = useAuthStore.getState()
 
   if (!tokens?.refreshToken) {
-    console.error("No refresh token available");
-    logout();
-    throw new Error("No refresh token available");
+    console.error("No refresh token available")
+    logout()
+    throw new Error("No refresh token available")
   }
 
   console.log("Refreshing tokens with:", {
     refreshToken: tokens.refreshToken,
     sessionId: tokens.sessionId,
-  });
+  })
 
   try {
-    const response = await axios.post( `${baseURI}${apiRoutes.REFRESH_TOKEN}`, {
+    const response = await axios.post(`${baseURI}${apiRoutes.REFRESH_TOKEN}`, {
       refreshToken: tokens.refreshToken,
       sessionId: tokens.sessionId,
-    });
+    })
 
-    console.log("Refresh tokens response:", response);
+    console.log("Refresh tokens response:", response)
 
     if (response.status === 200) {
-      const { accessToken, refreshToken, sessionId } = response.data.success;
-      setTokens({ accessToken, refreshToken, sessionId });
-      return accessToken;
+      const { accessToken, refreshToken, sessionId } = response.data.success
+      setTokens({ accessToken, refreshToken, sessionId })
+
+      // Setting new access token in cookies with SameSite=None; Secure
+      Cookies.set("ACCESS_TOKEN", accessToken, {
+        sameSite: "None",
+        secure: true,
+      })
+      Cookies.set("REFRESH_TOKEN", refreshToken, {
+        sameSite: "None",
+        secure: true,
+      })
+      Cookies.set("SESSION_ID", sessionId, {
+        sameSite: "None",
+        secure: true,
+      })
+
+      return accessToken
     } else {
-      logout();
-      throw new Error("Failed to refresh token");
+      console.error("Failed to refresh token, logging out")
+      logout()
+      throw new Error("Failed to refresh token")
     }
   } catch (error) {
-    console.error("Error refreshing tokens:", error);
-    logout();
-    throw error;
+    console.error("Error refreshing tokens:", error)
+    logout()
+    throw error
   }
-};
+}

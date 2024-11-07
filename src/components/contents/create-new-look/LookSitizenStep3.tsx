@@ -1,4 +1,3 @@
-// src/components/LookSitizenStep3.tsx
 import React, { FC, Fragment } from "react"
 import Link from "next/link"
 
@@ -8,6 +7,12 @@ import { http } from "@/libs"
 // STORE
 import { useAuthStore, School } from "@/store"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
+
+// Define an interface for the response structure
+interface SignUpResponse {
+  statusCode: number
+  message: string
+}
 
 interface StepProps {
   onNext: () => void
@@ -81,61 +86,57 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
   }
 
   const onSubmit = async () => {
-    
-    
-
-      const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
-        const { status, course, confirmedSchool, school } = item
-        return {
-          school: {
-            ...school,
-            type: Number(school.type) || 0,
-          },
-          course,
-          confirmedSchool,
-          status: Number(status) || 0,
-        }
-      })
-
-      const payload = {
-        email: authStore.form.email,
-        password: authStore.form.password,
-        name: authStore.form.name,
-        phone: authStore.form.phone,
-        countryCode: authStore.form.countryCode || "defaultCountryCode",
-        rawSchoolingList,
-        interests: authStore.form.interests,
+    const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
+      const { status, course, confirmedSchool, school } = item
+      return {
+        school: {
+          ...school,
+          type: Number(school.type) || 0,
+        },
+        course,
+        confirmedSchool,
+        status: Number(status) || 0,
       }
+    })
 
-      try {
-        authStore.setUI("loading", true)
+    const payload = {
+      email: authStore.form.email,
+      password: authStore.form.password,
+      name: authStore.form.name,
+      phone: authStore.form.phone,
+      countryCode: authStore.form.countryCode || "defaultCountryCode",
+      rawSchoolingList,
+      interests: authStore.form.interests,
+    }
 
-        const response = await http.post(
-          `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
-          payload,
-        )
+    try {
+      authStore.setUI("loading", true)
 
-        if ([200, 201].includes(response.status)) {
-          const tokenMatch = response.data.message.match(/token=(.*)$/)
-          const token = tokenMatch ? tokenMatch[1] : null
+      const response = await http.post<SignUpResponse>(
+        `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
+        payload,
+      )
 
-          if (token) {
-            authStore.setForm("emailToken", token)
-            
-            onNext()
-          } else {
-            alert("Registration successful, but no token received.")
-          }
+      if ([200, 201].includes(response.status)) {
+        const tokenMatch = response.data.message.match(/token=(.*)$/)
+        const token = tokenMatch ? tokenMatch[1] : null
+
+        if (token) {
+          authStore.setForm("emailToken", token)
+          onNext()
         } else {
-          authStore.setUI("error", response.data.message)
-          alert(response.data.message || "Registration failed.")
+          alert("Registration successful, but no token received.")
         }
-      } catch (error: any) {
-        authStore.setUI("error", error.message || "Registration failed.")
-        alert(error.message || "Registration failed.")
-      } finally {
-        authStore.setUI("loading", false)
+      } else {
+        authStore.setUI("error", response.data.message)
+        alert(response.data.message || "Registration failed.")
       }
+    } catch (error: any) {
+      authStore.setUI("error", error.message || "Registration failed.")
+      alert(error.message || "Registration failed.")
+    } finally {
+      authStore.setUI("loading", false)
+    }
   }
 
   return (
@@ -263,46 +264,43 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
               />
             </label>
             <label className="text-sm flex items-center">
-              Dropout
+              Other
               <input
                 type="radio"
                 name={`school-status-type-${index}`}
-                value="2"
-                checked={formItem.status === "2"}
+                value="OTHER"
+                checked={formItem.status === "OTHER"}
                 onChange={(e) => handleStatusChange(index, e.target.value)}
                 className="ml-2 text-black"
               />
             </label>
           </div>
 
-          <div className="mb-6 mt-2">
-            <label className="block text-sm font-semibold mb-1 text-center">
-              What did you study?
-            </label>
-            <p className="text-sm text-center mb-2">
-              (Add more if you have studied multiple courses)
-            </p>
-            <input
-              type="text"
-              value={formItem.course}
-              onChange={(e) => handleCourseChange(index, e.target.value)}
-              placeholder="Example: Computer Science"
-              className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-            />
-          </div>
+          <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+            What course of study did you pursue?
+          </h2>
+          <input
+            type="text"
+            value={formItem.course}
+            onChange={(e) => handleCourseChange(index, e.target.value)}
+            placeholder="Example: Computer Science"
+            className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+          />
         </div>
       ))}
 
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between items-center my-4">
         <button
+          type="button"
           onClick={onBack}
-          className="p-2 bg-gray-300 text-black rounded-xl"
+          className="bg-gray-300 p-2 rounded shadow-md"
         >
           Back
         </button>
         <button
+          type="button"
           onClick={onSubmit}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-xl"
+          className="bg-blue-500 text-white p-2 rounded shadow-md"
         >
           Next
         </button>

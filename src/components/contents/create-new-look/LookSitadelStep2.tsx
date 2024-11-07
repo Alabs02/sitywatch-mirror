@@ -20,6 +20,10 @@ interface StepProps {
   onNext: () => void
   onBack: () => void
 }
+interface SignUpResponse {
+  statusCode: number
+  message: string
+}
 
 const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const [showBars, setShowBars] = useState(false)
@@ -28,14 +32,12 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const [nicheValues, setNicheValues] = useState<string[]>([])
   const maxNiches = 5
   const authStore = useAuthStore()
-
   const handleNext = async () => {
     if (nicheValues.length === 0) {
       alert("Please add at least one niche.")
       return
     }
 
-    // Preparing payload for API
     const niches = nicheValues.map((niche) => ({
       value: niche,
       verified: true,
@@ -53,18 +55,19 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
 
     try {
       authStore.setUI("loading", true)
-      const response = await http.post(
+      const response = await http.post<SignUpResponse>(
         `${baseURI}${apiRoutes.SITADELS_SIGN_UP}`,
         payload,
       )
 
-      if ([200, 201].includes(response.status)) {
-        const tokenMatch = response.data.message.match(/token=(.*)$/)
-        const token = tokenMatch ? tokenMatch[1] : null
+      if (response.status === 201) {
+        const verificationLinkMatch =
+          response.data.message.match(/token=([\w.-]+)/)
+        const token = verificationLinkMatch ? verificationLinkMatch[1] : null
 
         if (token) {
           authStore.setForm("emailToken", token)
-          onNext() // Move to next step
+          onNext()
         } else {
           alert("Registration successful, but no token received.")
         }
