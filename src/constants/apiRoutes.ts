@@ -11,4 +11,5 @@ export const apiRoutes = {
   PANDAR_POLLS_INTERACTIONS: (id: string) => `pandar-polls/${id}/interactions`,
   UPLOAD_IMAGE: "images",
   GET_IMAGE: (id: string) => `images/${id}`,
+  CHECK_EMAIL: (email: string) => `accounts/${email}/checkEmail`,
 }

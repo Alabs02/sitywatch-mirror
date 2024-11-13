@@ -1,7 +1,5 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import Image from "next/image"
-
-// STORE
 import { useAuthStore } from "@/store"
 
 interface StepProps {
@@ -11,36 +9,94 @@ interface StepProps {
 
 const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const authStore = useAuthStore()
-  const { form } = useAuthStore() 
-  const [confirmPassword, setConfirmPassword] = useState(
-    authStore.form.confirmPassword,
-  )
+  const { form } = authStore
+  const [confirmPassword, setConfirmPassword] = useState(form.confirmPassword)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordsMatch, setPasswordsMatch] = useState(true)
+  const [isEmailValid, setIsEmailValid] = useState(true)
+  const [phoneValid, setPhoneValid] = useState(true)
+  const [emailChecked, setEmailChecked] = useState(false)
+  const [isLoadingEmail, setIsLoadingEmail] = useState(false)
 
-  const handleNext = () => {
-    if (
-      !authStore.form.name ||
-      !authStore.form.shortName ||
-      !authStore.form.email ||
-      !authStore.form.phone ||
-      !authStore.form.password ||
-      !confirmPassword
-    ) {
-      alert("Please fill out all fields.")
-      return
-    }
 
-    if (authStore.form.password !== confirmPassword) {
-      setPasswordsMatch(false)
-      return
-    }
 
-    // Store confirmPassword in the store as well
-    authStore.setForm("confirmPassword", confirmPassword)
-    onNext() // Proceed to the next step
+ let timeoutId: NodeJS.Timeout
+
+ const debounce = <T extends (...args: any[]) => void>(
+   func: T,
+   delay: number,
+ ): T => {
+   return ((...args: Parameters<T>) => {
+     clearTimeout(timeoutId)
+     timeoutId = setTimeout(() => func(...args), delay)
+   }) as T
+ }
+
+ const checkEmail = async () => {
+   if (form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+     setIsLoadingEmail(true)
+     const isAvailable = await authStore.checkEmail(form.email)
+     setIsEmailValid(isAvailable) // Interpret boolean response
+     setIsLoadingEmail(false)
+   } else {
+     setIsEmailValid(false)
+   }
+ }
+
+ const debouncedCheckEmail = debounce(checkEmail, 500)
+
+ const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   e.preventDefault() 
+   const newEmail = e.target.value
+   authStore.setForm("email", newEmail)
+
+   // Validate format locally; API call handles availability check
+   setIsEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail))
+   debouncedCheckEmail()
+ }
+
+ const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
+   event.preventDefault()
+   if (
+     !form.firstName ||
+     !form.lastName ||
+     !form.shortName ||
+     !form.email ||
+     !form.phone ||
+     !form.password ||
+     !confirmPassword
+   ) {
+     alert("Please fill out all fields.")
+     return
+   }
+
+   if (!isEmailValid) {
+     alert("Please enter a valid and available email address.")
+     return
+   }
+
+   if (!phoneValid) {
+     alert("Please enter a valid Nigerian phone number.")
+     return
+   }
+
+   if (form.password !== confirmPassword) {
+     setPasswordsMatch(false)
+     return
+   }
+
+   authStore.setForm("confirmPassword", confirmPassword)
+   onNext()
+ }
+
+  // Nigerian phone number validation function
+  const validatePhoneNumber = (phone: string) => {
+    const nigerianPhoneRegex = /^(0\d{10}|[7-9]\d{9})$/
+    setPhoneValid(nigerianPhoneRegex.test(phone))
   }
+
+
 
   const handleShortNameChange = (value: string) => {
     if (!value.startsWith("@")) {
@@ -50,46 +106,57 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
     }
   }
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev)
-  }
-
-  const toggleConfirmPasswordVisibility = () => {
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev)
+  const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword((prev) => !prev)
-  }
 
   return (
     <div className="h-full overflow-y-auto">
-      {/* Name Field */}
+      {/* First Name Field */}
       <h2 className="text-sm font-semibold text-center mt-6 mb-1">
-        What is your name?
+        First Name
       </h2>
-      <p className="text-xs text-center mb-1 italic">
-        Tell us your name, preferably your first and last name. You can add a
-        middle name if you like.
-      </p>
       <input
         type="text"
-        name="name"
-        value={form.name}
-        onChange={(e) => authStore.setForm("name", e.target.value)}
-        placeholder="Example: John Pharrel"
+        name="firstName"
+        value={form.firstName}
+        onChange={(e) => authStore.setForm("firstName", e.target.value)}
+        placeholder="Example: John"
         className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
+
+      {/* Last Name Field */}
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">Last Name</h2>
+      <input
+        type="text"
+        name="lastName"
+        value={form.lastName}
+        onChange={(e) => authStore.setForm("lastName", e.target.value)}
+        placeholder="Example: Doe"
+        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
+
+      {/* Other Names Field */}
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+        Other Names (Optional)
+      </h2>
+      <input
+        type="text"
+        name="otherNames"
+        value={form.otherNames}
+        onChange={(e) => authStore.setForm("otherNames", e.target.value)}
+        placeholder="Middle name(s)"
+        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
 
       {/* Short Name Field */}
       <h2 className="text-sm font-semibold text-center mt-2 mb-1">
         How should we refer to you on Sitywatch?
       </h2>
-      <p className="text-xs text-center mb-1 italic">
-        This will be your alias so that other sitizens can easily cite you. It
-        can be your nickname, a combination of letters and numbers, or anything
-        you like, just make it unique to you.
-      </p>
       <input
         type="text"
         name="shortName"
-        value={authStore.form.shortName}
+        value={form.shortName}
         onChange={(e) => handleShortNameChange(e.target.value)}
         placeholder="Example: John_Pharrel919"
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
@@ -100,27 +167,34 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
         <label className="block text-sm font-semibold mb-1 text-center">
           Email
         </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
-        </p>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={(e) => authStore.setForm("email", e.target.value)}
-          placeholder="example@email.com"
-          className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-        />
+        <div className="relative">
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleEmailChange}
+            placeholder="example@email.com"
+            className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+            disabled={isLoadingEmail}
+          />
+          {isLoadingEmail && (
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              <span className="text-gray-500">Loading...</span>
+            </div>
+          )}
+          {!isEmailValid && (
+            <p className="text-red-500 text-center mt-1">
+              Email is unavailable or invalid.
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Contact Field */}
+      {/* Phone Field */}
       <div className="flex flex-col justify-center">
         <label className="block text-sm font-semibold mb-1 text-center">
           Phone number
         </label>
-        <p className="text-sm text-black italic mb-2 text-center">
-          It will not be made public.
-        </p>
         <div className="flex items-center w-full">
           <div className="mr-2 p-2 border border-gray-300 rounded bg-white shadow-inner shadow-gray-600/50 w-32 text-center">
             <Image
@@ -136,20 +210,27 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
             type="tel"
             name="phone"
             value={form.phone}
-            onChange={(e) => authStore.setForm("phone", e.target.value)}
+            onChange={(e) => {
+              authStore.setForm("phone", e.target.value)
+              validatePhoneNumber(e.target.value)
+            }}
             placeholder="Phone Number"
             className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            maxLength={15}
+            maxLength={10}
             required
           />
         </div>
+        {!phoneValid && (
+          <p className="text-red-500 text-center mt-1">
+            Please enter a valid Nigerian phone number.
+          </p>
+        )}
       </div>
 
-      {/* Password Field */}
+      {/* Password Fields */}
       <div className="mb-6 relative">
         <label className="block text-sm font-semibold mb-1 text-center mt-4">
-          What should be your password
+          Password
         </label>
         <div className="relative">
           <input
@@ -157,10 +238,10 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
             name="password"
             value={form.password}
             onChange={(e) => authStore.setForm("password", e.target.value)}
-            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
+            placeholder="Password"
+            className={`mt-1 block w-full rounded-md border-gray-300 bg-white p-2 pr-10 shadow-inner shadow-gray-600/50 ${
               !passwordsMatch ? "border-red-500" : ""
             }`}
-            placeholder="Password"
           />
           <span
             className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
@@ -171,20 +252,19 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
         </div>
       </div>
 
-      {/* Confirm Password Field */}
       <div className="mb-6 relative">
         <label className="block text-sm font-semibold mb-1 text-center">
-          Re-enter your password
+          Confirm Password
         </label>
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`mt-1 block w-full rounded-md border-gray-300 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 pr-10 shadow-inner shadow-gray-600/50 ${
+            placeholder="Confirm Password"
+            className={`mt-1 block w-full rounded-md border-gray-300 bg-white p-2 pr-10 shadow-inner shadow-gray-600/50 ${
               !passwordsMatch ? "border-red-500" : ""
             }`}
-            placeholder="Confirm Password"
           />
           <span
             className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
@@ -196,26 +276,20 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
       </div>
 
       {/* Next Button */}
-      <div className="flex justify-between mt-1">
+      <div className="flex justify-between mt-4">
         <button
           onClick={onBack}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          className="p-2 bg-gradient-to-r from-[#F2406D] to-[#FF6B2C] text-white rounded"
         >
           Back
         </button>
-
         <button
           onClick={handleNext}
-          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
+          className="p-2 bg-gradient-to-r from-[#F2406D] to-[#FF6B2C] text-white rounded"
         >
           Next
         </button>
       </div>
-
-      {/* Password Mismatch Warning */}
-      {!passwordsMatch && (
-        <p className="text-red-500 text-center mt-2">Passwords do not match!</p>
-      )}
     </div>
   )
 }

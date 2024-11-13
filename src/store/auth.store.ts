@@ -1,129 +1,121 @@
-import { create } from "zustand";
+import { create } from "zustand"
+import axios  from "axios"
+import { baseURI, apiRoutes } from "@constants/apiRoutes"
 
 // Interfaces
 export interface Interest {
-  value: string;
-  verified: boolean;
+  value: string
+  verified: boolean
 }
 
 export interface School {
-  id: string;
-  name: string;
-  type: string;
-  country: string;
-  state: string;
-  [key: string]: any;
+  id: string
+  name: string
+  type: string
+  country: string
+  state: string
+  [key: string]: any
 }
 
 export interface RawSchoolingListItem {
-  school: School;
-  status: string;
-  course: string;
-  confirmedSchool: boolean;
+  school: School
+  status: string
+  course: string
+  confirmedSchool: boolean
 }
 
 interface AuthTokens {
-  sessionId: string;
-  accessToken: string;
-  refreshToken: string;
+  sessionId: string
+  accessToken: string
+  refreshToken: string
 }
 
 export interface FormData {
-  email: string;
-  password: string;
-  name: string;
-  phone: string;
-  countryCode: string;
-  rawSchoolingList: RawSchoolingListItem[];
-  fieldOfStudy: string;
-  shortName: string;
-  info: string;
-  coverPhoto: File | null;
-  profilePhoto: File | null;
-  link?: string;
-  contact?: string;
-  address?: string;
-  study?: string;
+  email: string
+  password: string
+  confirmPassword: string
+  firstName: string
+  lastName: string
+  otherNames: string
+  phone: string
+  countryCode: string
+  rawSchoolingList: RawSchoolingListItem[]
+  interests: Interest[]
+  fieldOfStudy: string
+  shortName: string
+  info: string
+  coverPhoto: File | null
+  profilePhoto: File | null
   dob: {
-    month: string;
-    day: string;
-    year: string;
-  };
-  showDob: string;
-  gender: string;
-  sexuality: string;
-  relationshipStatus: string;
-  nightLife: string;
-  sideHustle?: string;
-  institutionType: string;
-  schoolStatus: string;
-  options: string[];
-  country: string;
-  state: string;
-  type?: string;
-  handle?: string;
-  description?: string;
-  startDate?: string;
-  endDate?: string;
-  time?: {
-    hour: string;
-    minute: string;
-    period: string;
-  };
-  highlightImage?: File | null;
-  category: string;
-  bio: string;
-  website: string;
-  confirmPassword: string;
-  emailToken?: string;
-  interests: Interest[];
-  niches: Interest[];
+    month: string
+    day: string
+    year: string
+  }
+  showDob: string
+  gender: string
+  sexuality: string
+  relationshipStatus: string
+  nightLife: string
+  sideHustle?: string
+  institutionType: string
+  schoolStatus: string
+  options: string[]
+  country: string
+  state: string
+  bio: string
+  website: string
+  emailToken?: string
+  niches: Interest[]
 }
 
 interface UIState {
-  loading: boolean;
-  error?: string;
-  category: "sitizen" | "sitadel" | "";
-  currentStep: number;
+  loading: boolean
+  error?: string
+  category: "sitizen" | "sitadel" | ""
+  currentStep: number
 }
 
 interface AuthStore {
-  form: FormData;
-  ui: UIState;
-  tokens: AuthTokens;
-  isLoggedIn: boolean;
-  isVerified: boolean; // User verification status
-  setForm: <K extends keyof FormData>(key: K, value: FormData[K]) => void;
-  setUI: <K extends keyof UIState>(key: K, value: UIState[K]) => void;
-  setUserVerification: (verified: boolean) => void;
-  resetForm: () => void;
-  setNext: () => void;
-  setPrevious: () => void;
-  setCurrentStep: (step: number) => void;
-  addInterest: (interest: Interest) => void;
-  removeInterest: (value: string) => void;
-  setNiches: (niches: Interest[]) => void;
-  setTokens: (tokens: Partial<AuthTokens>) => void;
-  logout: () => void;
+  checkEmail(email: string): Promise<boolean>
+  form: FormData
+  ui: UIState
+  tokens: AuthTokens
+  isLoggedIn: boolean
+  isVerified: boolean
+  setForm: <K extends keyof FormData>(key: K, value: FormData[K]) => void
+  setUI: <K extends keyof UIState>(key: K, value: UIState[K]) => void
+  setUserVerification: (verified: boolean) => void
+  resetForm: () => void
+  setNext: () => void
+  setPrevious: () => void
+  setCurrentStep: (step: number) => void
+  addInterest: (interest: Interest) => void
+  removeInterest: (value: string) => void
+  setNiches: (niches: Interest[]) => void
+  setTokens: (tokens: Partial<AuthTokens>) => void
+  logout: () => void
 }
 
 // Persist tokens in localStorage or browser storage (if available)
 const getInitialTokens = (): AuthTokens => {
-  const storage = typeof window !== "undefined" ? window.localStorage : null;
+  const storage = typeof window !== "undefined" ? window.localStorage : null
 
-  const sessionId = storage?.getItem("sessionId") || "";
-  const accessToken = storage?.getItem("accessToken") || "";
-  const refreshToken = storage?.getItem("refreshToken") || "";
+  const sessionId = storage?.getItem("sessionId") || ""
+  const accessToken = storage?.getItem("accessToken") || ""
+  const refreshToken = storage?.getItem("refreshToken") || ""
 
-  return { sessionId, accessToken, refreshToken };
-};
+  return { sessionId, accessToken, refreshToken }
+}
 
 // Store
 export const useAuthStore = create<AuthStore>((set) => ({
   form: {
     email: "",
     password: "",
-    name: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    otherNames: "",
     phone: "",
     countryCode: "",
     rawSchoolingList: [
@@ -163,10 +155,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     options: [],
     country: "",
     state: "",
-    category: "",
     bio: "",
     website: "",
-    confirmPassword: "",
     emailToken: "",
   },
   ui: {
@@ -179,7 +169,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoggedIn: Boolean(
     typeof window !== "undefined"
       ? window.localStorage.getItem("accessToken")
-      : null
+      : null,
   ),
   isVerified: false,
 
@@ -210,12 +200,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     })),
 
   setTokens: (tokens) => {
-    const storage = typeof window !== "undefined" ? window.localStorage : null;
+    const storage = typeof window !== "undefined" ? window.localStorage : null
 
-    if (tokens.sessionId) storage?.setItem("sessionId", tokens.sessionId);
-    if (tokens.accessToken) storage?.setItem("accessToken", tokens.accessToken);
+    if (tokens.sessionId) storage?.setItem("sessionId", tokens.sessionId)
+    if (tokens.accessToken) storage?.setItem("accessToken", tokens.accessToken)
     if (tokens.refreshToken)
-      storage?.setItem("refreshToken", tokens.refreshToken);
+      storage?.setItem("refreshToken", tokens.refreshToken)
 
     set((state) => ({
       tokens: {
@@ -224,15 +214,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
         refreshToken: tokens.refreshToken || state.tokens.refreshToken,
       },
       isLoggedIn: true,
-    }));
+    }))
   },
 
   logout: () => {
-    const storage = typeof window !== "undefined" ? window.localStorage : null;
+    const storage = typeof window !== "undefined" ? window.localStorage : null
 
-    storage?.removeItem("sessionId");
-    storage?.removeItem("accessToken");
-    storage?.removeItem("refreshToken");
+    storage?.removeItem("sessionId")
+    storage?.removeItem("accessToken")
+    storage?.removeItem("refreshToken")
 
     set(() => ({
       tokens: {
@@ -242,7 +232,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       },
       isLoggedIn: false,
       isVerified: false,
-    }));
+    }))
   },
 
   resetForm: () =>
@@ -250,7 +240,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
       form: {
         email: "",
         password: "",
-        name: "",
+        confirmPassword: "",
+        firstName: "",
+        lastName: "",
+        otherNames: "",
         phone: "",
         countryCode: "",
         rawSchoolingList: [
@@ -290,10 +283,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         options: [],
         country: "",
         state: "",
-        category: "",
         bio: "",
         website: "",
-        confirmPassword: "",
         emailToken: "",
       },
       ui: {
@@ -305,15 +296,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     })),
 
   setNext: () =>
-    set((state) => {
-      console.log({ inline_current_step: state.ui.currentStep });
-      return {
-        ui: {
-          ...state.ui,
-          currentStep: state.ui.currentStep + 1,
-        },
-      };
-    }),
+    set((state) => ({
+      ui: {
+        ...state.ui,
+        currentStep: state.ui.currentStep + 1,
+      },
+    })),
 
   setPrevious: () =>
     set((state) => ({
@@ -346,4 +334,45 @@ export const useAuthStore = create<AuthStore>((set) => ({
         interests: state.form.interests.filter((i) => i.value !== value),
       },
     })),
-}));
+  checkEmail: async (email: string): Promise<boolean> => {
+    set((state) => ({
+      ui: { ...state.ui, loading: true, error: "" },
+    }))
+    try {
+      const response = await axios.get(
+        `${baseURI}${apiRoutes.CHECK_EMAIL(email)}`,
+      )
+      const isAvailable = response?.data?.success === true
+
+      // If email is unavailable or invalid, set an error
+      if (!isAvailable) {
+        set((state) => ({
+          ui: {
+            ...state.ui,
+            error: "Email is unavailable or invalid.",
+          },
+        }))
+      } else {
+        set((state) => ({
+          ui: {
+            ...state.ui,
+            error: "",
+          },
+        }))
+      }
+
+
+      return isAvailable
+    } catch (error: any) {
+      // Only set error if an actual exception occurred
+      set((state) => ({
+        ui: { ...state.ui, error: "Failed to check email." },
+      }))
+      return false
+    } finally {
+      set((state) => ({
+        ui: { ...state.ui, loading: false },
+      }))
+    }
+  },
+}))
