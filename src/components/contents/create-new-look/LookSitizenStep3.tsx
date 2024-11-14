@@ -85,59 +85,44 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
     authStore.setForm("rawSchoolingList", updatedSchoolingList)
   }
 
-  const onSubmit = async () => {
-    const rawSchoolingList = authStore.form.rawSchoolingList.map((item) => {
-      const { status, course, confirmedSchool, school } = item
-      return {
-        school: {
-          ...school,
-          type: Number(school.type) || 0,
-        },
-        course,
-        confirmedSchool,
-        status: Number(status) || 0,
+    const onSubmit = async () => {
+      const payload = {
+        email: authStore.form.email,
+        password: authStore.form.password,
+        firstName: authStore.form.firstName,
+        lastName: authStore.form.lastName,
+        otherNames: authStore.form.otherNames,
+        phone: authStore.form.phone,
+        countryCode: authStore.form.countryCode || "defaultCountryCode",
+        rawSchoolingList: authStore.form.rawSchoolingList,
+        interests: authStore.form.interests,
       }
-    })
 
-    const payload = {
-      email: authStore.form.email,
-      password: authStore.form.password,
-      name: authStore.form.name,
-      phone: authStore.form.phone,
-      countryCode: authStore.form.countryCode || "defaultCountryCode",
-      rawSchoolingList,
-      interests: authStore.form.interests,
-    }
+      try {
+        authStore.setUI("loading", true)
+        const response = await http.post<SignUpResponse>(
+          `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
+          payload,
+        )
 
-    try {
-      authStore.setUI("loading", true)
+        if ([200, 201].includes(response.status)) {
+          const tokenMatch = response.data.message.match(/token=(.*)$/)
+          const token = tokenMatch ? tokenMatch[1] : null
 
-      const response = await http.post<SignUpResponse>(
-        `${baseURI}${apiRoutes.SITIZENS_SIGN_UP}`,
-        payload,
-      )
-
-      if ([200, 201].includes(response.status)) {
-        const tokenMatch = response.data.message.match(/token=(.*)$/)
-        const token = tokenMatch ? tokenMatch[1] : null
-
-        if (token) {
-          authStore.setForm("emailToken", token)
-          onNext()
-        } else {
-          alert("Registration successful, but no token received.")
+          if (token) {
+            authStore.setForm("emailToken", token)
+            onNext()
+          } else {
+            alert("Registration successful, but no token received.")
+          }
         }
-      } else {
-        authStore.setUI("error", response.data.message)
-        alert(response.data.message || "Registration failed.")
+      } catch (error) {
+        console.error("Error during registration:", (error as Error).message)
+        alert("Registration failed.")
+      } finally {
+        authStore.setUI("loading", false)
       }
-    } catch (error: any) {
-      authStore.setUI("error", error.message || "Registration failed.")
-      alert(error.message || "Registration failed.")
-    } finally {
-      authStore.setUI("loading", false)
     }
-  }
 
   return (
     <Fragment>
