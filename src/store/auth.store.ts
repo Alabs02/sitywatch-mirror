@@ -11,7 +11,7 @@ export interface Interest {
 export interface School {
   id: string
   name: string
-  type: string
+  type: number
   country: string
   state: string
   [key: string]: any
@@ -123,7 +123,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         school: {
           id: "",
           name: "",
-          type: "0",
+          type: 0,
           country: "",
           state: "",
         },
@@ -251,7 +251,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             school: {
               id: "",
               name: "",
-              type: "0",
+              type: 0,
               country: "",
               state: "",
             },

@@ -34,7 +34,7 @@ export interface FormData {
   options: string[]
   country: string
   state: string
-  type?: string
+  type?: number
   handle?: string
   description?: string
   startDate?: string

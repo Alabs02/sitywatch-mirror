@@ -12,4 +12,5 @@ export const apiRoutes = {
   UPLOAD_IMAGE: "images",
   GET_IMAGE: (id: string) => `images/${id}`,
   CHECK_EMAIL: (email: string) => `accounts/${email}/checkEmail`,
+  OPTIONS_SCHOOLS: "options/schools",
 }
