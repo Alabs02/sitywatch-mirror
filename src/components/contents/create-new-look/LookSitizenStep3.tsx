@@ -64,39 +64,58 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
     const [schoolOptions, setSchoolOptions] = useState<School[]>([])
     const [showDropdown, setShowDropdown] = useState(false)
 
-   const fetchSchools = debounce(async (query: string) => {
-     if (query.trim() === "") {
-       setShowDropdown(false) // Close dropdown if input is empty
-       return
-     }
+const fetchSchools = debounce(
+  async (query: string) => {
+    // Fetch only if query is meaningful
+    if (query.trim().length < 2) {
+      setSchoolOptions([])
+      setShowDropdown(false)
+      return
+    }
 
-     try {
-       const response = await http.get<School[]>(
-         `${baseURI}${apiRoutes.OPTIONS_SCHOOLS}?query=${query}`,
-       )
-       setSchoolOptions(response.data || [])
-       setShowDropdown(response.data.length > 0)
-     } catch (error) {
-       console.error("Error fetching school options:", error)
-       setSchoolOptions([])
-       setShowDropdown(false)
-     }
-   }, 300)
+    try {
+      const response = await http.get<any>(
+        `${baseURI}${apiRoutes.OPTIONS_SCHOOLS}?query=${query}`,
+      )
+
+      if (response.status === 200) {
+        const schools = response.data.success || [] // Ensure fallback to an empty array
+        setSchoolOptions(schools)
+        setShowDropdown(schools.length > 0)
+      } else {
+        console.error("API Error:", response.statusText)
+        setSchoolOptions([])
+        setShowDropdown(false)
+      }
+    } catch (error) {
+      console.error("Error fetching schools:", error)
+      setSchoolOptions([])
+      setShowDropdown(false)
+    }
+  },
+  300,
+  { leading: true, trailing: true },
+)
+
+// Handle input changes for the school field
+const handleSchoolInputChange = (index: number, value: string) => {
+  const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+  updatedSchoolingList[index].school.name = value
+  authStore.setForm("rawSchoolingList", updatedSchoolingList)
+
+  // Fetch school options
+  fetchSchools(value)
+}
 
 
-  const handleSchoolInputChange = (index: number, value: string) => {
-    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-    updatedSchoolingList[index].school.name = value
-    authStore.setForm("rawSchoolingList", updatedSchoolingList)
-    fetchSchools(value)
-  }
+ const selectSchool = (index: number, school: School) => {
+   const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+   updatedSchoolingList[index].school = school
+   authStore.setForm("rawSchoolingList", updatedSchoolingList)
 
-   const selectSchool = (index: number, school: School) => {
-     const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-     updatedSchoolingList[index].school = school
-     authStore.setForm("rawSchoolingList", updatedSchoolingList)
-     setShowDropdown(false) // Close dropdown on selection
-   }
+   // Close dropdown after selection
+   setShowDropdown(false)
+ }
 
   const handleInputChange = (
     index: number,
@@ -165,26 +184,34 @@ const LookSitizenStep3: FC<StepProps> = ({ onNext, onBack }) => {
           <h2 className="text-sm font-semibold text-center mt-6 mb-1">
             What is the name of your school?
           </h2>
-          <input
-            type="text"
-            value={formItem.school.name}
-            onChange={(e) => handleSchoolInputChange(index, e.target.value)}
-            placeholder="Example: University of Lagos"
-            className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-          />
-          {showDropdown && schoolOptions.length > 0 && (
-            <ul className="bg-white border border-gray-300 rounded shadow-md max-h-40 overflow-y-auto absolute z-10 w-full">
-              {schoolOptions.map((school) => (
-                <li
-                  key={school.id}
-                  onClick={() => selectSchool(index, school)}
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                >
-                  {school.name}
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="relative">
+            <input
+              type="text"
+              value={formItem.school.name}
+              onChange={(e) => handleSchoolInputChange(index, e.target.value)}
+              placeholder="Example: University of Lagos"
+              className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+              onFocus={() =>
+                setShowDropdown(
+                  schoolOptions.length > 0 && formItem.school.name.length > 1,
+                )
+              } // Open only if conditions are met
+            />
+
+            {showDropdown && (
+              <ul className="bg-white border border-gray-300 rounded shadow-md max-h-40 overflow-y-auto absolute z-10 w-full">
+                {schoolOptions.map((school) => (
+                  <li
+                    key={school.id}
+                    onClick={() => selectSchool(index, school)}
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                  >
+                    {school.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <h2 className="text-sm font-semibold text-center mt-2 mb-1">
             What type of institution is it?
