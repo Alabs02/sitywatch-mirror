@@ -51,18 +51,24 @@ const CreatePandarPoll: React.FC = () => {
     imageUrl: "",
   })
 
-  const addStation = () => {
-    setStations([
-      ...stations,
-      {
-        id: stations.length + 1,
-        questionText: "",
-        descriptionText: "",
-        options: [defaultOption()],
-        isTextOnly: true,
-      },
-    ])
+const addStation = () => {
+  if (stations.length >= 3) {
+    alert("You can only create up to 3 stations.")
+    return
   }
+
+  setStations([
+    ...stations,
+    {
+      id: stations.length + 1,
+      questionText: "",
+      descriptionText: "",
+      options: [defaultOption()],
+      isTextOnly: true,
+    },
+  ])
+}
+
 
   const removeStation = (id: number) =>
     setStations(stations.filter((station) => station.id !== id))
