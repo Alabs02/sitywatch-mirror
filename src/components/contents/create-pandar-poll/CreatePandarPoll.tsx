@@ -39,6 +39,7 @@ const CreatePandarPoll: React.FC = () => {
   const [captions, setCaptions] = useState<{ [key: number]: string }>({})
   const [description, setDescription] = useState<string>("")
   const [isButtonActive, setIsButtonActive] = useState(false)
+   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     fetchPollData()
@@ -68,8 +69,10 @@ const CreatePandarPoll: React.FC = () => {
 
   const addOption = (stationIndex: number) => {
     const updatedStations = [...stations]
-    updatedStations[stationIndex].options.push(defaultOption())
-    setStations(updatedStations)
+    if (updatedStations[stationIndex].options.length < 4) {
+      updatedStations[stationIndex].options.push(defaultOption())
+      setStations(updatedStations)
+    }
   }
 
   const removeOption = (stationIndex: number, optionIndex: number) => {
@@ -153,39 +156,68 @@ const CreatePandarPoll: React.FC = () => {
     setShowWarning(false)
   }
 
-  const handleSubmit = async () => {
-    const formattedStations = stations.map((station) => ({
-      questionNumber: station.id,
-      questionText: station.questionText,
-      descriptionText: station.descriptionText,
-      answerOptions: station.options.map((option) => ({
-        questionNumber: station.id,
-        text: option.text,
-        file: option.type === "image" ? option.imageUrl : undefined,
-        caption: option.caption,
-      })),
-    }))
+   const validateForm = () => {
+     if (!description.trim()) return false
+     for (const station of stations) {
+       if (!station.questionText.trim() || station.options.length === 0) {
+         return false
+       }
+       for (const option of station.options) {
+         if (
+           (option.type === "text" && !option.text.trim()) ||
+           (option.type === "image" && !option.imageUrl)
+         ) {
+           return false
+         }
+       }
+     }
+     return true
+   }
 
-    try {
-      await http.service().post(apiRoutes.PANDAR_POLLS, {
-        stations: formattedStations,
-        description,
-      })
-      setStations([
-        {
-          id: 1,
-          questionText: "",
-          descriptionText: "",
-          options: [defaultOption()],
-          isTextOnly: true,
-        },
-      ])
-      setIsButtonActive(false)
-      console.log("Poll created successfully")
-    } catch (error) {
-      console.error("Error creating poll:", error)
-    }
-  }
+   const handleSubmit = async () => {
+     if (!validateForm()) {
+       alert("Please fill out all required fields.")
+       return
+     }
+
+     setIsSubmitting(true)
+
+     const formattedStations = stations.map((station) => ({
+       questionNumber: station.id,
+       questionText: station.questionText,
+       descriptionText: station.descriptionText,
+       answerOptions: station.options.map((option) => ({
+         questionNumber: station.id,
+         text: option.text,
+         file: option.type === "image" ? option.imageUrl : undefined,
+         caption: option.caption,
+       })),
+     }))
+
+     try {
+       await http.service().post(apiRoutes.PANDAR_POLLS, {
+         stations: formattedStations,
+         description,
+       })
+
+       setStations([
+         {
+           id: 1,
+           questionText: "",
+           descriptionText: "",
+           options: [defaultOption()],
+           isTextOnly: true,
+         },
+       ])
+       setDescription("")
+       setIsButtonActive(false)
+       console.log("Poll created successfully")
+     } catch (error) {
+       console.error("Error creating poll:", error)
+     } finally {
+       setIsSubmitting(false)
+     }
+   }
 
   return (
     <div className="border rounded-lg p-6 bg-neutral-100 shadow-md mb-32">
@@ -200,17 +232,13 @@ const CreatePandarPoll: React.FC = () => {
           </span>
         </div>
       </div>
-      {/* Description Text Field */}
-      {/* <textarea
+      {/* Description Field */}
+      <textarea
         className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
         placeholder="Write a short description for your poll..."
-        value={station.descriptionText} 
-        onChange={(e) => {
-          const updatedStations = [...stations]
-          updatedStations[stationIndex].descriptionText = e.target.value
-          setStations(updatedStations)
-        }}
-      /> */}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
       {showWarning && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-4 rounded-md text-center">
@@ -410,10 +438,13 @@ const CreatePandarPoll: React.FC = () => {
       <div className="mt-4">
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-secondary text-white rounded-full"
+          className={`w-full py-2 px-4 bg-secondary text-white rounded-full ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isSubmitting}
           onClick={handleSubmit}
         >
-          Create Poll
+          {isSubmitting ? "Submitting..." : "Create Poll"}
         </button>
       </div>
     </div>
