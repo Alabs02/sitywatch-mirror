@@ -21,6 +21,19 @@ interface Station {
 const CreatePandarPoll: React.FC = () => {
   const { fetchPollData } = usePandarPollStore()
 
+  const [formState, setFormState] = useState({
+    description: null,
+    stations: [
+      {
+        id: 1,
+        questionText: "",
+        descriptionText: "",
+        options: [{ text: "", type: "text", imageUrl: "", caption: "" }],
+        isTextOnly: true,
+      },
+    ],
+  })
+
   const [stations, setStations] = useState<Station[]>([
     {
       id: 1,
@@ -39,7 +52,8 @@ const CreatePandarPoll: React.FC = () => {
   const [captions, setCaptions] = useState<{ [key: number]: string }>({})
   const [description, setDescription] = useState<string>("")
   const [isButtonActive, setIsButtonActive] = useState(false)
-   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<string | null>(null)
 
   useEffect(() => {
     fetchPollData()
@@ -51,24 +65,23 @@ const CreatePandarPoll: React.FC = () => {
     imageUrl: "",
   })
 
-const addStation = () => {
-  if (stations.length >= 3) {
-    alert("You can only create up to 3 stations.")
-    return
+  const addStation = () => {
+    if (stations.length >= 3) {
+      alert("You can only create up to 3 stations.")
+      return
+    }
+
+    setStations([
+      ...stations,
+      {
+        id: stations.length + 1,
+        questionText: "",
+        descriptionText: "",
+        options: [defaultOption()],
+        isTextOnly: true,
+      },
+    ])
   }
-
-  setStations([
-    ...stations,
-    {
-      id: stations.length + 1,
-      questionText: "",
-      descriptionText: "",
-      options: [defaultOption()],
-      isTextOnly: true,
-    },
-  ])
-}
-
 
   const removeStation = (id: number) =>
     setStations(stations.filter((station) => station.id !== id))
@@ -78,6 +91,12 @@ const addStation = () => {
     if (updatedStations[stationIndex].options.length < 4) {
       updatedStations[stationIndex].options.push(defaultOption())
       setStations(updatedStations)
+    }
+  }
+
+  const confirmRemoveStation = (id: number) => {
+    if (window.confirm(`Are you sure you want to remove Station ${id}?`)) {
+      removeStation(id)
     }
   }
 
@@ -92,18 +111,20 @@ const addStation = () => {
     optionIndex: number,
     type: "text" | "image",
   ) => {
-    const currentOption = stations[stationIndex].options[optionIndex]
-    const hasContent =
-      currentOption.type === "text"
-        ? !!currentOption.text
-        : !!currentOption.imageUrl
+    const updatedStations = [...stations]
+    const station = updatedStations[stationIndex]
+    station.options[optionIndex].type = type
 
-    if (hasContent) {
-      setShowWarning(true)
-      setToggleDetails({ stationIndex, optionIndex, targetType: type })
-    } else {
-      applyOptionToggle(stationIndex, optionIndex, type)
+    // Reset fields based on type
+    if (type === "text") {
+      station.options[optionIndex].text = ""
+    } else if (type === "image") {
+      station.options[optionIndex].imageUrl = ""
+      station.options[optionIndex].caption = ""
     }
+
+    setStations(updatedStations)
+    setIsButtonActive(true)
   }
 
   const applyOptionToggle = (
@@ -162,68 +183,79 @@ const addStation = () => {
     setShowWarning(false)
   }
 
-   const validateForm = () => {
-     if (!description.trim()) return false
-     for (const station of stations) {
-       if (!station.questionText.trim() || station.options.length === 0) {
-         return false
-       }
-       for (const option of station.options) {
-         if (
-           (option.type === "text" && !option.text.trim()) ||
-           (option.type === "image" && !option.imageUrl)
-         ) {
-           return false
-         }
-       }
-     }
-     return true
-   }
+  const validateForm = () => {
+    for (const station of stations) {
+      if (!station.questionText.trim()) {
+        setErrors(`Station ${station.id} requires a question.`)
+        return false
+      }
 
-   const handleSubmit = async () => {
-     if (!validateForm()) {
-       alert("Please fill out all required fields.")
-       return
-     }
+      if (station.options.length === 0) {
+        setErrors(`Station ${station.id} must have at least one option.`)
+        return false
+      }
 
-     setIsSubmitting(true)
+      for (const option of station.options) {
+        if (option.type === "text" && !option.text.trim()) {
+          setErrors(`Option in Station ${station.id} is missing text.`)
+          return false
+        }
 
-     const formattedStations = stations.map((station) => ({
-       questionNumber: station.id,
-       questionText: station.questionText,
-       descriptionText: station.descriptionText,
-       answerOptions: station.options.map((option) => ({
-         questionNumber: station.id,
-         text: option.text,
-         file: option.type === "image" ? option.imageUrl : undefined,
-         caption: option.caption,
-       })),
-     }))
+        if (option.type === "image" && !option.imageUrl) {
+          setErrors(`Option in Station ${station.id} is missing an image.`)
+          return false
+        }
+      }
+    }
 
-     try {
-       await http.service().post(apiRoutes.PANDAR_POLLS, {
-         stations: formattedStations,
-         description,
-       })
+    // Clear errors if everything is valid
+    setErrors(null)
+    return true
+  }
 
-       setStations([
-         {
-           id: 1,
-           questionText: "",
-           descriptionText: "",
-           options: [defaultOption()],
-           isTextOnly: true,
-         },
-       ])
-       setDescription("")
-       setIsButtonActive(false)
-       console.log("Poll created successfully")
-     } catch (error) {
-       console.error("Error creating poll:", error)
-     } finally {
-       setIsSubmitting(false)
-     }
-   }
+  const handleSubmit = async () => {
+    if (!validateForm()) return
+
+    setIsSubmitting(true)
+
+    const formattedStations = stations.map((station) => ({
+      questionNumber: station.id,
+      questionText: station.questionText,
+      descriptionText: station.descriptionText || undefined, // Optional
+      answerOptions: station.options.map((option) => ({
+        questionNumber: station.id,
+        text: option.type === "text" ? option.text : undefined,
+        file: option.type === "image" ? option.imageUrl : undefined,
+        caption: option.caption,
+      })),
+    }))
+
+    try {
+      await http.service().post(apiRoutes.PANDAR_POLLS, {
+        stations: formattedStations,
+        description: description.trim() || undefined, // Optional
+      })
+
+      setStations([
+        {
+          id: 1,
+          questionText: "",
+          descriptionText: "",
+          options: [defaultOption()],
+          isTextOnly: true,
+        },
+      ])
+      setDescription("")
+      setCaptions({})
+      setErrors(null)
+      setIsButtonActive(false)
+      console.log("Poll created successfully")
+    } catch (error) {
+      console.error("Error creating poll:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="border rounded-lg p-6 bg-neutral-100 shadow-md mb-32">
@@ -376,23 +408,19 @@ const addStation = () => {
                         <p className="mb-1 text-xs">
                           Write caption for image here (optional):
                         </p>
-                        <div
-                          className={`w-full max-w-xs border-b border-gray-300 text-center cursor-text ${
-                            captions[station.id]
-                              ? "text-black"
-                              : "text-gray-400"
-                          }`}
-                          contentEditable
-                          suppressContentEditableWarning={true}
-                          onInput={(e) =>
-                            handleCaptionChange(
-                              station.id,
-                              (e.target as HTMLElement).innerText,
-                            )
-                          }
-                        >
-                          {captions[station.id] || "Type here..."}
-                        </div>
+                        <input
+                          type="text"
+                          className="mt-2 p-1 border rounded w-full max-w-xs"
+                          placeholder="Type caption here..."
+                          value={option.caption || ""}
+                          onChange={(e) => {
+                            const updatedStations = [...stations]
+                            updatedStations[stationIndex].options[
+                              optionIndex
+                            ].caption = e.target.value
+                            setStations(updatedStations)
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -435,20 +463,25 @@ const addStation = () => {
           type="button"
           className="border border-primary rounded-full px-4 py-2 text-secondary flex items-center"
           onClick={addStation}
+          disabled={stations.length >= 3}
         >
           <span className="material-symbols-outlined">add_circle</span>
           <span className="ml-2">Add New Station</span>
+          <span className="ml-2">
+            {stations.length >= 3 ? "Max Stations Reached" : "Add Station"}
+          </span>
         </button>
       </div>
 
       <div className="mt-4">
+        {errors && <div className="text-red-500 text-sm mb-4">{errors}</div>}
         <button
           type="submit"
           className={`w-full py-2 px-4 bg-secondary text-white rounded-full ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={isSubmitting}
           onClick={handleSubmit}
+          disabled={isSubmitting}
         >
           {isSubmitting ? "Submitting..." : "Create Poll"}
         </button>

@@ -3,21 +3,21 @@ import Cookies from "js-cookie"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
 // Define interfaces for the data structure
-interface Interaction {
+export interface Interaction {
   id: string
   pollInteractionId: string
   answerOptionId: string
   createdAt: string
 }
 
-interface AnswerOption {
+export interface AnswerOption {
   id: string
   text: string
   file?: string
   interactions: Interaction[]
 }
 
-interface Station {
+export interface Station {
   id: string
   questionNumber: number
   questionText: string
@@ -26,13 +26,13 @@ interface Station {
   answerOptions: AnswerOption[]
 }
 
-interface PollInteraction {
+export interface PollInteraction {
   id: string
   pandarAlias: string
   selectedAnswers: { id: string; answerOptionId: string }[]
 }
 
-interface PollData {
+export interface PollData {
   id: string
   pollOwnerAlias: string
   stations: Station[]
@@ -62,8 +62,8 @@ export const usePandarPollStore = create<PandarPollState>((set) => ({
 
       const response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${accessToken}`, 
-          "Content-Type": "application/json", 
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
       })
 
@@ -75,6 +75,17 @@ export const usePandarPollStore = create<PandarPollState>((set) => ({
 
       // Parse the response data
       const pollData: PollData[] = await response.json()
+
+      // Ensure interactions are always an empty array if they are missing
+      pollData.forEach((poll) => {
+        poll.stations.forEach((station) => {
+          station.answerOptions.forEach((option) => {
+            if (!option.interactions) {
+              option.interactions = [] 
+            }
+          })
+        })
+      })
 
       // Set the state with the fetched poll data
       set({ pollData, isFetching: false })

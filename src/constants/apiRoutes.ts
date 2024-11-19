@@ -9,6 +9,7 @@ export const apiRoutes = {
   REFRESH_TOKEN: "auth/tokens",
   PANDAR_POLLS: "pandar-polls",
   PANDAR_POLLS_INTERACTIONS: (id: string) => `pandar-polls/${id}/interactions`,
+  GET_SINGLE_POLL: (id: string) => `pandar-polls/${id}`,
   UPLOAD_IMAGE: "images",
   GET_IMAGE: (id: string) => `images/${id}`,
   CHECK_EMAIL: (email: string) => `accounts/${email}/checkEmail`,
