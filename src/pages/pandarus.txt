@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "framer-motion" 
 import Image from "next/image"
 import PandPollContent from "@/components/molecules/PandaPollContent"
 import PandaPollCard1 from "@/components/molecules/PandaPollCard1"
@@ -15,8 +15,7 @@ const pandaSection = {
       icon: "add_circle",
       image: "/coreAssets/PandarUs/CreatePollHeader/poll.svg",
       title: "Create Pandar Poll",
-      description:
-        "Set up your own pandar poll to help others find their soul_pandars.You can ask those questions you don’t wanna ask in person andno one will know its you ... not even us.",
+      description: "Set up your own pandar poll to help others find their soul_pandars.You can ask those questions you don’t wanna ask in person andno one will know its you ... not even us."
     },
   ],
   polls: [
