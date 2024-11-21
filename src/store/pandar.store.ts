@@ -2,7 +2,6 @@ import { create } from "zustand"
 import Cookies from "js-cookie"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
-// Define interfaces for the data structure
 export interface Interaction {
   id: string
   pollInteractionId: string
@@ -35,7 +34,7 @@ export interface PollInteraction {
 export interface PollData {
   id: string
   pollOwnerAlias: string
-   description?: string
+  description?: string
   stations: Station[]
   expiresAt: string
   pollInteractions: PollInteraction[]
@@ -45,14 +44,20 @@ interface PandarPollState {
   pollData: PollData[]
   isFetching: boolean
   error: string | null
+  progress: Record<string, string[]>
   fetchPollData: () => Promise<void>
+  updateProgress: (pollId: string, answerOptionId: string) => void
+  loadProgress: () => void
 }
 
-// Create Zustand store
 export const usePandarPollStore = create<PandarPollState>((set) => ({
   pollData: [],
   isFetching: false,
   error: null,
+  progress:
+    typeof window !== "undefined" && window.localStorage
+      ? JSON.parse(localStorage.getItem("pollProgress") || "{}")
+      : {},
 
   fetchPollData: async () => {
     set({ isFetching: true, error: null })
@@ -68,31 +73,49 @@ export const usePandarPollStore = create<PandarPollState>((set) => ({
         },
       })
 
-      // Check if the response is not OK and throw an error
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData?.message || "Failed to fetch polls")
       }
 
-      // Parse the response data
       const pollData: PollData[] = await response.json()
 
-      // Ensure interactions are always an empty array if they are missing
       pollData.forEach((poll) => {
         poll.stations.forEach((station) => {
           station.answerOptions.forEach((option) => {
             if (!option.interactions) {
-              option.interactions = [] 
+              option.interactions = []
             }
           })
         })
       })
 
-      // Set the state with the fetched poll data
       set({ pollData, isFetching: false })
     } catch (error) {
-      // Set error state in case of failure
       set({ error: (error as Error).message, isFetching: false })
+    }
+  },
+
+  updateProgress: (pollId, answerOptionId) => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      set((state) => {
+        const updatedProgress = {
+          ...state.progress,
+          [pollId]: [...(state.progress[pollId] || []), answerOptionId],
+        }
+        localStorage.setItem("pollProgress", JSON.stringify(updatedProgress))
+        return { progress: updatedProgress }
+      })
+    }
+  },
+
+  loadProgress: () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      set({
+        progress: JSON.parse(
+          window.localStorage.getItem("pollProgress") || "{}",
+        ),
+      })
     }
   },
 }))

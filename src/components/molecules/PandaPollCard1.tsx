@@ -8,7 +8,7 @@ import { apiRoutes,baseURI } from "@/constants/apiRoutes";
 import Cookies from "js-cookie"
 
 
-// Define option and station types
+// option and station types
 interface Option {
   text?: string;
   file?: string;
@@ -58,6 +58,15 @@ const PandaPollCard1: React.FC = () => {
      {},
    )
 
+   const useLocalStorage = () => {
+     if (typeof window !== "undefined" && window.localStorage) {
+       return window.localStorage
+     } else {
+       // Handle server-side storage or a different approach
+       return {} // Or some alternative storage mechanism
+     }
+   }
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchPollData()
@@ -66,40 +75,48 @@ const PandaPollCard1: React.FC = () => {
   }, [fetchPollData])
 
   // Update countdowns for each poll every minute
+   useEffect(() => {
+     const calculateCountdown = (expiresAt: string) => {
+       const now = new Date().getTime()
+       const end = new Date(expiresAt).getTime()
+       const diff = end - now
+
+       if (diff <= 0) return "Expired"
+
+       const hours = Math.floor(
+         (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+       )
+       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+       return `${hours} hrs ${minutes} mins remaining`
+     }
+
+     const updateCountdowns = () => {
+       const updatedCountdowns: { [key: string]: string } = {}
+       const updatedExpiredPolls: { [key: string]: boolean } = {}
+       pollData.forEach((poll) => {
+         const countdown = calculateCountdown(poll.expiresAt)
+         updatedCountdowns[poll.id] = countdown
+         updatedExpiredPolls[poll.id] = countdown === "Expired"
+       })
+
+       setCountdowns(updatedCountdowns)
+       setExpiredPolls(updatedExpiredPolls)
+     }
+
+     updateCountdowns()
+     const intervalId = setInterval(updateCountdowns, 60000)
+     return () => clearInterval(intervalId)
+   }, [pollData])
+
   useEffect(() => {
-    const calculateCountdown = (expiresAt: string) => {
-      const now = new Date().getTime()
-      const end = new Date(expiresAt).getTime()
-      const diff = end - now
-
-      if (diff <= 0) return "Expired"
-
-      const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      )
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      return `${hours} hrs ${minutes} mins remaining`
+    const localStorage = typeof window !== "undefined" && window.localStorage
+    if (localStorage) {
+      localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions))
+    } else {
+      // Handle the case where local storage is unavailable (optional)
+      console.warn("Local storage is not available")
     }
-
-    const updateCountdowns = () => {
-      const updatedCountdowns: { [key: string]: string } = {}
-      const updatedExpiredPolls: { [key: string]: boolean } = {}
-      pollData.forEach((poll) => {
-        const countdown = calculateCountdown(poll.expiresAt)
-        updatedCountdowns[poll.id] = countdown
-        updatedExpiredPolls[poll.id] = countdown === "Expired"
-      })
-
-      setCountdowns(updatedCountdowns)
-      setExpiredPolls(updatedExpiredPolls)
-    }
-
-    updateCountdowns()
-    // Update every 1 minute
-    const intervalId = setInterval(updateCountdowns, 60000)
-    // Cleanup on component unmount
-    return () => clearInterval(intervalId)
-  }, [pollData])
+  }, [selectedOptions])
 
 useEffect(() => {
   console.log("Poll Data:", pollData)
@@ -118,41 +135,65 @@ useEffect(() => {
     setShowOverlay(!showOverlay)
   }
 
-const handleOptionSelect = (
-  pollId: string,
-  stationId: string,
-  optionIndex: number,
-) => {
-  if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
+ const handleOptionSelect = async (
+   pollId: string,
+   stationId: string,
+   optionIndex: number,
+ ) => {
+   if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
 
-  setSelectedOptions((prev) => ({
-    ...prev,
-    [`${pollId}-${stationId}`]: optionIndex,
-  }))
-  setShowResults((prev) => ({
-    ...prev,
-    [`${pollId}-${stationId}`]: true,
-  }))
+   setSelectedOptions((prev) => ({
+     ...prev,
+     [`${pollId}-${stationId}`]: optionIndex,
+   }))
+   setShowResults((prev) => ({
+     ...prev,
+     [`${pollId}-${stationId}`]: true,
+   }))
 
-  const updatedPollData = pollData.map((poll) => {
-    if (poll.id === pollId) {
-      poll.stations = poll.stations.map((station) => {
-        if (station.id === stationId) {
-          station.answerOptions[optionIndex].interactions.push({
-            id: `interaction-${Date.now()}`,
-            pollInteractionId: pollId,
-            answerOptionId: station.answerOptions[optionIndex].id,
-            createdAt: new Date().toISOString(),
-          })
-        }
-        return station
-      })
-    }
-    return poll
-  })
+   // Update the poll data in the store
+   const updatedPollData = pollData.map((poll) => {
+     if (poll.id === pollId) {
+       poll.stations = poll.stations.map((station) => {
+         if (station.id === stationId) {
+           station.answerOptions[optionIndex].interactions.push({
+             id: `interaction-${Date.now()}`,
+             pollInteractionId: pollId,
+             answerOptionId: station.answerOptions[optionIndex].id,
+             createdAt: new Date().toISOString(),
+           })
+         }
+         return station
+       })
+     }
+     return poll
+   })
 
-  usePandarPollStore.setState({ pollData: updatedPollData })
-}
+   usePandarPollStore.setState({ pollData: updatedPollData })
+
+   // Save interaction to backend
+   const accessToken = Cookies.get("ACCESS_TOKEN")
+   try {
+     await http.service(false).post(
+       `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
+       {
+         selectedAnswers: [
+           {
+             answerOptionId: updatedPollData.find((poll) => poll.id === pollId)!
+               .stations[0].answerOptions[optionIndex].id,
+           },
+         ],
+       },
+       {
+         headers: { Authorization: `Bearer ${accessToken}` },
+         withCredentials: true,
+       },
+     )
+   } catch (error) {
+     console.error("Error saving interaction:", error)
+   }
+ }
+
 
 
 
