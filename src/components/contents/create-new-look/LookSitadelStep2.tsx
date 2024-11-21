@@ -47,7 +47,9 @@ const LookSitadelStep2: FC<StepProps> = ({ onNext, onBack }) => {
     const payload = {
       email: authStore.form.email,
       password: authStore.form.password,
-      name: authStore.form.name,
+      firstName: authStore.form.firstName,
+      lastName: authStore.form.lastName,
+      otherNames: authStore.form.otherNames,
       phone: authStore.form.phone,
       countryCode: authStore.form.countryCode || "defaultCountryCode",
       niches,

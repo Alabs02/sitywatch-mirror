@@ -21,11 +21,12 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
 
   const handleNext = () => {
     if (
-      !authStore.form.name ||
-      !authStore.form.shortName ||
-      !authStore.form.email ||
-      !authStore.form.phone ||
-      !authStore.form.password ||
+      !form.firstName ||
+      !form.lastName ||
+      !form.shortName ||
+      !form.email ||
+      !form.phone ||
+      !form.password ||
       !confirmPassword
     ) {
       alert("Please fill out all fields.")
@@ -70,11 +71,35 @@ const LookSitadelStep1: FC<StepProps> = ({ onNext, onBack }) => {
       </p>
       <input
         type="text"
-        name="name"
-        value={form.name}
-        onChange={(e) => authStore.setForm("name", e.target.value)}
-        placeholder=""
+        name="firstName"
+        value={form.firstName}
+        onChange={(e) => authStore.setForm("firstName", e.target.value)}
+        placeholder="Example: John"
         className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
+
+      {/* Last Name Field */}
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">Last Name</h2>
+      <input
+        type="text"
+        name="lastName"
+        value={form.lastName}
+        onChange={(e) => authStore.setForm("lastName", e.target.value)}
+        placeholder="Example: Doe"
+        className="mb-1 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
+      />
+
+      {/* Other Names Field */}
+      <h2 className="text-sm font-semibold text-center mt-2 mb-1">
+        Other Names (Optional)
+      </h2>
+      <input
+        type="text"
+        name="otherNames"
+        value={form.otherNames}
+        onChange={(e) => authStore.setForm("otherNames", e.target.value)}
+        placeholder="Middle name(s)"
+        className="mb-4 p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
       />
 
       {/* Short Name Field */}
