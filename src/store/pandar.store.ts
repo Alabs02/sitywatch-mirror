@@ -35,6 +35,7 @@ export interface PollInteraction {
 export interface PollData {
   id: string
   pollOwnerAlias: string
+   description?: string
   stations: Station[]
   expiresAt: string
   pollInteractions: PollInteraction[]

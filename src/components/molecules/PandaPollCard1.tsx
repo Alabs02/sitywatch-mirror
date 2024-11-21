@@ -176,20 +176,22 @@ const handleOptionSelect = (
 
 
 const onSubmitPoll = async (id: string) => {
-  setIsPandering((prev) => ({ ...prev, [id]: true }))
+  // Persist pandering state
+  setIsSubmitting((prev) => ({ ...prev, [id]: true }))
+
   const accessToken = Cookies.get("ACCESS_TOKEN")
 
-const selectedAnswers = Object.entries(selectedOptions)
-  .map(([key, optionIndex]) => {
-    if (optionIndex === null) return null
-    const poll = pollData.find((poll) => poll.id === id)
-    if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex]) return null
-    return {
-      answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
-    }
-  })
-  .filter((answer) => answer && answer.answerOptionId !== null)
-
+  const selectedAnswers = Object.entries(selectedOptions)
+    .map(([key, optionIndex]) => {
+      if (optionIndex === null) return null
+      const poll = pollData.find((poll) => poll.id === id)
+      if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+        return null
+      return {
+        answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
+      }
+    })
+    .filter((answer) => answer && answer.answerOptionId !== null)
 
   const payload = { selectedAnswers }
 
@@ -202,13 +204,19 @@ const selectedAnswers = Object.entries(selectedOptions)
         },
         withCredentials: true,
       })
+
     console.log({ response })
+
+    // Refresh poll data after successful submission
+    await fetchPollData()
   } catch (error: any) {
     console.error({ error })
   } finally {
-    setIsPandering((prev) => ({ ...prev, [id]: false }))
+    // Reset submitting state
+    setIsSubmitting((prev) => ({ ...prev, [id]: false }))
   }
 }
+
 
 
  // Styles for the ellipsis animation
@@ -233,7 +241,8 @@ const selectedAnswers = Object.entries(selectedOptions)
     {pollData.map((poll) => {
       const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
 
-      const isPollExpired = expiredPolls[poll.id];
+      const isPollExpired = expiredPolls[poll.id]
+      const isCurrentlyPandering = isSubmitting[poll.id]
 
       return (
         <div
@@ -251,8 +260,12 @@ const selectedAnswers = Object.entries(selectedOptions)
                 className="rounded-full mr-4"
               />
               <div>
-                <p className="font-bold text-sm md:text-base">{poll.pollOwnerAlias}</p>
-                <p className="text-gray-800 text-xs md:text-sm">{countdowns[poll.id]}</p>
+                <p className="font-bold text-sm md:text-base">
+                  {poll.pollOwnerAlias}
+                </p>
+                <p className="text-gray-800 text-xs md:text-sm">
+                  {countdowns[poll.id]}
+                </p>
               </div>
             </div>
             <span
@@ -262,15 +275,23 @@ const selectedAnswers = Object.entries(selectedOptions)
               more_horiz
             </span>
           </div>
+          {/* Poll Description */}
+          {poll.description && (
+            <p className="mb-2 text-sm md:text-base text-gray-700">
+              {poll.description}
+            </p>
+          )}
 
           {/* Poll Question */}
-          <p className="mb-4 text-sm md:text-lg font-semibold">{poll.stations[0].questionText}</p>
+          <p className="mb-4 text-sm md:text-lg font-semibold">
+            {poll.stations[0].questionText}
+          </p>
 
           {/* Answer Options */}
           <div className="flex flex-col space-y-2 items-center">
             {poll.stations[0].answerOptions.map((option, index) => {
-              const optionKey = `poll-${poll.id}-option-${index}`;
-              const optionVotes = option.interactions?.length || 0;
+              const optionKey = `poll-${poll.id}-option-${index}`
+              const optionVotes = option.interactions?.length || 0
 
               return (
                 <div key={index} className="w-full">
@@ -341,7 +362,9 @@ const selectedAnswers = Object.entries(selectedOptions)
                     ? "Hide additional stations"
                     : "This pandar poll has multiple stations, see all stations "}
                   <span className="material-symbols-outlined ml-2">
-                    {expanded[poll.id] ? "arrow_circle_up" : "arrow_circle_down"}
+                    {expanded[poll.id]
+                      ? "arrow_circle_up"
+                      : "arrow_circle_down"}
                   </span>
                 </span>
               </div>
@@ -358,11 +381,16 @@ const selectedAnswers = Object.entries(selectedOptions)
                 className="overflow-hidden mt-4"
               >
                 {poll.stations.slice(1).map((station) => (
-                  <div key={station.id} className="border-t border-gray-500 pt-4 mt-4">
-                    <p className="mb-2 text-sm md:text-lg font-semibold">{station.questionText}</p>
+                  <div
+                    key={station.id}
+                    className="border-t border-gray-500 pt-4 mt-4"
+                  >
+                    <p className="mb-2 text-sm md:text-lg font-semibold">
+                      {station.questionText}
+                    </p>
                     <div className="flex flex-col space-y-2 items-center">
                       {station.answerOptions.map((option, idx) => {
-                        const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`;
+                        const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`
                         return (
                           <div key={idx} className="w-full">
                             {/* Radio Option */}
@@ -372,10 +400,19 @@ const selectedAnswers = Object.entries(selectedOptions)
                                 id={stationOptionKey}
                                 name={`poll-${poll.id}-station-${station.id}`}
                                 className="mr-2"
-                                onChange={() => handleOptionSelect(poll.id, station.id, idx)}
-                                disabled={!!selectedOptions[`poll-${poll.id}-station-${station.id}`]}
+                                onChange={() =>
+                                  handleOptionSelect(poll.id, station.id, idx)
+                                }
+                                disabled={
+                                  !!selectedOptions[
+                                    `poll-${poll.id}-station-${station.id}`
+                                  ]
+                                }
                               />
-                              <label htmlFor={stationOptionKey} className="text-xs md:text-sm w-full">
+                              <label
+                                htmlFor={stationOptionKey}
+                                className="text-xs md:text-sm w-full"
+                              >
                                 {option.text || (
                                   <Image
                                     src={option.file || ""}
@@ -387,7 +424,9 @@ const selectedAnswers = Object.entries(selectedOptions)
                               </label>
                             </div>
                             {/* Progress Bar */}
-                            {showResults[`poll-${poll.id}-station-${station.id}`] && (
+                            {showResults[
+                              `poll-${poll.id}-station-${station.id}`
+                            ] && (
                               <div className="flex items-center mt-1">
                                 <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
                                   <motion.div
@@ -396,7 +435,7 @@ const selectedAnswers = Object.entries(selectedOptions)
                                     animate={{
                                       width: `${getPercentage(
                                         option.interactions?.length || 0,
-                                        pollTotalVotes
+                                        pollTotalVotes,
                                       )}%`,
                                     }}
                                     transition={{ duration: 0.5 }}
@@ -405,14 +444,14 @@ const selectedAnswers = Object.entries(selectedOptions)
                                 <span className="text-xs text-secondary">
                                   {getPercentage(
                                     option.interactions?.length || 0,
-                                    pollTotalVotes
+                                    pollTotalVotes,
                                   )}
                                   %
                                 </span>
                               </div>
                             )}
                           </div>
-                        );
+                        )
                       })}
                     </div>
                   </div>
@@ -424,17 +463,21 @@ const selectedAnswers = Object.entries(selectedOptions)
           {/* Poll Footer */}
           <div className="flex w-full mx-auto items-center justify-center mt-4">
             <button
-              onClick={() => onSubmitPoll(poll.id)}
+              onClick={() => {
+                if (!isCurrentlyPandering) {
+                  onSubmitPoll(poll.id)
+                }
+              }}
               className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
-                isPandering[poll.id] || countdowns[poll.id] === "Expired"
+                isCurrentlyPandering || isPollExpired
                   ? "bg-gray-700 text-gray-300 cursor-not-allowed"
                   : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
               }`}
-              disabled={isPandering[poll.id] || countdowns[poll.id] === "Expired"}
+              disabled={isCurrentlyPandering || isPollExpired}
             >
-              {countdowns[poll.id] === "Expired" ? (
+              {isPollExpired ? (
                 "Expired"
-              ) : isPandering[poll.id] ? (
+              ) : isCurrentlyPandering ? (
                 <>
                   Pandaring<span className="dot1">.</span>
                   <span className="dot2">.</span>
@@ -449,7 +492,7 @@ const selectedAnswers = Object.entries(selectedOptions)
           {/* Overlay */}
           {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
         </div>
-      );
+      )
     })}
   </div>
 );
