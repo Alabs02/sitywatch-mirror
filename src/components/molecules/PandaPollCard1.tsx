@@ -204,19 +204,11 @@ const onSubmitPoll = async (id: string) => {
         },
         withCredentials: true,
       })
-
     console.log({ response })
-
-    // Refresh poll data after successful submission
-    await fetchPollData()
   } catch (error: any) {
     console.error({ error })
-  } finally {
-    // Reset submitting state
-    setIsSubmitting((prev) => ({ ...prev, [id]: false }))
   }
 }
-
 
 
  // Styles for the ellipsis animation
