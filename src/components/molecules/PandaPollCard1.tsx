@@ -364,7 +364,7 @@ const getPercentage = (votes: number, total: number) => {
         return (
           <div
             key={poll.pollId}
-            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
+            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-32 lg:mb-64 text-sm md:text-base relative"
           >
             {/* Header Section */}
             <div className="flex items-center justify-between mb-4">
