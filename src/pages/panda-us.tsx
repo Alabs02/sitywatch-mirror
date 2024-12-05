@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import PandPollContent from "@/components/molecules/PandaPollContent"
 import PandaPollCard1 from "@/components/molecules/PandaPollCard1"
 import SoulPanda from "@/components/molecules/SoulPanda"
 import PandaScent from "@/components/molecules/PandaScent"
 import RightSideComponent from "@/components/contents/RightSideComponent"
 import CreatePandarPoll from "@/components/contents/create-pandar-poll/CreatePandarPoll"
+import SinglePoll from "./poll/[pollId]"
 
 const pandaSection = {
   cards: [
@@ -34,20 +34,27 @@ const pandaSection = {
 const PandaUs = () => {
   const [activeTab, setActiveTab] = useState("PANDA POLLS")
   const [showCreatePoll, setShowCreatePoll] = useState(false)
+  const [showSinglePoll, setShowSinglePoll] = useState(false)
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName)
+    setShowCreatePoll(false) // Reset state when changing tabs
+    setShowSinglePoll(false)
   }
 
   const toggleCreatePoll = () => {
     setShowCreatePoll(!showCreatePoll)
+    setShowSinglePoll(false) // Ensure only one view is active
+  }
+
+  const navigateToSinglePoll = () => {
+    setShowSinglePoll(true)
+    setShowCreatePoll(false) // Ensure only one view is active
   }
 
   const renderPandaCard = () => {
     return pandaSection.cards.map((card) => (
       <div key={card.id} onClick={toggleCreatePoll}>
-        {" "}
-        {/* On click, toggle the poll */}
         <PandPollContent
           icon={card.icon}
           image={card.image}
@@ -95,10 +102,13 @@ const PandaUs = () => {
 
         <div className="w-full h-full tab-content mt-4 px-4 shadow-inner shadow-gray-400/40 border rounded-t-[20px] overflow-hidden">
           <span
-            onClick={toggleCreatePoll}
+            onClick={() => {
+              setShowCreatePoll(false)
+              setShowSinglePoll(false)
+            }}
             className="cursor-pointer flex items-center justify-center p-1 my-1 md:my-2 rounded-full bg-gradient-to-r from-tertiary-100 to-neutral-100 font-bold sticky top-0 z-10 text-[10px] md:text-sm"
           >
-            {showCreatePoll ? (
+            {showCreatePoll || showSinglePoll ? (
               <>
                 <span className="material-symbols-outlined mr-2">
                   arrow_back
@@ -113,12 +123,14 @@ const PandaUs = () => {
           <div className="overflow-y-auto h-full">
             {activeTab === "PANDA POLLS" && (
               <div className="overflow-y-auto h-full">
-                {!showCreatePoll ? (
+                {!showCreatePoll && !showSinglePoll ? (
                   <>
                     {renderPandaCard()}
-                    <PandaPollCard1 />
+                    <div onClick={navigateToSinglePoll}>
+                      <PandaPollCard1 />
+                    </div>
                   </>
-                ) : (
+                ) : showCreatePoll ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -126,6 +138,15 @@ const PandaUs = () => {
                     transition={{ duration: 0.5 }}
                   >
                     <CreatePandarPoll />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <SinglePoll poll={null} />
                   </motion.div>
                 )}
               </div>

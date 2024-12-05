@@ -474,6 +474,12 @@ const getPercentage = (votes: number, total: number) => {
                 )
               })}
             </div>
+            <div className="flex items-center justify-center space-x-4">
+              <span className="material-symbols-outlined">cognition</span>
+              <span className="material-symbols-outlined">repeat</span>
+              <span className="material-symbols-outlined">bookmark</span>
+              <span className="material-symbols-outlined">send</span>
+            </div>
 
             {/* Expand Stations Button */}
             {poll.stations.length > 1 && (
