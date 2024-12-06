@@ -17,6 +17,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
   const {
     pollData,
     fetchPollData,
+    fetchSinglePoll,
     isFetching,
     error,
     updateProgress,
@@ -27,6 +28,12 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
   const [expired, setExpired] = useState(false)
 
   useEffect(() => {
+    if (pollId) {
+      fetchSinglePoll(pollId as string)
+    }
+  }, [pollId])
+
+  useEffect(() => {
     if (!pollData.length) {
       fetchPollData()
     }
@@ -34,7 +41,6 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
 
   useEffect(() => {
     if (poll) {
-      // Check if the poll is expired
       const pollEndTime = new Date(poll.expiresAt).getTime()
       setExpired(Date.now() > pollEndTime)
     }
@@ -63,14 +69,10 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
 
       alert("Your vote has been recorded!")
       updateProgress(pollId as string, selectedOption)
-      fetchPollData() // Refresh poll data
+      fetchPollData()
     } catch (err) {
       console.error("Error submitting vote:", err)
     }
-  }
-
-  if (!poll) {
-    return <div>No poll data available.</div>
   }
 
   if (isFetching) {
@@ -81,7 +83,11 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
     return <div>Error: {error}</div>
   }
 
-  const currentStation = poll.stations[0] // Assuming the poll has stations
+  if (!poll) {
+    return <div>No poll data available.</div>
+  }
+
+  const currentStation = poll.stations[0]
 
   return (
     <motion.div
@@ -95,14 +101,20 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
       <div className="poll-header flex items-center justify-between">
         <div className="flex items-center">
           <Image
-            src={poll.pollOwnerAlias || "/default-avatar.png"}
-            alt={poll.pollOwnerAlias}
+            src={
+              poll.pollOwnerAlias?.startsWith("http")
+                ? poll.pollOwnerAlias
+                : poll.pollOwnerAlias?.startsWith("/")
+                ? poll.pollOwnerAlias
+                : "/default-avatar.png"
+            }
+            alt={poll.pollOwnerAlias || "Poll Owner"}
             width={40}
             height={40}
             className="rounded-full"
           />
           <div className="ml-3">
-            <h2 className="font-bold">{poll.pollOwnerAlias}</h2>
+            <h2 className="font-bold">{poll.pollOwnerAlias || "Anonymous"}</h2>
             <p className="text-gray-500">
               {new Date(poll.expiresAt).toLocaleString()}
             </p>
@@ -156,4 +168,3 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
 }
 
 export default SinglePoll
-

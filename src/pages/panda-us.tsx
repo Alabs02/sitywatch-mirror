@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { motion } from "framer-motion"
 import PandPollContent from "@/components/molecules/PandaPollContent"
 import PandaPollCard1 from "@/components/molecules/PandaPollCard1"
+import { usePandarPollStore, PollData } from "@/store/pandar.store"
 import SoulPanda from "@/components/molecules/SoulPanda"
 import PandaScent from "@/components/molecules/PandaScent"
 import RightSideComponent from "@/components/contents/RightSideComponent"
@@ -32,6 +33,8 @@ const pandaSection = {
 }
 
 const PandaUs = () => {
+  const { fetchSinglePoll, pollData, isFetching } = usePandarPollStore()
+  const [currentPoll, setCurrentPoll] = useState<PollData | null>(null)
   const [activeTab, setActiveTab] = useState("PANDA POLLS")
   const [showCreatePoll, setShowCreatePoll] = useState(false)
   const [showSinglePoll, setShowSinglePoll] = useState(false)
@@ -47,23 +50,48 @@ const PandaUs = () => {
     setShowSinglePoll(false) // Ensure only one view is active
   }
 
-  const navigateToSinglePoll = () => {
+  const navigateToSinglePoll = async (pollId: string) => {
     setShowSinglePoll(true)
-    setShowCreatePoll(false) // Ensure only one view is active
+    setShowCreatePoll(false)
+
+    const existingPoll = pollData.find((p) => p.id === pollId)
+    if (!existingPoll) {
+      await fetchSinglePoll(pollId) 
+      const newlyFetchedPoll = pollData.find((p) => p.id === pollId)
+      setCurrentPoll(newlyFetchedPoll || null)
+    } else {
+      setCurrentPoll(existingPoll)
+    }
   }
 
-  const renderPandaCard = () => {
-    return pandaSection.cards.map((card) => (
-      <div key={card.id} onClick={toggleCreatePoll}>
-        <PandPollContent
-          icon={card.icon}
-          image={card.image}
-          title={card.title}
-          description={card.description}
-        />
-      </div>
-    ))
-  }
+
+const renderPandaCard = () => {
+  return (
+    <>
+      {/* Action Cards */}
+      {pandaSection.cards.map((card) => (
+        <div key={card.id} onClick={toggleCreatePoll}>
+          <PandPollContent
+            icon={card.icon}
+            image={card.image}
+            title={card.title}
+            description={card.description}
+          />
+        </div>
+      ))}
+
+      {/* Poll Cards */}
+      {pollData.map((poll) => (
+        <div key={poll.id} onClick={() => navigateToSinglePoll(poll.id)}>
+          <PandaPollCard1 />
+        </div>
+      ))}
+    </>
+  )
+}
+
+
+  
 
   return (
     <div className="w-full h-full grid grid-cols-12 gap-x-4 px-4 md:px-2 sm:px-1">
@@ -124,12 +152,7 @@ const PandaUs = () => {
             {activeTab === "PANDA POLLS" && (
               <div className="overflow-y-auto h-full">
                 {!showCreatePoll && !showSinglePoll ? (
-                  <>
-                    {renderPandaCard()}
-                    <div onClick={navigateToSinglePoll}>
-                      <PandaPollCard1 />
-                    </div>
-                  </>
+                  <>{renderPandaCard()}</>
                 ) : showCreatePoll ? (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -146,7 +169,7 @@ const PandaUs = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <SinglePoll poll={null} />
+                    <SinglePoll poll={currentPoll} />
                   </motion.div>
                 )}
               </div>

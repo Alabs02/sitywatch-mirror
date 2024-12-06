@@ -41,17 +41,20 @@ export interface PollData {
 }
 
 interface PandarPollState {
-  pollData: PollData[]
+  pollData: PollData[] // All polls
+  currentPoll: PollData | null // Single poll
   isFetching: boolean
   error: string | null
-  progress: Record<string, string[]>
+  progress: Record<string, string[]> // Tracks answered options
   fetchPollData: () => Promise<void>
+  fetchSinglePoll: (pollId: string) => Promise<void> // Fetch single poll
   updateProgress: (pollId: string, answerOptionId: string) => void
   loadProgress: () => void
 }
 
 export const usePandarPollStore = create<PandarPollState>((set) => ({
   pollData: [],
+  currentPoll: null,
   isFetching: false,
   error: null,
   progress:
@@ -91,6 +94,41 @@ export const usePandarPollStore = create<PandarPollState>((set) => ({
       })
 
       set({ pollData, isFetching: false })
+    } catch (error) {
+      set({ error: (error as Error).message, isFetching: false })
+    }
+  },
+
+  fetchSinglePoll: async (pollId: string) => {
+    set({ isFetching: true, error: null, currentPoll: null })
+
+    try {
+      const accessToken = Cookies.get("ACCESS_TOKEN")
+      const url = `${baseURI}${apiRoutes.PANDAR_POLLS}/${pollId}`
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData?.message || `Failed to fetch poll ${pollId}`)
+      }
+
+      const currentPoll: PollData = await response.json()
+
+      currentPoll.stations.forEach((station) => {
+        station.answerOptions.forEach((option) => {
+          if (!option.interactions) {
+            option.interactions = []
+          }
+        })
+      })
+
+      set({ currentPoll, isFetching: false })
     } catch (error) {
       set({ error: (error as Error).message, isFetching: false })
     }
