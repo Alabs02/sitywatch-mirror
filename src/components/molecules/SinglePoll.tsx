@@ -1,169 +1,359 @@
-import React, { useEffect, useState } from "react"
-import { useRouter } from "next/router"
-import { motion } from "framer-motion"
-import { usePandarPollStore } from "@/store/pandar.store"
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
-import { AnswerOption, PollData } from "@/store/pandar.store"
-import { apiRoutes } from "@/constants/apiRoutes"
+import { motion, AnimatePresence } from "framer-motion"
+import PandaPollOverlay from "./PandaPollOverlay"
+import { usePandarPollStore, AnswerOption, PollData } from "@/store/pandar.store"
+import { http } from "@/libs"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
+import Cookies from "js-cookie"
+
 
 interface SinglePollProps {
-  poll: PollData | null
+  poll: PollData // Update this to expect the whole poll object
+  onBack: () => void
 }
 
-const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
-  const router = useRouter()
-  const { pollId } = router.query
 
-  const {
-    pollData,
-    fetchPollData,
-    fetchSinglePoll,
-    isFetching,
-    error,
-    updateProgress,
-    progress,
-  } = usePandarPollStore()
+const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
+  const { pollData, fetchPollData, isFetching, error } = usePandarPollStore()
+  const [showOverlay, setShowOverlay] = useState(false)
+  const [selectedOptions, setSelectedOptions] = useState<{
+    [key: string]: number | null
+  }>({})
+  const [showResults, setShowResults] = useState<{ [key: string]: boolean }>({})
+  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({})
 
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
-  const [expired, setExpired] = useState(false)
-
-  useEffect(() => {
-    if (pollId) {
-      fetchSinglePoll(pollId as string)
-    }
-  }, [pollId])
+  const [countdowns, setCountdowns] = useState<{ [key: string]: string }>({})
+  const [isSubmitting, setIsSubmitting] = useState<{ [key: string]: boolean }>(
+    {},
+  )
+  const [expiredPolls, setExpiredPolls] = useState<{ [key: string]: boolean }>(
+    {},
+  )
+  const [isPandering, setIsPandering] = useState<{ [key: string]: boolean }>({})
 
   useEffect(() => {
-    if (!pollData.length) {
+    if (pollData.length === 0) {
       fetchPollData()
     }
-  }, [fetchPollData, pollData])
+  }, [pollData, fetchPollData])
+  useEffect(() => {
+    const calculateCountdown = (expiresAt: string) => {
+      const now = new Date().getTime()
+      const end = new Date(expiresAt).getTime()
+      const diff = end - now
+
+      if (diff <= 0) return "Expired"
+
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      )
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      return `${hours} hrs ${minutes} mins remaining`
+    }
+
+    const updateCountdowns = () => {
+      const updatedCountdowns: { [key: string]: string } = {}
+      const updatedExpiredPolls: { [key: string]: boolean } = {}
+      pollData.forEach((poll) => {
+        const countdown = calculateCountdown(poll.expiresAt)
+        updatedCountdowns[poll.id] = countdown
+        updatedExpiredPolls[poll.id] = countdown === "Expired"
+      })
+
+      setCountdowns(updatedCountdowns)
+      setExpiredPolls(updatedExpiredPolls)
+    }
+
+    updateCountdowns()
+    const intervalId = setInterval(updateCountdowns, 60000)
+    return () => clearInterval(intervalId)
+  }, [pollData])
+
+  // Filter the specific poll based on pollId
+const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
+
+
+ if (!poll) {
+   return <div>Poll not found.</div>
+ }
 
   useEffect(() => {
-    if (poll) {
-      const pollEndTime = new Date(poll.expiresAt).getTime()
-      setExpired(Date.now() > pollEndTime)
+    const localStorage = typeof window !== "undefined" && window.localStorage
+    if (localStorage) {
+      localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions))
+    } else {
+      // Handle the case where local storage is unavailable (optional)
+      console.warn("Local storage is not available")
     }
-  }, [poll])
+  }, [selectedOptions])
 
-  const handleVote = async () => {
-    if (expired || !selectedOption) return
+  useEffect(() => {
+    console.log("Poll Data:", pollData)
+    pollData.forEach((poll) => {
+      poll.stations[0].answerOptions.forEach((option) => {
+        console.log(
+          `Option Text: ${option.text}, Interactions:`,
+          option.interactions,
+        )
+      })
+    })
+  }, [pollData])
 
+  // Filter the specific poll based on pollId
+  // const selectedPoll = pollData.find((poll) => poll.id === pollId)
+
+  // Debugging log for pollId
+  console.log("Selected Poll ID:", poll)
+  console.log("Selected Poll:", selectedPoll)
+
+  if (!selectedPoll) {
+    return <div>Poll not found.</div>
+  }
+
+   const getTotalVotes = (options: AnswerOption[]) => {
+     return options.reduce((sum, option) => {
+       return sum + (option.interactions ? option.interactions.length : 0)
+     }, 0)
+   }
+  const pollTotalVotes = getTotalVotes(selectedPoll.stations[0].answerOptions)
+  const isPollExpired = expiredPolls[selectedPoll.id]
+  const isCurrentlyPandering = isSubmitting[selectedPoll.id]
+  const toggleOverlay = () => {
+    setShowOverlay(!showOverlay)
+  }
+
+  const handleOptionSelect = async (
+    pollId: string,
+    stationId: string,
+    optionIndex: number,
+  ) => {
+    if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
+
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [`${pollId}-${stationId}`]: optionIndex,
+    }))
+    setShowResults((prev) => ({
+      ...prev,
+      [`${pollId}-${stationId}`]: true,
+    }))
+
+    // Update the poll data in the store
+    const updatedPollData = pollData.map((poll) => {
+      if (poll.id === pollId) {
+        poll.stations = poll.stations.map((station) => {
+          if (station.id === stationId) {
+            station.answerOptions[optionIndex].interactions.push({
+              id: `interaction-${Date.now()}`,
+              pollInteractionId: pollId,
+              answerOptionId: station.answerOptions[optionIndex].id,
+              createdAt: new Date().toISOString(),
+            })
+          }
+          return station
+        })
+      }
+      return poll
+    })
+
+    usePandarPollStore.setState({ pollData: updatedPollData })
+
+    // Save interaction to backend
+    const accessToken = Cookies.get("ACCESS_TOKEN")
     try {
-      const response = await fetch(
-        `https://sitywatch-backend.onrender.com/api/v1/${apiRoutes.PANDAR_POLLS_INTERACTIONS(
-          pollId as string,
-        )}`,
+      await http.service(false).post(
+        `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ answerOptionId: selectedOption }),
+          selectedAnswers: [
+            {
+              answerOptionId: updatedPollData.find(
+                (poll) => poll.id === pollId,
+              )!.stations[0].answerOptions[optionIndex].id,
+            },
+          ],
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
         },
       )
-
-      if (!response.ok) {
-        throw new Error("Failed to submit vote.")
-      }
-
-      alert("Your vote has been recorded!")
-      updateProgress(pollId as string, selectedOption)
-      fetchPollData()
-    } catch (err) {
-      console.error("Error submitting vote:", err)
+    } catch (error) {
+      console.error("Error saving interaction:", error)
     }
   }
 
-  if (isFetching) {
-    return <div>Loading...</div>
+  const toggleExpandedPoll = (pollId: string) => {
+    setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
   }
 
-  if (error) {
-    return <div>Error: {error}</div>
+  // Calculate the total votes for a set of options, handling undefined interactions
+ 
+
+  // Calculate the percentage of votes for an option
+  const getPercentage = (votes: number, total: number) => {
+    if (total === 0) return "0"
+    return ((votes / total) * 100).toFixed(1)
   }
 
-  if (!poll) {
-    return <div>No poll data available.</div>
+  const onSubmitPoll = async (id: string) => {
+    // Persist pandering state
+    setIsSubmitting((prev) => ({ ...prev, [id]: true }))
+
+    const accessToken = Cookies.get("ACCESS_TOKEN")
+
+    const selectedAnswers = Object.entries(selectedOptions)
+      .map(([key, optionIndex]) => {
+        if (optionIndex === null) return null
+        const poll = pollData.find((poll) => poll.id === id)
+        if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+          return null
+        return {
+          answerOptionId:
+            poll.stations[0].answerOptions[optionIndex].id || null,
+        }
+      })
+      .filter((answer) => answer && answer.answerOptionId !== null)
+
+    const payload = { selectedAnswers }
+
+    try {
+      const response = await http
+        .service(false)
+        .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        })
+      console.log({ response })
+    } catch (error: any) {
+      console.error({ error })
+    }
   }
 
-  const currentStation = poll.stations[0]
+  const ellipsisStyle = `
+    @keyframes ellipsis {
+      0% { opacity: 0; }
+      33% { opacity: 1; }
+      66% { opacity: 0; }
+    }
+    .dot1 { animation: ellipsis 1s infinite; animation-delay: 0s; }
+    .dot2 { animation: ellipsis 1s infinite; animation-delay: 0.33s; }
+    .dot3 { animation: ellipsis 1s infinite; animation-delay: 0.66s; }
+  `
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="single-poll-container p-4"
-    >
-      {/* Poll Header */}
-      <div className="poll-header flex items-center justify-between">
-        <div className="flex items-center">
-          <Image
-            src={
-              poll.pollOwnerAlias?.startsWith("http")
-                ? poll.pollOwnerAlias
-                : poll.pollOwnerAlias?.startsWith("/")
-                ? poll.pollOwnerAlias
-                : "/default-avatar.png"
-            }
-            alt={poll.pollOwnerAlias || "Poll Owner"}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          <div className="ml-3">
-            <h2 className="font-bold">{poll.pollOwnerAlias || "Anonymous"}</h2>
-            <p className="text-gray-500">
-              {new Date(poll.expiresAt).toLocaleString()}
-            </p>
-          </div>
-        </div>
-        <span className="material-symbols-outlined cursor-pointer">
-          more_vert
-        </span>
-      </div>
-
-      {/* Poll Description */}
-      <div className="poll-description mt-4">
-        <p className="text-sm text-gray-600">{poll.description}</p>
-        <h3 className="text-lg font-bold mt-2">
-          {currentStation.questionText}
-        </h3>
-      </div>
-
-      {/* Poll Options */}
-      <div className="poll-options mt-4">
-        {currentStation.answerOptions.map((option: AnswerOption) => (
-          <button
-            key={option.id}
-            className={`poll-option-btn ${
-              selectedOption === option.id ? "active" : ""
-            }`}
-            onClick={() => setSelectedOption(option.id)}
-            disabled={
-              expired ||
-              (progress[pollId as string] &&
-                progress[pollId as string].includes(option.id))
-            }
-          >
-            {option.text}
-          </button>
-        ))}
-      </div>
-
-      {/* Submit Button */}
-      <button
-        onClick={handleVote}
-        disabled={expired || !selectedOption}
-        className={`submit-btn mt-4 ${
-          expired || !selectedOption ? "disabled" : ""
-        }`}
+ return (
+    <div className="mb-32">
+      <div
+        className="text-secondary text-sm  mb-4 inline-flex p-1 items-center border border-secondary rounded-full cursor-pointer"
+        onClick={onBack}
       >
-        {expired ? "Poll Expired" : "Pander"}
-      </button>
-    </motion.div>
+        <span className="material-symbols-outlined">arrow_back</span>
+        <span> Back to polls</span>
+      </div>
+
+      {/* Single poll content */}
+      <div
+        key={selectedPoll.id}
+        className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
+      >
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <Image
+              src="/pandar-img.png"
+              alt={selectedPoll.pollOwnerAlias}
+              width={70}
+              height={70}
+              className="rounded-full mr-4"
+            />
+            <div>
+              <p className="font-bold text-sm md:text-base">{selectedPoll.pollOwnerAlias}</p>
+              <p className="text-gray-800 text-xs md:text-sm">{countdowns[selectedPoll.id]}</p>
+            </div>
+          </div>
+          <span className="material-symbols-outlined cursor-pointer" onClick={toggleOverlay}>
+            more_horiz
+          </span>
+        </div>
+
+        {/* Poll Description */}
+        {selectedPoll.description && (
+          <p className="mb-2 text-sm md:text-base text-gray-700">{selectedPoll.description}</p>
+        )}
+
+        {/* Poll Question */}
+        <p className="mb-4 text-sm md:text-lg font-semibold">{selectedPoll.stations[0].questionText}</p>
+
+        {/* Answer Options */}
+        <div className="flex flex-col space-y-2 items-center">
+          {selectedPoll.stations[0].answerOptions.map((option, index) => {
+            const optionKey = `poll-${selectedPoll.id}-option-${index}`
+            const optionVotes = option.interactions?.length || 0
+
+            return (
+              <div key={index} className="w-full">
+                {/* Radio Option */}
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id={optionKey}
+                    name={`poll-${selectedPoll.id}`}
+                    className="mr-2"
+                    onChange={() =>
+                      handleOptionSelect(selectedPoll.id, selectedPoll.stations[0].id, index)
+                    }
+                    disabled={selectedOptions[`${selectedPoll.id}-${selectedPoll.stations[0].id}`] !== undefined}
+                  />
+                  <label htmlFor={optionKey} className="text-xs md:text-sm w-full">
+                    {option.text || (
+                      <Image src={option.file || ""} alt="Option image" width={50} height={50} />
+                    )}
+                  </label>
+                </div>
+                {/* Progress Bar */}
+                {showResults[`${selectedPoll.id}-${selectedPoll.stations[0].id}`] && (
+                  <div className="flex items-center mt-1">
+                    <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
+                      <motion.div
+                        className="bg-secondary h-2.5 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${getPercentage(optionVotes, pollTotalVotes)}%` }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </div>
+                    <span className="text-xs text-secondary">{getPercentage(optionVotes, pollTotalVotes)}%</span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Poll Footer */}
+        <div className="flex w-full mx-auto items-center justify-center mt-4">
+          <button
+            onClick={() => {
+              if (!isCurrentlyPandering) {
+                onSubmitPoll(selectedPoll.id)
+              }
+            }}
+            className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
+              isCurrentlyPandering || isPollExpired
+                ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
+            }`}
+            disabled={isCurrentlyPandering || isPollExpired}
+          >
+            {isPollExpired ? "Expired" : isCurrentlyPandering ? "Pandaring..." : "PANDAR"}
+          </button>
+        </div>
+
+        {/* Overlay */}
+        {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
+      </div>
+    </div>
   )
 }
 

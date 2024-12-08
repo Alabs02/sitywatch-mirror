@@ -1,0 +1,221 @@
+import { create } from "zustand"
+import Cookies from "js-cookie"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
+
+export interface Interaction {
+  id: string
+  pollInteractionId: string
+  answerOptionId: string
+  createdAt: string
+}
+
+export interface AnswerOption {
+  id: string
+  text: string
+  file?: string
+  interactions: Interaction[]
+  _count?: {
+    interactions: number
+  }
+}
+
+export interface Station {
+  id: string
+  questionNumber: number
+  questionText: string
+  descriptionText: string
+  file?: string
+  answerOptions: AnswerOption[]
+  _count?: {
+    interactions: number
+  }
+}
+
+export interface PollInteraction {
+  id: string
+  pandarAlias: string
+  selectedAnswers: { id: string; answerOptionId: string }[]
+}
+
+export interface PollData {
+  id: string
+  pollOwnerAlias: string
+  description?: string
+  stations: Station[]
+  expiresAt: string
+  pollInteractions: PollInteraction[]
+}
+
+interface PandarPollState {
+  pollData: PollData[] // All polls
+  currentPoll: PollData | null // Single poll
+  isFetching: boolean
+  error: string | null
+  progress: Record<string, string[]> // Tracks answered options (pollId -> array of answerOptionIds)
+  fetchPollData: () => Promise<void>
+  fetchSinglePoll: (pollId: string) => Promise<PollData>
+  updateProgress: (pollId: string, answerOptionId: string) => void
+  loadProgress: () => void
+  updateInteractions: (pollId: string, answerOptionId: string) => void
+}
+
+export const usePandarPollStore = create<PandarPollState>((set, get) => ({
+  pollData: [],
+  currentPoll: null,
+  isFetching: false,
+  error: null,
+  progress:
+    typeof window !== "undefined" && window.localStorage
+      ? JSON.parse(localStorage.getItem("pollProgress") || "{}")
+      : {},
+
+  fetchPollData: async () => {
+    set({ isFetching: true, error: null })
+
+    try {
+      const accessToken = Cookies.get("ACCESS_TOKEN")
+      const url = `${baseURI}${apiRoutes.PANDAR_POLLS}`
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData?.message || "Failed to fetch polls")
+      }
+
+      const pollData: PollData[] = await response.json()
+
+      pollData.forEach((poll) => {
+        poll.stations.forEach((station) => {
+          station.answerOptions.forEach((option) => {
+            if (!option.interactions) {
+              option.interactions = []
+            }
+          })
+        })
+      })
+
+      set({ pollData, isFetching: false })
+    } catch (error) {
+      set({ error: (error as Error).message, isFetching: false })
+    }
+  },
+
+  fetchSinglePoll: async (pollId: string): Promise<PollData> => {
+    set({ isFetching: true, error: null, currentPoll: null })
+
+    try {
+      const accessToken = Cookies.get("ACCESS_TOKEN")
+      const url = `${baseURI}${apiRoutes.PANDAR_POLLS}/${pollId}`
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData?.message || `Failed to fetch poll ${pollId}`)
+      }
+
+      const currentPoll: PollData = await response.json()
+
+      currentPoll.stations.forEach((station) => {
+        station.answerOptions.forEach((option) => {
+          if (!option.interactions) {
+            option.interactions = []
+          }
+          if (!option._count) {
+            option._count = { interactions: 0 }
+          }
+        })
+      })
+
+      set({ currentPoll, isFetching: false })
+      return currentPoll
+    } catch (error) {
+      set({ error: (error as Error).message, isFetching: false })
+      throw error
+    }
+  },
+
+  updateProgress: (pollId, answerOptionId) => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      set((state) => {
+        const updatedProgress = {
+          ...state.progress,
+          [pollId]: Array.from(
+            new Set([...(state.progress[pollId] || []), answerOptionId]),
+          ),
+        }
+        localStorage.setItem("pollProgress", JSON.stringify(updatedProgress))
+        return { progress: updatedProgress }
+      })
+    }
+  },
+
+  loadProgress: () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      set({
+        progress: JSON.parse(
+          window.localStorage.getItem("pollProgress") || "{}",
+        ),
+      })
+    }
+  },
+
+  updateInteractions: (pollId: string, answerOptionId: string) => {
+    set((state) => {
+      const updatedPollData = state.pollData.map((poll) => {
+        if (poll.id === pollId) {
+          const updatedStations = poll.stations.map((station) => {
+            const updatedAnswerOptions = station.answerOptions.map((option) => {
+              if (option.id === answerOptionId) {
+                return {
+                  ...option,
+                  _count: {
+                    interactions: (option._count?.interactions || 0) + 1,
+                  },
+                }
+              }
+              return option
+            })
+            return { ...station, answerOptions: updatedAnswerOptions }
+          })
+          return { ...poll, stations: updatedStations }
+        }
+        return poll
+      })
+
+      let updatedCurrentPoll = state.currentPoll
+      if (state.currentPoll?.id === pollId) {
+        updatedCurrentPoll = {
+          ...state.currentPoll,
+          stations: state.currentPoll.stations.map((station) => {
+            const updatedAnswerOptions = station.answerOptions.map((option) => {
+              if (option.id === answerOptionId) {
+                return {
+                  ...option,
+                  _count: {
+                    interactions: (option._count?.interactions || 0) + 1,
+                  },
+                }
+              }
+              return option
+            })
+            return { ...station, answerOptions: updatedAnswerOptions }
+          }),
+        }
+      }
+
+      return { pollData: updatedPollData, currentPoll: updatedCurrentPoll }
+    })
+  },
+}))

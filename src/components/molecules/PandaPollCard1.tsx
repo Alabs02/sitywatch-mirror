@@ -1,87 +1,42 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import PandaPollOverlay from "./PandaPollOverlay";
-import {
-  usePandarPollStore,
-  AnswerOption,
-  PollData,
- 
-} from "@/store/pandar.store"
-import { http } from "@/libs";
-import { apiRoutes,baseURI } from "@/constants/apiRoutes";
+import React, { useEffect, useState } from "react"
+import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
+import PandaPollOverlay from "./PandaPollOverlay"
+import { usePandarPollStore, AnswerOption } from "@/store/pandar.store"
+import { http } from "@/libs"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 import Cookies from "js-cookie"
-
+import SinglePoll from "./SinglePoll"
 
 // option and station types
 interface Option {
-  text?: string;
-  file?: string;
+  text?: string
+  file?: string
   interactions: {
-    id: string;
-    pollInteractionId: string;
-    answerOptionId: string;
-    createdAt: string;
-  }[];
-}
-
-interface Station {
-  id: string;
-  questionNumber: number;
-  questionText: string;
-  descriptionText: string;
-  file?: string;
-  answerOptions: Option[];
-}
-
-interface Poll {
-  id: number;
-  author: string;
-  question: string;
-  options: Option[];
-  remainingTime: string;
-  stations?: Station[];
-}
-interface NormalizedPollData {
-  pollId: string
-  description: string | null
-  isMatched: boolean
-  ownerAlias: string
-  stations: {
-    stationId: string
-    questionNumber: number
-    questionText: string
-    descriptionText: string
-    file: string | null
-    answerOptions: {
-      optionId: string
-      text: string | null
-      file: string | null
-      interactionCount: number
-    }[]
+    id: string
+    pollInteractionId: string
+    answerOptionId: string
+    createdAt: string
   }[]
 }
 
-const normalizePollData = (data: PollData): NormalizedPollData => ({
-  pollId: data.id,
-  description: data.description || null,
-  isMatched: false,
-  ownerAlias: data.pollOwnerAlias,
-  stations: data.stations.map((station) => ({
-    stationId: station.id,
-    questionNumber: station.questionNumber,
-    questionText: station.questionText,
-    descriptionText: station.descriptionText,
-    file: station.file || null,
-    answerOptions: station.answerOptions.map((option) => ({
-      optionId: option.id,
-      text: option.text || null,
-      file: option.file || null,
-      interactionCount: option.interactions.length, // Use interaction length for votes
-    })),
-  })),
-})
+interface Station {
+  id: string
+  questionNumber: number
+  questionText: string
+  descriptionText: string
+  file?: string
+  answerOptions: Option[]
+}
 
+interface Poll {
+  id: number
+  author: string
+  question: string
+  options: Option[]
+  remainingTime: string
+  stations?: Station[]
+}
 
 const PandaPollCard1: React.FC = () => {
   const { pollData, fetchPollData, isFetching, error } = usePandarPollStore()
@@ -100,9 +55,7 @@ const PandaPollCard1: React.FC = () => {
     {},
   )
   const [isPandering, setIsPandering] = useState<{ [key: string]: boolean }>({})
-  const [normalizedPolls, setNormalizedPolls] = useState<NormalizedPollData[]>(
-    [],
-  )
+   const [selectedPollId, setSelectedPollId] = useState<string | null>(null) 
 
   const useLocalStorage = () => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -176,166 +129,137 @@ const PandaPollCard1: React.FC = () => {
     })
   }, [pollData])
 
-  // Fetch all polls on mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchPollData() // Fetch from store
-        const data = usePandarPollStore.getState().pollData
-        const normalized = data.map(normalizePollData)
-        setNormalizedPolls(normalized) // Update state with normalized data
-      } catch (err) {
-        console.error("Error fetching poll data:", err)
-      }
-    }
-    fetchData()
-  }, [fetchPollData])
-
-  const fetchSinglePollData = async (
-    pollId: string,
-  ): Promise<NormalizedPollData | null> => {
-    try {
-      const response = await http
-        .service(false)
-        .get(`${baseURI}${apiRoutes.GET_SINGLE_POLL(pollId)}`)
-      return normalizePollData(response.data as PollData)
-    } catch (error) {
-      console.error("Error fetching single poll data:", error)
-      return null
-    }
-  }
-
   const toggleOverlay = () => {
     setShowOverlay(!showOverlay)
   }
 
- const handleOptionSelect = async (
-   pollId: string,
-   stationId: string,
-   optionIndex: number,
- ) => {
-   if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
+  const handlePollClick = (pollId: string) => {
+    console.log("Poll clicked:", pollId)
+    setSelectedPollId(pollId) // Ensure correct ID is stored
+  }
 
-   setIsSubmitting((prev) => ({ ...prev, [pollId]: true }))
 
-   const accessToken = Cookies.get("ACCESS_TOKEN")
-   const poll = normalizedPolls.find((p) => p.pollId === pollId)
-   if (!poll) return
+   useEffect(() => {
+     console.log("Selected Poll ID changed:", selectedPollId)
+   }, [selectedPollId])
 
-   const station = poll.stations.find((s) => s.stationId === stationId)
-   if (!station) return
 
-   const selectedOptionId = station.answerOptions[optionIndex].optionId
+    const handleBackToPolls = () => {
+      setSelectedPollId(null) // Reset to show the list of polls
+    }
 
-   try {
-     // Submit the vote
-     await http.service(false).post(
-       `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
-       {
-         selectedAnswers: [{ answerOptionId: selectedOptionId }],
-       },
-       {
-         headers: { Authorization: `Bearer ${accessToken}` },
-         withCredentials: true,
-       },
-     )
+  const handleOptionSelect = async (
+    pollId: string,
+    stationId: string,
+    optionIndex: number,
+  ) => {
+    if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
 
-     // Fetch updated poll data
-     const updatedPoll = await fetchSinglePollData(pollId)
-     if (updatedPoll) {
-       setNormalizedPolls((prevPolls) =>
-         prevPolls.map((p) => (p.pollId === pollId ? updatedPoll : p)),
-       )
-     }
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [`${pollId}-${stationId}`]: optionIndex,
+    }))
+    setShowResults((prev) => ({
+      ...prev,
+      [`${pollId}-${stationId}`]: true,
+    }))
 
-     // Update UI state
-     setSelectedOptions((prev) => ({
-       ...prev,
-       [`${pollId}-${stationId}`]: optionIndex,
-     }))
-     setShowResults((prev) => ({
-       ...prev,
-       [`${pollId}-${stationId}`]: true,
-     }))
-   } catch (error) {
-     console.error("Error submitting vote:", error)
-   } finally {
-     setIsSubmitting((prev) => ({ ...prev, [pollId]: false }))
-   }
- }
+    // Update the poll data in the store
+    const updatedPollData = pollData.map((poll) => {
+      if (poll.id === pollId) {
+        poll.stations = poll.stations.map((station) => {
+          if (station.id === stationId) {
+            station.answerOptions[optionIndex].interactions.push({
+              id: `interaction-${Date.now()}`,
+              pollInteractionId: pollId,
+              answerOptionId: station.answerOptions[optionIndex].id,
+              createdAt: new Date().toISOString(),
+            })
+          }
+          return station
+        })
+      }
+      return poll
+    })
+
+    usePandarPollStore.setState({ pollData: updatedPollData })
+
+    // Save interaction to backend
+    const accessToken = Cookies.get("ACCESS_TOKEN")
+    try {
+      await http.service(false).post(
+        `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
+        {
+          selectedAnswers: [
+            {
+              answerOptionId: updatedPollData.find(
+                (poll) => poll.id === pollId,
+              )!.stations[0].answerOptions[optionIndex].id,
+            },
+          ],
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        },
+      )
+    } catch (error) {
+      console.error("Error saving interaction:", error)
+    }
+  }
 
   const toggleExpandedPoll = (pollId: string) => {
     setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
   }
 
   // Calculate the total votes for a set of options, handling undefined interactions
- const getTotalVotes = (
-   options: NormalizedPollData["stations"][0]["answerOptions"],
- ) => {
-   return options.reduce((sum, option) => sum + option.interactionCount, 0)
- }
-
+  const getTotalVotes = (options: AnswerOption[]) => {
+    return options.reduce((sum, option) => {
+      return sum + (option.interactions ? option.interactions.length : 0)
+    }, 0)
+  }
 
   // Calculate the percentage of votes for an option
-const getPercentage = (votes: number, total: number) => {
-  if (total === 0) return "0"
-  return ((votes / total) * 100).toFixed(1)
-}
+  const getPercentage = (votes: number, total: number) => {
+    if (total === 0) return "0"
+    return ((votes / total) * 100).toFixed(1)
+  }
 
+  const onSubmitPoll = async (id: string) => {
+    // Persist pandering state
+    setIsSubmitting((prev) => ({ ...prev, [id]: true }))
 
- const onSubmitPoll = async (pollId: string) => {
-   setIsSubmitting((prev) => ({ ...prev, [pollId]: true }))
+    const accessToken = Cookies.get("ACCESS_TOKEN")
 
-   const accessToken = Cookies.get("ACCESS_TOKEN")
-   const poll = normalizedPolls.find((p) => p.pollId === pollId)
-   if (!poll) return
+    const selectedAnswers = Object.entries(selectedOptions)
+      .map(([key, optionIndex]) => {
+        if (optionIndex === null) return null
+        const poll = pollData.find((poll) => poll.id === id)
+        if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+          return null
+        return {
+          answerOptionId:
+            poll.stations[0].answerOptions[optionIndex].id || null,
+        }
+      })
+      .filter((answer) => answer && answer.answerOptionId !== null)
 
-   const selectedAnswers = Object.entries(selectedOptions)
-     .filter(([key]) => key.startsWith(`${pollId}-`)) // Filter selections for this poll
-     .map(([key, optionIndex]) => {
-       const stationId = key.split("-")[1] // Extract stationId from key
-       const station = poll.stations.find((s) => s.stationId === stationId)
-       if (!station) return null
+    const payload = { selectedAnswers }
 
-       const option = station.answerOptions[optionIndex!]
-       return option ? { answerOptionId: option.optionId } : null
-     })
-     .filter(Boolean) // Remove null values
-
-   if (selectedAnswers.length === 0) {
-     console.error("No selected answers for submission.")
-     setIsSubmitting((prev) => ({ ...prev, [pollId]: false }))
-     return
-   }
-
-   try {
-     // Submit the selected answers
-     await http.service(false).post(
-       `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
-       { selectedAnswers },
-       {
-         headers: { Authorization: `Bearer ${accessToken}` },
-         withCredentials: true,
-       },
-     )
-
-     // Fetch the updated single poll data
-     const updatedPoll = await fetchSinglePollData(pollId)
-     if (updatedPoll) {
-       setNormalizedPolls((prevPolls) =>
-         prevPolls.map((p) => (p.pollId === pollId ? updatedPoll : p)),
-       )
-     }
-
-     // Mark the poll as submitted for the user
-     setShowResults((prev) => ({ ...prev, [pollId]: true }))
-   } catch (error) {
-     console.error("Error submitting poll:", error)
-   } finally {
-     setIsSubmitting((prev) => ({ ...prev, [pollId]: false }))
-   }
- }
-
+    try {
+      const response = await http
+        .service(false)
+        .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        })
+      console.log({ response })
+    } catch (error: any) {
+      console.error({ error })
+    }
+  }
 
   // Styles for the ellipsis animation
   const ellipsisStyle = `
@@ -352,36 +276,54 @@ const getPercentage = (votes: number, total: number) => {
   if (isFetching) return <div>Loading polls...</div>
   if (error) return <div>Error loading polls: {error}</div>
 
+if (selectedPollId) {
+  const selectedPoll = pollData.find((poll) => poll.id === selectedPollId)
+
+  if (!selectedPoll) {
+    return <div>Poll not found</div>
+  }
+
+  return (
+    <SinglePoll
+      poll={selectedPoll} 
+      onBack={handleBackToPolls}
+    />
+  )
+}
+
+
+
   return (
     <div className="-mb-32">
       <style>{ellipsisStyle}</style>
-      {normalizedPolls.map((poll) => {
+      {pollData.map((poll) => {
         const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
 
-        const isPollExpired = expiredPolls[poll.pollId]
-        const isCurrentlyPandering = isSubmitting[poll.pollId]
+        const isPollExpired = expiredPolls[poll.id]
+        const isCurrentlyPandering = isSubmitting[poll.id]
 
         return (
           <div
-            key={poll.pollId}
-            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-32 lg:mb-64 text-sm md:text-base relative"
+            key={poll.id}
+            className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
+            onClick={() => handlePollClick(poll.id)}
           >
             {/* Header Section */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Image
                   src="/pandar-img.png"
-                  alt={poll.ownerAlias}
+                  alt={poll.pollOwnerAlias}
                   width={70}
                   height={70}
                   className="rounded-full mr-4"
                 />
                 <div>
                   <p className="font-bold text-sm md:text-base">
-                    {poll.ownerAlias}
+                    {poll.pollOwnerAlias}
                   </p>
                   <p className="text-gray-800 text-xs md:text-sm">
-                    {countdowns[poll.pollId]}
+                    {countdowns[poll.id]}
                   </p>
                 </div>
               </div>
@@ -392,7 +334,6 @@ const getPercentage = (votes: number, total: number) => {
                 more_horiz
               </span>
             </div>
-
             {/* Poll Description */}
             {poll.description && (
               <p className="mb-2 text-sm md:text-base text-gray-700">
@@ -408,8 +349,8 @@ const getPercentage = (votes: number, total: number) => {
             {/* Answer Options */}
             <div className="flex flex-col space-y-2 items-center">
               {poll.stations[0].answerOptions.map((option, index) => {
-                const optionKey = `poll-${poll.pollId}-option-${index}`
-                const optionVotes = option.interactionCount
+                const optionKey = `poll-${poll.id}-option-${index}`
+                const optionVotes = option.interactions?.length || 0
 
                 return (
                   <div key={index} className="w-full">
@@ -418,18 +359,18 @@ const getPercentage = (votes: number, total: number) => {
                       <input
                         type="radio"
                         id={optionKey}
-                        name={`poll-${poll.pollId}`}
+                        name={`poll-${poll.id}`}
                         className="mr-2"
                         onChange={() =>
                           handleOptionSelect(
-                            poll.pollId,
-                            poll.stations[0].stationId,
+                            poll.id,
+                            poll.stations[0].id,
                             index,
                           )
                         }
                         disabled={
                           selectedOptions[
-                            `${poll.pollId}-${poll.stations[0].stationId}`
+                            `${poll.id}-${poll.stations[0].id}`
                           ] !== undefined
                         }
                       />
@@ -448,9 +389,7 @@ const getPercentage = (votes: number, total: number) => {
                       </label>
                     </div>
                     {/* Progress Bar */}
-                    {showResults[
-                      `${poll.pollId}-${poll.stations[0].stationId}`
-                    ] && (
+                    {showResults[`${poll.id}-${poll.stations[0].id}`] && (
                       <div className="flex items-center mt-1">
                         <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
                           <motion.div
@@ -474,26 +413,20 @@ const getPercentage = (votes: number, total: number) => {
                 )
               })}
             </div>
-            <div className="flex items-center justify-center space-x-4">
-              <span className="material-symbols-outlined">cognition</span>
-              <span className="material-symbols-outlined">repeat</span>
-              <span className="material-symbols-outlined">bookmark</span>
-              <span className="material-symbols-outlined">send</span>
-            </div>
 
             {/* Expand Stations Button */}
             {poll.stations.length > 1 && (
               <div className="flex justify-center mt-6">
                 <div
                   className="p-1 inline-flex bg-neutral-300 rounded-lg shadow-md items-center justify-center w-full cursor-pointer"
-                  onClick={() => toggleExpandedPoll(poll.pollId)}
+                  onClick={() => toggleExpandedPoll(poll.id)}
                 >
                   <span className="text-xs md:text-sm text-secondary flex items-center justify-center">
-                    {expanded[poll.pollId]
+                    {expanded[poll.id]
                       ? "Hide additional stations"
                       : "This pandar poll has multiple stations, see all stations "}
                     <span className="material-symbols-outlined ml-2">
-                      {expanded[poll.pollId]
+                      {expanded[poll.id]
                         ? "arrow_circle_up"
                         : "arrow_circle_down"}
                     </span>
@@ -504,7 +437,7 @@ const getPercentage = (votes: number, total: number) => {
 
             {/* Additional Stations */}
             <AnimatePresence>
-              {expanded[poll.pollId] && (
+              {expanded[poll.id] && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -513,7 +446,7 @@ const getPercentage = (votes: number, total: number) => {
                 >
                   {poll.stations.slice(1).map((station) => (
                     <div
-                      key={station.stationId}
+                      key={station.id}
                       className="border-t border-gray-500 pt-4 mt-4"
                     >
                       <p className="mb-2 text-sm md:text-lg font-semibold">
@@ -521,7 +454,7 @@ const getPercentage = (votes: number, total: number) => {
                       </p>
                       <div className="flex flex-col space-y-2 items-center">
                         {station.answerOptions.map((option, idx) => {
-                          const stationOptionKey = `poll-${poll.pollId}-station-${station.stationId}-option-${idx}`
+                          const stationOptionKey = `poll-${poll.id}-station-${station.id}-option-${idx}`
                           return (
                             <div key={idx} className="w-full">
                               {/* Radio Option */}
@@ -529,18 +462,14 @@ const getPercentage = (votes: number, total: number) => {
                                 <input
                                   type="radio"
                                   id={stationOptionKey}
-                                  name={`poll-${poll.pollId}-station-${station.stationId}`}
+                                  name={`poll-${poll.id}-station-${station.id}`}
                                   className="mr-2"
                                   onChange={() =>
-                                    handleOptionSelect(
-                                      poll.pollId,
-                                      station.stationId,
-                                      idx,
-                                    )
+                                    handleOptionSelect(poll.id, station.id, idx)
                                   }
                                   disabled={
                                     !!selectedOptions[
-                                      `poll-${poll.pollId}-station-${station.stationId}`
+                                      `poll-${poll.id}-station-${station.id}`
                                     ]
                                   }
                                 />
@@ -560,7 +489,7 @@ const getPercentage = (votes: number, total: number) => {
                               </div>
                               {/* Progress Bar */}
                               {showResults[
-                                `poll-${poll.pollId}-station-${station.stationId}`
+                                `poll-${poll.id}-station-${station.id}`
                               ] && (
                                 <div className="flex items-center mt-1">
                                   <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
@@ -569,7 +498,7 @@ const getPercentage = (votes: number, total: number) => {
                                       initial={{ width: 0 }}
                                       animate={{
                                         width: `${getPercentage(
-                                          option.interactionCount,
+                                          option.interactions?.length || 0,
                                           pollTotalVotes,
                                         )}%`,
                                       }}
@@ -578,7 +507,7 @@ const getPercentage = (votes: number, total: number) => {
                                   </div>
                                   <span className="text-xs text-secondary">
                                     {getPercentage(
-                                      option.interactionCount,
+                                      option.interactions?.length || 0,
                                       pollTotalVotes,
                                     )}
                                     %
@@ -600,7 +529,7 @@ const getPercentage = (votes: number, total: number) => {
               <button
                 onClick={() => {
                   if (!isCurrentlyPandering) {
-                    onSubmitPoll(poll.pollId)
+                    onSubmitPoll(poll.id)
                   }
                 }}
                 className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
@@ -631,7 +560,6 @@ const getPercentage = (votes: number, total: number) => {
       })}
     </div>
   )
+}
 
-};
-
-export default PandaPollCard1;
+export default PandaPollCard1

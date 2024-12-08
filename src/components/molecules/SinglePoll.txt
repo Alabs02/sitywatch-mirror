@@ -1,0 +1,206 @@
+import React, { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import { motion } from "framer-motion"
+import { usePandarPollStore } from "@/store/pandar.store"
+import Cookies from "js-cookie"
+import Image from "next/image"
+import { AnswerOption, PollData } from "@/store/pandar.store"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
+
+interface SinglePollProps {
+  poll: PollData | null // Define the type of poll prop
+}
+
+const SinglePoll: React.FC<SinglePollProps> = ({ poll }) => {
+  const router = useRouter()
+  const { pollId } = router.query
+
+  const { fetchSinglePoll, updateInteractions } = usePandarPollStore()
+  const [pollData, setPollData] = useState<PollData | null>(null)
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [interacted, setInteracted] = useState(false)
+
+  // Fetch poll data when pollId is available
+  useEffect(() => {
+    if (!pollId) {
+      console.log("No pollId, still loading...")
+      return // Wait until pollId is available
+    }
+
+    console.log("Fetching poll with id:", pollId) // Log pollId to check if it's correct
+
+    fetchSinglePoll(pollId as string)
+      .then((data) => {
+        setPollData(data)
+        console.log("Poll fetched successfully:", data) // Debug fetched data
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error("Error fetching poll data:", err)
+        setLoading(false)
+      })
+  }, [pollId]) // Only trigger this effect when pollId changes
+
+  // Handle vote interaction
+  const handleVote = async (optionId: string) => {
+    if (!pollId || !optionId) return
+
+    try {
+      console.log("Submitting vote for option:", optionId)
+
+      // Update UI immediately
+      if (pollData) {
+        const updatedPollData = { ...pollData }
+        updatedPollData.stations[0].answerOptions =
+          updatedPollData.stations[0].answerOptions.map((option) => {
+            if (option.id === optionId) {
+              return {
+                ...option,
+                _count: {
+                  interactions: (option._count?.interactions || 0) + 1,
+                },
+              }
+            }
+            return option
+          })
+        setPollData(updatedPollData)
+      }
+
+      // Hit interaction endpoint
+      const response = await fetch(
+        `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId as string)}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("ACCESS_TOKEN")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ answerOptionId: optionId }),
+        },
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error("API error response:", errorData)
+        throw new Error("Failed to submit vote.")
+      }
+
+      console.log("Vote submitted successfully.")
+
+      // Refresh poll data after interaction submission
+      const updatedPoll = await fetchSinglePoll(pollId as string)
+      setPollData(updatedPoll)
+      setInteracted(true)
+
+      // Update the store's interactions
+      updateInteractions(pollId as string, optionId)
+    } catch (error) {
+      console.error("Error while submitting vote:", error)
+    }
+  }
+
+  // Calculate progress percentage
+  const calculatePercentage = (option: AnswerOption) => {
+    const totalInteractions = pollData?.stations[0]?.answerOptions.reduce(
+      (sum, opt) => sum + (opt._count?.interactions || 0),
+      0,
+    )
+
+    if (!totalInteractions || totalInteractions === 0) return 0
+
+    const optionCount = option._count?.interactions || 0
+    return (optionCount / totalInteractions) * 100
+  }
+
+  if (loading) return <div>Loading...</div>
+
+  if (!pollData) {
+    return <div>No poll data found.</div>
+  }
+
+  const currentStation = pollData.stations[0]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="single-poll-container p-4"
+    >
+      {/* Poll Header */}
+      <div className="poll-header flex items-center justify-between">
+        <div className="flex items-center">
+          <Image
+            src="/pandar-img.png"
+            alt={pollData.pollOwnerAlias || "Poll Owner"}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <div className="ml-3">
+            <h2 className="font-bold">
+              {pollData.pollOwnerAlias || "Anonymous"}
+            </h2>
+            <p className="text-gray-500">
+              {new Date(pollData.expiresAt).toLocaleString()}
+            </p>
+          </div>
+        </div>
+        <span className="material-symbols-outlined cursor-pointer">
+          more_vert
+        </span>
+      </div>
+
+      {/* Poll Description */}
+      <div className="poll-description mt-4">
+        <p className="text-sm text-gray-600">{pollData.description}</p>
+        <h3 className="text-lg font-bold mt-2">
+          {currentStation.questionText}
+        </h3>
+      </div>
+
+      {/* Poll Options */}
+      <div className="poll-options mt-4 mb-4">
+        {currentStation.answerOptions.map((option: AnswerOption) => {
+          const percentage = calculatePercentage(option)
+
+          return (
+            <div key={option.id} className="poll-option-container mb-4">
+              <label className="poll-option-label flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="poll-option"
+                  value={option.id}
+                  checked={selectedOption === option.id}
+                  disabled={interacted}
+                  onChange={() => {
+                    setSelectedOption(option.id)
+                    handleVote(option.id) // Trigger vote on selection
+                  }}
+                />
+                <span>{option.text || "Option"}</span>
+              </label>
+
+              {/* Progress bar showing percentage */}
+              {(interacted || selectedOption === option.id) && (
+                <div className="poll-option-progress-bar relative mt-2 h-2 bg-gray-200 rounded-full">
+                  <div
+                    className="poll-option-progress bg-secondary h-full rounded-full"
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                  <span className="absolute right-0 top-0 text-xs font-semibold pr-2">
+                    {Math.round(percentage)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </motion.div>
+  )
+}
+
+export default SinglePoll
