@@ -31,6 +31,8 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     {},
   )
   const [isPandering, setIsPandering] = useState<{ [key: string]: boolean }>({})
+  const [thoughts, setThoughts] = useState<any[]>([]) // To store submitted thoughts
+  const [thought, setThought] = useState<string>("") // For the input field
 
   useEffect(() => {
     if (pollData.length === 0) {
@@ -71,12 +73,11 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
   }, [pollData])
 
   // Filter the specific poll based on pollId
-const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
+  const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
 
-
- if (!poll) {
-   return <div>Poll not found.</div>
- }
+  if (!poll) {
+    return <div>Poll not found.</div>
+  }
 
   useEffect(() => {
     const localStorage = typeof window !== "undefined" && window.localStorage
@@ -111,11 +112,11 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
     return <div>Poll not found.</div>
   }
 
-   const getTotalVotes = (options: AnswerOption[]) => {
-     return options.reduce((sum, option) => {
-       return sum + (option.interactions ? option.interactions.length : 0)
-     }, 0)
-   }
+  const getTotalVotes = (options: AnswerOption[]) => {
+    return options.reduce((sum, option) => {
+      return sum + (option.interactions ? option.interactions.length : 0)
+    }, 0)
+  }
   const pollTotalVotes = getTotalVotes(selectedPoll.stations[0].answerOptions)
   const isPollExpired = expiredPolls[selectedPoll.id]
   const isCurrentlyPandering = isSubmitting[selectedPoll.id]
@@ -188,7 +189,6 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
   }
 
   // Calculate the total votes for a set of options, handling undefined interactions
- 
 
   // Calculate the percentage of votes for an option
   const getPercentage = (votes: number, total: number) => {
@@ -231,6 +231,28 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
       console.error({ error })
     }
   }
+  const submitThought = async () => {
+    if (!thought.trim()) return // Prevent empty submissions
+
+    const accessToken = Cookies.get("ACCESS_TOKEN")
+    try {
+      const response = await http.service(false).post(
+        `/api/v1/pandar-polls/${poll.id}/thought`,
+        { thought },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        },
+      )
+
+      const newThought = response.data // Assuming the API returns the created thought
+      setThoughts((prev) => [newThought, ...prev]) // Add to the top of the list
+      setThought("") // Clear input field
+    } catch (error) {
+      console.error("Error submitting thought:", error)
+    }
+  }
+
 
   const ellipsisStyle = `
     @keyframes ellipsis {
@@ -243,186 +265,248 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
     .dot3 { animation: ellipsis 1s infinite; animation-delay: 0.66s; }
   `
 
- return (
-   <div className="mb-32">
-     <div
-       className="text-secondary text-sm  mb-4 inline-flex p-1 items-center border border-secondary rounded-full cursor-pointer"
-       onClick={onBack}
-     >
-       <span className="material-symbols-outlined">arrow_back</span>
-       <span> Back to polls</span>
-     </div>
+  return (
+    <div className="mb-32">
+      <div
+        className="text-secondary text-sm  mb-4 inline-flex p-1 items-center border border-secondary rounded-full cursor-pointer"
+        onClick={onBack}
+      >
+        <span className="material-symbols-outlined">arrow_back</span>
+        <span> Back to polls</span>
+      </div>
 
-     {/* Single poll content */}
-     <div
-       key={selectedPoll.id}
-       className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
-     >
-       {/* Header Section */}
-       <div className="flex items-center justify-between mb-4">
-         <div className="flex items-center">
-           <Image
-             src="/pandar-img.png"
-             alt={selectedPoll.pollOwnerAlias}
-             width={70}
-             height={70}
-             className="rounded-full mr-4"
-           />
-           <div>
-             <p className="font-bold text-sm md:text-base">
-               {selectedPoll.pollOwnerAlias}
-             </p>
-             <p className="text-gray-800 text-xs md:text-sm">
-               {countdowns[selectedPoll.id]}
-             </p>
-           </div>
-         </div>
-         <span
-           className="material-symbols-outlined cursor-pointer"
-           onClick={toggleOverlay}
-         >
-           more_horiz
-         </span>
-       </div>
+      {/* Single poll content */}
+      <div
+        key={selectedPoll.id}
+        className="border rounded-lg p-4 bg-neutral-400 shadow-md mb-4 text-sm md:text-base relative"
+      >
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <Image
+              src="/pandar-img.png"
+              alt={selectedPoll.pollOwnerAlias}
+              width={70}
+              height={70}
+              className="rounded-full mr-4"
+            />
+            <div>
+              <p className="font-bold text-sm md:text-base">
+                {selectedPoll.pollOwnerAlias}
+              </p>
+              <p className="text-gray-800 text-xs md:text-sm">
+                {countdowns[selectedPoll.id]}
+              </p>
+            </div>
+          </div>
+          <span
+            className="material-symbols-outlined cursor-pointer"
+            onClick={toggleOverlay}
+          >
+            more_horiz
+          </span>
+        </div>
 
-       {/* Poll Description */}
-       {selectedPoll.description && (
-         <p className="mb-2 text-sm md:text-base text-gray-700">
-           {selectedPoll.description}
-         </p>
-       )}
+        {/* Poll Description */}
+        {selectedPoll.description && (
+          <p className="mb-2 text-sm md:text-base text-gray-700">
+            {selectedPoll.description}
+          </p>
+        )}
 
-       {/* Poll Question */}
-       <p className="mb-4 text-sm md:text-lg font-semibold">
-         {selectedPoll.stations[0].questionText}
-       </p>
+        {/* Poll Question */}
+        <p className="mb-4 text-sm md:text-lg font-semibold">
+          {selectedPoll.stations[0].questionText}
+        </p>
 
-       {/* Answer Options */}
-       <div className="flex flex-col space-y-2 items-center">
-         {selectedPoll.stations[0].answerOptions.map((option, index) => {
-           const optionKey = `poll-${selectedPoll.id}-option-${index}`
-           const optionVotes = option.interactions?.length || 0
+        {/* Answer Options */}
+        <div className="flex flex-col space-y-2 items-center">
+          {selectedPoll.stations[0].answerOptions.map((option, index) => {
+            const optionKey = `poll-${selectedPoll.id}-option-${index}`
+            const optionVotes = option.interactions?.length || 0
 
-           return (
-             <div key={index} className="w-full">
-               {/* Radio Option */}
-               <div className="flex items-center">
-                 <input
-                   type="radio"
-                   id={optionKey}
-                   name={`poll-${selectedPoll.id}`}
-                   className="mr-2"
-                   onChange={() =>
-                     handleOptionSelect(
-                       selectedPoll.id,
-                       selectedPoll.stations[0].id,
-                       index,
-                     )
-                   }
-                   disabled={
-                     selectedOptions[
-                       `${selectedPoll.id}-${selectedPoll.stations[0].id}`
-                     ] !== undefined
-                   }
-                 />
-                 <label
-                   htmlFor={optionKey}
-                   className="text-xs md:text-sm w-full"
-                 >
-                   {option.text || (
-                     <Image
-                       src={option.file || ""}
-                       alt="Option image"
-                       width={50}
-                       height={50}
-                     />
-                   )}
-                 </label>
-               </div>
-               {/* Progress Bar */}
-               {showResults[
-                 `${selectedPoll.id}-${selectedPoll.stations[0].id}`
-               ] && (
-                 <div className="flex items-center mt-1">
-                   <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
-                     <motion.div
-                       className="bg-secondary h-2.5 rounded-full"
-                       initial={{ width: 0 }}
-                       animate={{
-                         width: `${getPercentage(
-                           optionVotes,
-                           pollTotalVotes,
-                         )}%`,
-                       }}
-                       transition={{ duration: 0.5 }}
-                     />
-                   </div>
-                   <span className="text-xs text-secondary">
-                     {getPercentage(optionVotes, pollTotalVotes)}%
-                   </span>
-                 </div>
-               )}
-             </div>
-           )
-         })}
-       </div>
-       <div className="flex items-center justify-center space-x-4 mt-4">
-         <span className="material-symbols-outlined">cognition</span>
-         <span className="material-symbols-outlined">repeat</span>
-         <span className="material-symbols-outlined">bookmark</span>
-         <span className="material-symbols-outlined">send</span>
-       </div>
-       <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
-         <div className="flex">
-           <Image
-             src="/coreAssets/PandarUs/Poll1/panda.png"
-             alt="alt"
-             width={20}
-             height={20}
-             className="rounded-full mr-4"
-           />
-           <p className="text-xs md:text-sm">34 pandas</p>
-         </div>
-         <div className="flex gap-x-2">
-           <div className="flex items-center">
-             <span className="material-symbols-outlined">cognition</span>
-             <p className="text-xs md:text-sm">5</p>
-           </div>
-           <div className="flex items-center">
-             <span className="material-symbols-outlined">repeat</span>
-             <p className="text-xs md:text-sm">5</p>
-           </div>
-         </div>
-       </div>
+            return (
+              <div key={index} className="w-full">
+                {/* Radio Option */}
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id={optionKey}
+                    name={`poll-${selectedPoll.id}`}
+                    className="mr-2"
+                    onChange={() =>
+                      handleOptionSelect(
+                        selectedPoll.id,
+                        selectedPoll.stations[0].id,
+                        index,
+                      )
+                    }
+                    disabled={
+                      selectedOptions[
+                        `${selectedPoll.id}-${selectedPoll.stations[0].id}`
+                      ] !== undefined
+                    }
+                  />
+                  <label
+                    htmlFor={optionKey}
+                    className="text-xs md:text-sm w-full"
+                  >
+                    {option.text || (
+                      <Image
+                        src={option.file || ""}
+                        alt="Option image"
+                        width={50}
+                        height={50}
+                      />
+                    )}
+                  </label>
+                </div>
+                {/* Progress Bar */}
+                {showResults[
+                  `${selectedPoll.id}-${selectedPoll.stations[0].id}`
+                ] && (
+                  <div className="flex items-center mt-1">
+                    <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
+                      <motion.div
+                        className="bg-secondary h-2.5 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{
+                          width: `${getPercentage(
+                            optionVotes,
+                            pollTotalVotes,
+                          )}%`,
+                        }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </div>
+                    <span className="text-xs text-secondary">
+                      {getPercentage(optionVotes, pollTotalVotes)}%
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+        <div className="flex items-center justify-center space-x-4 mt-4">
+          <span className="material-symbols-outlined">cognition</span>
+          <span className="material-symbols-outlined">repeat</span>
+          <span className="material-symbols-outlined">bookmark</span>
+          <span className="material-symbols-outlined">send</span>
+        </div>
+        <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
+          <div className="flex">
+            <Image
+              src="/coreAssets/PandarUs/Poll1/panda.png"
+              alt="alt"
+              width={20}
+              height={20}
+              className="rounded-full mr-4"
+            />
+            <p className="text-xs md:text-sm">34 pandas</p>
+          </div>
+          <div className="flex gap-x-2">
+            <div className="flex items-center">
+              <span className="material-symbols-outlined">cognition</span>
+              <p className="text-xs md:text-sm">5</p>
+            </div>
+            <div className="flex items-center">
+              <span className="material-symbols-outlined">repeat</span>
+              <p className="text-xs md:text-sm">5</p>
+            </div>
+          </div>
+        </div>
 
-       {/* Poll Footer */}
-       <div className="flex w-full mx-auto items-center justify-center mt-4">
-         <button
-           onClick={() => {
-             if (!isCurrentlyPandering) {
-               onSubmitPoll(selectedPoll.id)
-             }
-           }}
-           className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
-             isCurrentlyPandering || isPollExpired
-               ? "bg-gray-700 text-gray-300 cursor-not-allowed"
-               : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
-           }`}
-           disabled={isCurrentlyPandering || isPollExpired}
-         >
-           {isPollExpired
-             ? "Expired"
-             : isCurrentlyPandering
-             ? "Pandaring..."
-             : "PANDAR"}
-         </button>
-       </div>
+        {/* Poll Footer */}
+        <div className="flex w-full mx-auto items-center justify-center mt-4">
+          <button
+            onClick={() => {
+              if (!isCurrentlyPandering) {
+                onSubmitPoll(selectedPoll.id)
+              }
+            }}
+            className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
+              isCurrentlyPandering || isPollExpired
+                ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
+            }`}
+            disabled={isCurrentlyPandering || isPollExpired}
+          >
+            {isPollExpired
+              ? "Expired"
+              : isCurrentlyPandering
+              ? "Pandaring..."
+              : "PANDAR"}
+          </button>
+        </div>
 
-       {/* Overlay */}
-       {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
-     </div>
-   </div>
- )
+        {/* Overlay */}
+        {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
+      </div>
+
+      {/* Thoughts Submission Section */}
+      <div className="mt-6">
+        <textarea
+          value={thought}
+          onChange={(e) => setThought(e.target.value)}
+          placeholder="Share your thoughts..."
+          className="p-2 border border-gray-300 rounded w-full  shadow-inner shadow-gray-600/50"
+        />
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={submitThought}
+            className="bg-gradient-to-b bg-secondary text-white rounded-full px-2 py-1 text-xs font-semibold"
+            disabled={!thought.trim()}
+          >
+            Submit Thought
+          </button>
+        </div>
+
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <Image
+              src="/pandar-img.png"
+              alt={selectedPoll.pollOwnerAlias}
+              width={70}
+              height={70}
+              className="rounded-full mr-4"
+            />
+            <div>
+              <p className="font-bold text-sm md:text-base">
+                {selectedPoll.pollOwnerAlias}
+              </p>
+              <p className="text-gray-800 text-xs md:text-sm">
+                {countdowns[selectedPoll.id]}
+              </p>
+            </div>
+          </div>
+          <span
+            className="material-symbols-outlined cursor-pointer"
+            onClick={toggleOverlay}
+          >
+            more_horiz
+          </span>
+        </div>
+
+        <span>Some thought about something I think about this poll just for component building</span>
+
+        {/* Display Submitted Thoughts */}
+        {thoughts.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-sm md:text-base font-semibold">Thoughts:</h3>
+            <ul className="mt-2 space-y-2">
+              {thoughts.map((thought, index) => (
+                <li key={index} className="border-b border-gray-300 pb-2">
+                  <p className="text-sm md:text-base">{thought.content}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default SinglePoll

@@ -10,8 +10,11 @@ export const apiRoutes = {
   PANDAR_POLLS: "pandar-polls",
   PANDAR_POLLS_INTERACTIONS: (id: string) => `pandar-polls/${id}/interactions`,
   GET_SINGLE_POLL: (id: string) => `pandar-polls/${id}`,
+  PANDAR_POLL_THOUGHTS: (id: string) => `pandar-polls/${id}/thoughts`, // Fetch thoughts
+  SUBMIT_POLL_THOUGHT: (id: string) => `pandar-polls/${id}/thought`, // Submit a thought
   UPLOAD_IMAGE: "images",
   GET_IMAGE: (id: string) => `images/${id}`,
   CHECK_EMAIL: (email: string) => `accounts/${email}/checkEmail`,
   OPTIONS_SCHOOLS: "options/schools",
 }
+
