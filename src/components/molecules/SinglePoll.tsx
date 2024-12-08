@@ -366,7 +366,7 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
            )
          })}
        </div>
-       <div className="flex items-center justify-center space-x-4">
+       <div className="flex items-center justify-center space-x-4 mt-4">
          <span className="material-symbols-outlined">cognition</span>
          <span className="material-symbols-outlined">repeat</span>
          <span className="material-symbols-outlined">bookmark</span>
