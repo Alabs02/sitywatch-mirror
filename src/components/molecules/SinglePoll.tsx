@@ -376,7 +376,7 @@ const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
          <div className="flex">
            <Image
              src="/coreAssets/PandarUs/Poll1/panda.png"
-             alt={poll.author}
+             alt="alt"
              width={20}
              height={20}
              className="rounded-full mr-4"
