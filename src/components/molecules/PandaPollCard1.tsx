@@ -294,7 +294,7 @@ if (selectedPollId) {
 
 
   return (
-    <div className="-mb-32">
+    <div className="-mb-32 lg:mb-64">
       <style>{ellipsisStyle}</style>
       {pollData.map((poll) => {
         const pollTotalVotes = getTotalVotes(poll.stations[0].answerOptions)
