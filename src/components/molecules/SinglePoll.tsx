@@ -10,7 +10,7 @@ import PollThoughts from "../contents/pandar-polls/PollThoughts"
 
 
 interface SinglePollProps {
-  poll: PollData // Update this to expect the whole poll object
+  poll: PollData 
   onBack: () => void
 }
 
@@ -196,41 +196,47 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     return ((votes / total) * 100).toFixed(1)
   }
 
-  const onSubmitPoll = async (id: string) => {
-    // Persist pandering state
-    setIsSubmitting((prev) => ({ ...prev, [id]: true }))
+ const onSubmitPoll = async (id: string) => {
+   // Mark as submitting
+   setIsSubmitting((prev) => ({ ...prev, [id]: true }))
 
-    const accessToken = Cookies.get("ACCESS_TOKEN")
+   const accessToken = Cookies.get("ACCESS_TOKEN")
 
-    const selectedAnswers = Object.entries(selectedOptions)
-      .map(([key, optionIndex]) => {
-        if (optionIndex === null) return null
-        const poll = pollData.find((poll) => poll.id === id)
-        if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
-          return null
-        return {
-          answerOptionId:
-            poll.stations[0].answerOptions[optionIndex].id || null,
-        }
-      })
-      .filter((answer) => answer && answer.answerOptionId !== null)
+   const selectedAnswers = Object.entries(selectedOptions)
+     .map(([key, optionIndex]) => {
+       if (optionIndex === null) return null
+       const poll = pollData.find((poll) => poll.id === id)
+       if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
+         return null
+       return {
+         answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
+       }
+     })
+     .filter((answer) => answer && answer.answerOptionId !== null)
 
-    const payload = { selectedAnswers }
+   const payload = { selectedAnswers }
 
-    try {
-      const response = await http
-        .service(false)
-        .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          withCredentials: true,
-        })
-      console.log({ response })
-    } catch (error: any) {
-      console.error({ error })
-    }
-  }
+   try {
+     const response = await http
+       .service(false)
+       .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
+         headers: {
+           Authorization: `Bearer ${accessToken}`,
+         },
+         withCredentials: true,
+       })
+
+     console.log({ response })
+
+     // Show results after successful submission
+     setShowResults((prev) => ({ ...prev, [id]: true }))
+   } catch (error: any) {
+     console.error({ error })
+   } finally {
+     setIsSubmitting((prev) => ({ ...prev, [id]: false }))
+   }
+ }
+
   
 
 
@@ -339,7 +345,7 @@ return (
                   </div>
 
                   {/* Progress Bar */}
-                  {showResults[stationKey] && (
+                  {showResults[selectedPoll.id] && (
                     <div className="flex items-center mt-1">
                       <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
                         <motion.div
