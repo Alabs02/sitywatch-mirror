@@ -6,6 +6,7 @@ import { usePandarPollStore, AnswerOption, PollData } from "@/store/pandar.store
 import { http } from "@/libs"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 import Cookies from "js-cookie"
+import PollThoughts from "../contents/pandar-polls/PollThoughts"
 
 
 interface SinglePollProps {
@@ -31,8 +32,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     {},
   )
   const [isPandering, setIsPandering] = useState<{ [key: string]: boolean }>({})
-  const [thoughts, setThoughts] = useState<any[]>([]) // To store submitted thoughts
-  const [thought, setThought] = useState<string>("") // For the input field
+
 
   useEffect(() => {
     if (pollData.length === 0) {
@@ -231,27 +231,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
       console.error({ error })
     }
   }
-  const submitThought = async () => {
-    if (!thought.trim()) return // Prevent empty submissions
-
-    const accessToken = Cookies.get("ACCESS_TOKEN")
-    try {
-      const response = await http.service(false).post(
-        `/api/v1/pandar-polls/${poll.id}/thought`,
-        { thought },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true,
-        },
-      )
-
-      const newThought = response.data // Assuming the API returns the created thought
-      setThoughts((prev) => [newThought, ...prev]) // Add to the top of the list
-      setThought("") // Clear input field
-    } catch (error) {
-      console.error("Error submitting thought:", error)
-    }
-  }
+  
 
 
   const ellipsisStyle = `
@@ -277,10 +257,10 @@ return (
 
     {/* Iterate through stations */}
     {selectedPoll.stations.map((station, stationIndex) => {
-      const isPollExpired = expiredPolls[selectedPoll.id];
-      const isCurrentlyPandering = isSubmitting[selectedPoll.id];
-      const stationKey = `${selectedPoll.id}-${station.id}`;
-      const stationTotalVotes = getTotalVotes(station.answerOptions);
+      const isPollExpired = expiredPolls[selectedPoll.id]
+      const isCurrentlyPandering = isSubmitting[selectedPoll.id]
+      const stationKey = `${selectedPoll.id}-${station.id}`
+      const stationTotalVotes = getTotalVotes(station.answerOptions)
 
       return (
         <div
@@ -295,7 +275,7 @@ return (
                 alt={selectedPoll.pollOwnerAlias}
                 width={70}
                 height={70}
-                className="rounded-full mr-4"
+                className="rounded-full mr-4 mt-4"
               />
               <div>
                 <p className="font-bold text-sm md:text-base">
@@ -322,8 +302,8 @@ return (
           {/* Answer Options */}
           <div className="flex flex-col space-y-2 items-center">
             {station.answerOptions.map((option, optionIndex) => {
-              const optionKey = `poll-${station.id}-option-${optionIndex}`;
-              const optionVotes = option.interactions?.length || 0;
+              const optionKey = `poll-${station.id}-option-${optionIndex}`
+              const optionVotes = option.interactions?.length || 0
 
               return (
                 <div key={optionIndex} className="w-full">
@@ -338,7 +318,7 @@ return (
                         handleOptionSelect(
                           selectedPoll.id,
                           station.id,
-                          optionIndex
+                          optionIndex,
                         )
                       }
                       disabled={selectedOptions[stationKey] !== undefined}
@@ -368,7 +348,7 @@ return (
                           animate={{
                             width: `${getPercentage(
                               optionVotes,
-                              stationTotalVotes
+                              stationTotalVotes,
                             )}%`,
                           }}
                           transition={{ duration: 0.5 }}
@@ -380,16 +360,44 @@ return (
                     </div>
                   )}
                 </div>
-              );
+              )
             })}
           </div>
-
+          {/* Interactions section */}
+          <div className="flex items-center justify-center space-x-4 mt-4">
+            <span className="material-symbols-outlined">cognition</span>
+            <span className="material-symbols-outlined">repeat</span>
+            <span className="material-symbols-outlined">bookmark</span>
+            <span className="material-symbols-outlined">send</span>
+          </div>
+          <div className="flex border border-t-gray-400 border-b-gray-400 p-1 mx-4 items-center justify-between my-6">
+            <div className="flex">
+              <Image
+                src="/coreAssets/PandarUs/Poll1/panda.png"
+                alt="alt img"
+                width={20}
+                height={20}
+                className="rounded-full mr-4"
+              />
+              <p className="text-xs md:text-sm">34 pandas</p>
+            </div>
+            <div className="flex gap-x-2">
+              <div className="flex items-center">
+                <span className="material-symbols-outlined">cognition</span>
+                <p className="text-xs md:text-sm">5</p>
+              </div>
+              <div className="flex items-center">
+                <span className="material-symbols-outlined">repeat</span>
+                <p className="text-xs md:text-sm">5</p>
+              </div>
+            </div>
+          </div>
           {/* Poll Footer */}
           <div className="flex w-full mx-auto items-center justify-center mt-4">
             <button
               onClick={() => {
                 if (!isCurrentlyPandering) {
-                  onSubmitPoll(selectedPoll.id);
+                  onSubmitPoll(selectedPoll.id)
                 }
               }}
               className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
@@ -407,46 +415,22 @@ return (
             </button>
           </div>
         </div>
-      );
+      )
     })}
 
     {/* Overlay */}
     {showOverlay && <PandaPollOverlay onClose={toggleOverlay} />}
 
     {/* Thoughts Submission Section */}
-    <div className="mt-6">
-      <textarea
-        value={thought}
-        onChange={(e) => setThought(e.target.value)}
-        placeholder="Share your thoughts..."
-        className="p-2 border border-gray-300 rounded w-full shadow-inner shadow-gray-600/50"
-      />
-      <div className="flex justify-end mt-2">
-        <button
-          onClick={submitThought}
-          className="bg-gradient-to-b bg-secondary text-white rounded-full px-2 py-1 text-xs font-semibold"
-          disabled={!thought.trim()}
-        >
-          Submit Thought
-        </button>
-      </div>
-
-      {/* Display Submitted Thoughts */}
-      {thoughts.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-sm md:text-base font-semibold">Thoughts:</h3>
-          <ul className="mt-2 space-y-2">
-            {thoughts.map((thought, index) => (
-              <li key={index} className="border-b border-gray-300 pb-2">
-                <p className="text-sm md:text-base">{thought.content}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    <h1>{poll.pollOwnerAlias}'s Poll</h1>
+    {/* Render PollThoughts */}
+    <PollThoughts
+      pollId={poll.id}
+      pollOwnerAlias={poll.pollOwnerAlias}
+      expiresAt={poll.expiresAt}
+    />
   </div>
-);
+)
 
 }
 
