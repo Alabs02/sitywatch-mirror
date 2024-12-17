@@ -124,65 +124,64 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     setShowOverlay(!showOverlay)
   }
 
-  const handleOptionSelect = async (
-    pollId: string,
-    stationId: string,
-    optionIndex: number,
-  ) => {
-    if (selectedOptions[`${pollId}-${stationId}`] !== undefined) return
+   const handleOptionSelect = async (
+     pollId: string,
+     stationId: string,
+     optionIndex: number,
+   ) => {
+     const stationKey = `${pollId}-${stationId}`
+     if (selectedOptions[stationKey] !== undefined) return
 
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [`${pollId}-${stationId}`]: optionIndex,
-    }))
-    setShowResults((prev) => ({
-      ...prev,
-      [`${pollId}-${stationId}`]: true,
-    }))
+    setSelectedOptions((prev) => ({ ...prev, [stationKey]: optionIndex }))
+    //  setShowResults((prev) => ({
+    //    ...prev,
+    //    [stationKey]: true,
+    //  }))
 
-    // Update the poll data in the store
-    const updatedPollData = pollData.map((poll) => {
-      if (poll.id === pollId) {
-        poll.stations = poll.stations.map((station) => {
-          if (station.id === stationId) {
-            station.answerOptions[optionIndex].interactions.push({
-              id: `interaction-${Date.now()}`,
-              pollInteractionId: pollId,
-              answerOptionId: station.answerOptions[optionIndex].id,
-              createdAt: new Date().toISOString(),
-            })
-          }
-          return station
-        })
-      }
-      return poll
-    })
+     // Update the poll data in the store
+     const updatedPollData = pollData.map((poll) => {
+       if (poll.id === pollId) {
+         poll.stations = poll.stations.map((station) => {
+           if (station.id === stationId) {
+             station.answerOptions[optionIndex].interactions.push({
+               id: `interaction-${Date.now()}`,
+               pollInteractionId: pollId,
+               answerOptionId: station.answerOptions[optionIndex].id,
+               createdAt: new Date().toISOString(),
+             })
+           }
+           return station
+         })
+       }
+       return poll
+     })
 
-    usePandarPollStore.setState({ pollData: updatedPollData })
+     usePandarPollStore.setState({ pollData: updatedPollData })
 
-    // Save interaction to backend
-    const accessToken = Cookies.get("ACCESS_TOKEN")
-    try {
-      await http.service(false).post(
-        `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
-        {
-          selectedAnswers: [
-            {
-              answerOptionId: updatedPollData.find(
-                (poll) => poll.id === pollId,
-              )!.stations[0].answerOptions[optionIndex].id,
-            },
-          ],
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true,
-        },
-      )
-    } catch (error) {
-      console.error("Error saving interaction:", error)
-    }
-  }
+     // Save interaction to backend
+     const accessToken = Cookies.get("ACCESS_TOKEN")
+     try {
+       await http.service(false).post(
+         `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
+         {
+           selectedAnswers: [
+             {
+               answerOptionId: updatedPollData
+                 .find((poll) => poll.id === pollId)!
+                 .stations.find((station) => station.id === stationId)!
+                 .answerOptions[optionIndex].id,
+             },
+           ],
+         },
+         {
+           headers: { Authorization: `Bearer ${accessToken}` },
+           withCredentials: true,
+         },
+       )
+     } catch (error) {
+       console.error("Error saving interaction:", error)
+     }
+   }
 
   const toggleExpandedPoll = (pollId: string) => {
     setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
@@ -196,49 +195,52 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     return ((votes / total) * 100).toFixed(1)
   }
 
- const onSubmitPoll = async (id: string) => {
-   // Mark as submitting
-   setIsSubmitting((prev) => ({ ...prev, [id]: true }))
+ const onSubmitPoll = async (pollId: string, stationId: string) => {
+   const stationKey = `${pollId}-${stationId}`
+
+   // If no option is selected, prevent submission
+   if (
+     selectedOptions[stationKey] === undefined ||
+     selectedOptions[stationKey] === null
+   )
+     return
+
+   setIsSubmitting((prev) => ({ ...prev, [stationKey]: true }))
 
    const accessToken = Cookies.get("ACCESS_TOKEN")
+   const selectedOptionIndex = selectedOptions[stationKey]!
+   const poll = pollData.find((p) => p.id === pollId)
+   const station = poll?.stations.find((s) => s.id === stationId)
 
-   const selectedAnswers = Object.entries(selectedOptions)
-     .map(([key, optionIndex]) => {
-       if (optionIndex === null) return null
-       const poll = pollData.find((poll) => poll.id === id)
-       if (!poll || !poll.stations?.[0]?.answerOptions?.[optionIndex])
-         return null
-       return {
-         answerOptionId: poll.stations[0].answerOptions[optionIndex].id || null,
-       }
-     })
-     .filter((answer) => answer && answer.answerOptionId !== null)
+   if (!station) return
 
-   const payload = { selectedAnswers }
+   const payload = {
+     selectedAnswers: [
+       { answerOptionId: station.answerOptions[selectedOptionIndex].id },
+     ],
+   }
 
    try {
-     const response = await http
+     // Submit to backend
+     await http
        .service(false)
-       .post(`${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(id)}`, payload, {
-         headers: {
-           Authorization: `Bearer ${accessToken}`,
+       .post(
+         `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
+         payload,
+         {
+           headers: { Authorization: `Bearer ${accessToken}` },
+           withCredentials: true,
          },
-         withCredentials: true,
-       })
+       )
 
-     console.log({ response })
-
-     // Show results after successful submission
-     setShowResults((prev) => ({ ...prev, [id]: true }))
-   } catch (error: any) {
-     console.error({ error })
+     // Show results only after successful submission
+     setShowResults((prev) => ({ ...prev, [stationKey]: true }))
+   } catch (error) {
+     console.error("Error submitting poll:", error)
    } finally {
-     setIsSubmitting((prev) => ({ ...prev, [id]: false }))
+     setIsSubmitting((prev) => ({ ...prev, [stationKey]: false }))
    }
  }
-
-  
-
 
   const ellipsisStyle = `
     @keyframes ellipsis {
@@ -254,7 +256,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
 return (
   <div className="mb-32">
     <div
-      className="text-secondary text-sm  mb-4 inline-flex p-1 items-center border border-secondary rounded-full cursor-pointer"
+      className="text-secondary text-sm mb-4 inline-flex p-1 items-center border border-secondary rounded-full cursor-pointer"
       onClick={onBack}
     >
       <span className="material-symbols-outlined">arrow_back</span>
@@ -345,7 +347,7 @@ return (
                   </div>
 
                   {/* Progress Bar */}
-                  {showResults[selectedPoll.id] && (
+                  {showResults[stationKey] && (
                     <div className="flex items-center mt-1">
                       <div className="w-4/5 bg-gray-200 rounded-full h-2.5 mr-2">
                         <motion.div
@@ -403,7 +405,7 @@ return (
             <button
               onClick={() => {
                 if (!isCurrentlyPandering) {
-                  onSubmitPoll(selectedPoll.id)
+                  onSubmitPoll(poll.id, station.id)
                 }
               }}
               className={`rounded-full text-xs md:text-sm px-[42%] py-[2%] font-semibold ${
@@ -411,7 +413,11 @@ return (
                   ? "bg-gray-700 text-gray-300 cursor-not-allowed"
                   : "bg-gradient-to-b from-[#F24055] to-[#1E7881] text-neutral-100"
               }`}
-              disabled={isCurrentlyPandering || isPollExpired}
+              disabled={
+                isCurrentlyPandering ||
+                isPollExpired ||
+                selectedOptions[stationKey] === undefined
+              }
             >
               {isPollExpired
                 ? "Expired"
@@ -437,6 +443,7 @@ return (
     />
   </div>
 )
+
 
 }
 
