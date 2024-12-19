@@ -1,7 +1,6 @@
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
-import { apiRoutes } from "@/constants/apiRoutes"
-import { http } from "@/libs"
+import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 import Cookies from "js-cookie"
 
 interface Thought {
@@ -25,61 +24,87 @@ const PollThoughts: React.FC<ThoughtsProps> = ({
   const [thoughts, setThoughts] = useState<Thought[]>([])
   const [thought, setThought] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const fetchThoughts = async () => {
-    setIsLoading(true)
-    try {
-      const accessToken = Cookies.get("ACCESS_TOKEN")
-      const url = apiRoutes.PANDAR_POLL_THOUGHTS(pollId)
+ const fetchThoughts = async () => {
+   setIsLoading(true)
+   setError(null)
 
-      console.log("Fetching URL:", url) // Debugging
-      const response = await http.service(false).get(url, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+   try {
+     const url = `${baseURI}${apiRoutes.PANDAR_POLL_THOUGHTS(pollId)}`
+     console.log("Fetching Thoughts from URL:", url)
 
-      const data = response.data
-      if (Array.isArray(data)) {
-        const validThoughts = data.filter(
-          (item) => item.thought && item.PollInteraction?.pandarAlias,
-        )
-        setThoughts(validThoughts as Thought[])
-      } else {
-        console.error("Unexpected response format:", data)
-      }
-    } catch (error: any) {
-      console.error("Error fetching thoughts:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+     const response = await fetch(url, {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+       },
+     })
+
+     if (!response.ok) {
+       const errorData = await response.json()
+       throw new Error(
+         errorData?.message ||
+           `Failed to fetch thoughts. Status: ${response.status}`,
+       )
+     }
+
+     const data = await response.json()
+     console.log("Fetched Thoughts Data:", data)
+
+     if (Array.isArray(data)) {
+       setThoughts(data)
+     } else {
+       throw new Error("Invalid data format received from API.")
+     }
+   } catch (error: any) {
+     console.error("Error fetching thoughts:", error.message || error)
+     setError("Failed to fetch thoughts. Please try again later.")
+   } finally {
+     setIsLoading(false)
+   }
+ }
+
+  useEffect(() => {
+    if (pollId) fetchThoughts()
+  }, [pollId])
 
   const submitThought = async () => {
     if (!thought.trim()) return
     setIsLoading(true)
+
     try {
+      const url = `${baseURI}${apiRoutes.SUBMIT_POLL_THOUGHT(pollId)}`
       const accessToken = Cookies.get("ACCESS_TOKEN")
-      const url = apiRoutes.SUBMIT_POLL_THOUGHT(pollId)
       const payload = { thought }
-      const response = await http.service(false).post(url, payload, {
+
+      const response = await fetch(url, {
+        method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        withCredentials: true,
+        body: JSON.stringify(payload),
       })
-      setThoughts((prev) => [...prev, response.data as Thought])
-      setThought("") // Clear the input field
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(
+          errorData?.message ||
+            `Failed to submit thought. Status: ${response.status}`,
+        )
+      }
+
+      const newThought = await response.json()
+      setThoughts((prev) => [...prev, newThought])
+      setThought("")
     } catch (error: any) {
-      console.error("Error submitting thought:", error)
+      console.error("Error submitting thought:", error.message || error)
+      setError("Failed to submit thought. Please try again later.") // Set error state
     } finally {
       setIsLoading(false)
     }
   }
-
-  useEffect(() => {
-    fetchThoughts()
-  }, [pollId])
 
   return (
     <div className="mt-6">
@@ -119,7 +144,11 @@ const PollThoughts: React.FC<ThoughtsProps> = ({
 
       <div className="mt-4">
         <h3 className="text-sm md:text-base font-semibold">Thoughts:</h3>
-        {thoughts.length > 0 ? (
+        {error ? (
+          <p className="text-red-500">{error}</p>
+        ) : isLoading && thoughts.length === 0 ? ( // Check isLoading and no thoughts
+          <p className="text-gray-500 mt-4">Loading thoughts...</p>
+        ) : thoughts.length > 0 ? (
           <ul className="mt-2 space-y-2">
             {thoughts.map((thought, index) => (
               <li key={index} className="border-b border-gray-300 pb-2">
