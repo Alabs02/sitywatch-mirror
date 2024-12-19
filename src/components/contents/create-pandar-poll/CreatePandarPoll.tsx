@@ -83,8 +83,20 @@ const CreatePandarPoll: React.FC = () => {
     ])
   }
 
-  const removeStation = (id: number) =>
-    setStations(stations.filter((station) => station.id !== id))
+ const removeStation = (id: number) => {
+   setStations((prevStations) => {
+     const filteredStations = prevStations.filter(
+       (station) => station.id !== id,
+     )
+
+     // Re-assign indexes after removal
+     filteredStations.forEach((station, index) => {
+       station.id = index + 1 // Update station ID based on new index
+     })
+
+     return filteredStations
+   })
+ }
 
   const addOption = (stationIndex: number) => {
     const updatedStations = [...stations]
@@ -94,11 +106,12 @@ const CreatePandarPoll: React.FC = () => {
     }
   }
 
-  const confirmRemoveStation = (id: number) => {
-    if (window.confirm(`Are you sure you want to remove Station ${id}?`)) {
-      removeStation(id)
-    }
+const confirmRemoveStation = (id: number) => {
+  if (window.confirm(`Are you sure you want to remove Station ${id}?`)) {
+    removeStation(id)
   }
+}
+
 
   const removeOption = (stationIndex: number, optionIndex: number) => {
     const updatedStations = [...stations]
