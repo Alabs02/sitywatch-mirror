@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { usePandarPollStore } from "@/store/pandar.store"
 import { http } from "@/libs"
 import { apiRoutes } from "@/constants/apiRoutes"
+import Dialog from "../pandar-polls/Dialogue"
 
 interface PollOption {
   text: string
@@ -54,10 +55,31 @@ const CreatePandarPoll: React.FC = () => {
   const [isButtonActive, setIsButtonActive] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<string | null>(null)
+    const [showRemoveDialog, setShowRemoveDialog] = useState(false)
+    const [stationToRemove, setStationToRemove] = useState<number | null>(null)
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   useEffect(() => {
     fetchPollData()
   }, [fetchPollData])
+
+   const openRemoveDialog = (id: number) => {
+     setStationToRemove(id)
+     setShowRemoveDialog(true)
+   }
+
+   const handleConfirmRemove = () => {
+     if (stationToRemove !== null) {
+       removeStation(stationToRemove)
+       setStationToRemove(null)
+     }
+     setShowRemoveDialog(false)
+   }
+
+   const handleCancelRemove = () => {
+     setStationToRemove(null)
+     setShowRemoveDialog(false)
+   }
 
   const defaultOption = (): PollOption => ({
     text: "",
@@ -262,6 +284,7 @@ const confirmRemoveStation = (id: number) => {
       setCaptions({})
       setErrors(null)
       setIsButtonActive(false)
+      setShowSuccessDialog(true)
       console.log("Poll created successfully")
     } catch (error) {
       console.error("Error creating poll:", error)
@@ -322,12 +345,20 @@ const confirmRemoveStation = (id: number) => {
             </label>
             <span
               className="flex items-center cursor-pointer text-[10px] text-tertiary-200 font-semibold"
-              onClick={() => removeStation(station.id)}
+              onClick={() => openRemoveDialog(station.id)}
             >
               Remove station
               <span className="material-symbols-outlined ml-1">more_horiz</span>
             </span>
           </div>
+          {/* Confirmation Dialog */}
+          <Dialog
+            title="Remove Station"
+            message={`Are you sure you want to remove Station ${stationToRemove}?`}
+            isOpen={showRemoveDialog}
+            onConfirm={handleConfirmRemove}
+            onCancel={handleCancelRemove}
+          />
           {/* Description Text comes here if needed */}
           {/* Question Text Field */}
 
@@ -499,6 +530,13 @@ const confirmRemoveStation = (id: number) => {
           {isSubmitting ? "Submitting..." : "Create Poll"}
         </button>
       </div>
+      <Dialog
+        title="Poll Created"
+        message="Your poll has been successfully created!"
+        isOpen={showSuccessDialog}
+        onConfirm={() => setShowSuccessDialog(false)}
+        confirmText="Close"
+      />
     </div>
   )
 }

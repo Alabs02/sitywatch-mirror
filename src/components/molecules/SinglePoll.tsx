@@ -439,7 +439,7 @@ return (
     <PollThoughts
       pollId={poll.id}
       pollOwnerAlias={poll.pollOwnerAlias}
-      expiresAt={poll.expiresAt}
+      
     />
   </div>
 )

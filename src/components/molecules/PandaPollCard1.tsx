@@ -62,7 +62,7 @@ const PandaPollCard1: React.FC = () => {
       return window.localStorage
     } else {
       // Handle server-side storage or a different approach
-      return {} // Or some alternative storage mechanism
+      return {} 
     }
   }
 
@@ -135,7 +135,7 @@ const PandaPollCard1: React.FC = () => {
 
   const handlePollClick = (pollId: string) => {
     console.log("Poll clicked:", pollId)
-    setSelectedPollId(pollId) // Ensure correct ID is stored
+    setSelectedPollId(pollId) 
   }
 
 
@@ -145,7 +145,7 @@ const PandaPollCard1: React.FC = () => {
 
 
     const handleBackToPolls = () => {
-      setSelectedPollId(null) // Reset to show the list of polls
+      setSelectedPollId(null)
     }
 
   const handleOptionSelect = async (
