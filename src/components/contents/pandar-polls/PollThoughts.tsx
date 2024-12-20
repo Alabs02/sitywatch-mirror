@@ -82,15 +82,15 @@ const PollThoughts: React.FC<ThoughtsProps> = ({ pollId, pollOwnerAlias }) => {
    if (!thought.trim()) return
 
    const newThought = {
-     id: Date.now().toString(), // Temporary ID
+     id: Date.now().toString(), 
      pollId,
-     pandar: pollOwnerAlias, // Use the current user alias
+     pandar: pollOwnerAlias, 
      thought,
-     createdAt: new Date().toISOString(), // Current timestamp
+     createdAt: new Date().toISOString(), 
    }
 
-   setThoughts((prev) => [newThought, ...prev]) // Optimistically add the thought
-   setThought("") // Clear the input
+   setThoughts((prev) => [newThought, ...prev]) 
+   setThought("")
 
    try {
      const url = `${baseURI}${apiRoutes.SUBMIT_POLL_THOUGHT(pollId)}`
