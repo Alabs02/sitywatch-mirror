@@ -126,11 +126,13 @@ const handleSchoolInputChange = (index: number, value: string) => {
     updatedSchoolingList[index].school[field as string] = value
     authStore.setForm("rawSchoolingList", updatedSchoolingList)
   }
-  const handleStatusChange = (index: number, value: string) => {
-    const updatedSchoolingList = [...authStore.form.rawSchoolingList]
-    updatedSchoolingList[index].status = value
-    authStore.setForm("rawSchoolingList", updatedSchoolingList)
-  }
+ const handleStatusChange = (index: number, value: string) => {
+   console.log(`Updating status for index ${index} to:`, value)
+   const updatedSchoolingList = [...authStore.form.rawSchoolingList]
+   updatedSchoolingList[index].status = value
+   authStore.setForm("rawSchoolingList", updatedSchoolingList)
+ }
+
 
   const handleCourseChange = (index: number, value: string) => {
     const updatedSchoolingList = [...authStore.form.rawSchoolingList]
@@ -222,24 +224,20 @@ const handleSchoolInputChange = (index: number, value: string) => {
               <input
                 type="radio"
                 name={`school-type-${index}`}
-                value="TETIARY"
+                value="0"
                 checked={formItem.school.type === 0}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
+                onChange={(e) => handleInputChange(index, "type", "0")}
                 className="ml-2 text-black"
               />
             </label>
             <label className="text-sm flex items-center">
-              Higher institution
+              High school
               <input
                 type="radio"
                 name={`school-type-${index}`}
                 value="1"
                 checked={formItem.school.type === 1}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
+                onChange={(e) => handleInputChange(index, "type", "1")}
                 className="ml-2 text-black bg-transparent"
               />
             </label>
@@ -250,9 +248,7 @@ const handleSchoolInputChange = (index: number, value: string) => {
                 name={`school-type-${index}`}
                 value="2"
                 checked={formItem.school.type === 2}
-                onChange={(e) =>
-                  handleInputChange(index, "type", e.target.value)
-                }
+                onChange={(e) => handleInputChange(index, "type", "2")}
                 className="ml-2 text-black"
               />
             </label>
@@ -305,9 +301,9 @@ const handleSchoolInputChange = (index: number, value: string) => {
               <input
                 type="radio"
                 name={`school-status-type-${index}`}
-                value="0"
-                checked={formItem.status === "0"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
+                value="STUDENT"
+                checked={formItem.status === "STUDENT"}
+                onChange={(e) => handleStatusChange(index, "STUDENT")}
                 className="ml-2 text-black"
               />
             </label>
@@ -318,7 +314,7 @@ const handleSchoolInputChange = (index: number, value: string) => {
                 name={`school-status-type-${index}`}
                 value="ALUMNUS"
                 checked={formItem.status === "ALUMNUS"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
+                onChange={(e) => handleStatusChange(index, "ALUMNUS")}
                 className="ml-2 text-black bg-transparent"
               />
             </label>
@@ -329,7 +325,7 @@ const handleSchoolInputChange = (index: number, value: string) => {
                 name={`school-status-type-${index}`}
                 value="OTHER"
                 checked={formItem.status === "OTHER"}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
+                onChange={(e) => handleStatusChange(index, "OTHER")}
                 className="ml-2 text-black"
               />
             </label>
@@ -348,18 +344,17 @@ const handleSchoolInputChange = (index: number, value: string) => {
         </div>
       ))}
 
-      <div className="flex justify-between items-center my-4">
+      <div className="flex justify-between my-4">
         <button
-          type="button"
           onClick={onBack}
-          className="bg-gray-300 p-2 rounded shadow-md"
+          className="p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
         >
           Back
         </button>
+
         <button
-          type="button"
           onClick={onSubmit}
-          className="bg-blue-500 text-white p-2 rounded shadow-md"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
         >
           Next
         </button>

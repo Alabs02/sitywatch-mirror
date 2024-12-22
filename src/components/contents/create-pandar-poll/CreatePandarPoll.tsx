@@ -55,31 +55,60 @@ const CreatePandarPoll: React.FC = () => {
   const [isButtonActive, setIsButtonActive] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<string | null>(null)
-    const [showRemoveDialog, setShowRemoveDialog] = useState(false)
-    const [stationToRemove, setStationToRemove] = useState<number | null>(null)
-    const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false)
+  const [stationToRemove, setStationToRemove] = useState<number | null>(null)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+  const [showOptionRemoveDialog, setShowOptionRemoveDialog] = useState(false)
+  const [optionToRemove, setOptionToRemove] = useState({
+    stationIndex: -1,
+    optionIndex: -1,
+  })
 
   useEffect(() => {
     fetchPollData()
   }, [fetchPollData])
 
-   const openRemoveDialog = (id: number) => {
-     setStationToRemove(id)
-     setShowRemoveDialog(true)
-   }
+  const openOptionRemoveDialog = (
+    stationIndex: number,
+    optionIndex: number,
+  ) => {
+    setOptionToRemove({ stationIndex, optionIndex })
+    setShowOptionRemoveDialog(true)
+  }
+  const handleConfirmRemoveOption = () => {
+    const { stationIndex, optionIndex } = optionToRemove
+    if (stationIndex !== -1 && optionIndex !== -1) {
+      const updatedStations = [...stations]
+      updatedStations[stationIndex].options.splice(optionIndex, 1)
+      setStations(updatedStations)
+    }
+    setOptionToRemove({ stationIndex: -1, optionIndex: -1 })
+    setShowOptionRemoveDialog(false)
+  }
 
-   const handleConfirmRemove = () => {
-     if (stationToRemove !== null) {
-       removeStation(stationToRemove)
-       setStationToRemove(null)
-     }
-     setShowRemoveDialog(false)
-   }
+  const handleCancelRemoveOption = () => {
+    setOptionToRemove({ stationIndex: -1, optionIndex: -1 })
+    setShowOptionRemoveDialog(false)
+  }
 
-   const handleCancelRemove = () => {
-     setStationToRemove(null)
-     setShowRemoveDialog(false)
-   }
+  //  Remove station functions
+  const openRemoveDialog = (id: number) => {
+    setStationToRemove(id)
+    setShowRemoveDialog(true)
+  }
+
+  const handleConfirmRemove = () => {
+    if (stationToRemove !== null) {
+      removeStation(stationToRemove)
+      setStationToRemove(null)
+    }
+    setShowRemoveDialog(false)
+  }
+
+  const handleCancelRemove = () => {
+    setStationToRemove(null)
+    setShowRemoveDialog(false)
+  }
 
   const defaultOption = (): PollOption => ({
     text: "",
@@ -105,20 +134,20 @@ const CreatePandarPoll: React.FC = () => {
     ])
   }
 
- const removeStation = (id: number) => {
-   setStations((prevStations) => {
-     const filteredStations = prevStations.filter(
-       (station) => station.id !== id,
-     )
+  const removeStation = (id: number) => {
+    setStations((prevStations) => {
+      const filteredStations = prevStations.filter(
+        (station) => station.id !== id,
+      )
 
-     // Re-assign indexes after removal
-     filteredStations.forEach((station, index) => {
-       station.id = index + 1 // Update station ID based on new index
-     })
+      // Re-assign indexes after removal
+      filteredStations.forEach((station, index) => {
+        station.id = index + 1 // Update station ID based on new index
+      })
 
-     return filteredStations
-   })
- }
+      return filteredStations
+    })
+  }
 
   const addOption = (stationIndex: number) => {
     const updatedStations = [...stations]
@@ -128,12 +157,11 @@ const CreatePandarPoll: React.FC = () => {
     }
   }
 
-const confirmRemoveStation = (id: number) => {
-  if (window.confirm(`Are you sure you want to remove Station ${id}?`)) {
-    removeStation(id)
+  const confirmRemoveStation = (id: number) => {
+    if (window.confirm(`Are you sure you want to remove Station ${id}?`)) {
+      removeStation(id)
+    }
   }
-}
-
 
   const removeOption = (stationIndex: number, optionIndex: number) => {
     const updatedStations = [...stations]
@@ -474,21 +502,30 @@ const confirmRemoveStation = (id: number) => {
               {station.options.length > 1 && (
                 <div className="flex justify-between">
                   <div className="flex-1"></div>
-                  <button
-                    type="button"
-                    className="flex items-center text-secondary font-bold"
-                    onClick={() => removeOption(stationIndex, optionIndex)}
+                  <span
+                    className="flex items-center cursor-pointer text-[10px] text-tertiary-200 font-semibold"
+                    onClick={() =>
+                      openOptionRemoveDialog(stationIndex, optionIndex)
+                    }
                   >
-                    <span className="material-symbols-outlined text-sm">
-                      do_not_disturb_on
+                    Remove option
+                    <span className="material-symbols-outlined ml-1">
+                      more_horiz
                     </span>
-                    <span className="ml-2 text-sm">Remove Option</span>
-                  </button>
+                  </span>
                 </div>
               )}
             </div>
           ))}
-
+          <Dialog
+            title="Remove Option"
+            message={`Are you sure you want to remove Option ${
+              optionToRemove.optionIndex + 1
+            }?`}
+            isOpen={showOptionRemoveDialog}
+            onConfirm={handleConfirmRemoveOption}
+            onCancel={handleCancelRemoveOption}
+          />
           <div className="flex justify-start">
             <button
               type="button"

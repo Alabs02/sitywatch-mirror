@@ -10,6 +10,7 @@ interface StepProps {
 
 const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
   const [showOptions, setShowOptions] = useState(false)
+   const [errorMessage, setErrorMessage] = useState<string>("")
 
   // Access store form and actions
   const { form, setForm, setNext, setPrevious } = useAuthStore()
@@ -42,9 +43,10 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
      "interests",
      uniqueOptions.map((option) => ({
        value: option,
-       verified: false, // Defaulting to false; modify as needed
+       verified: false, // Defaulting to false; 
      })),
    )
+   setErrorMessage("")
  }
 
   const handleSelectOption = (option: string) => {
@@ -59,13 +61,22 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
     handleUpdateOptions(selectedOptions.filter((o) => o !== normalizedOption))
   }
 
-  const handleNext = () => {
-    onNext() // Call parent's onNext if needed
-  }
+   const handleNext = () => {
+     if (selectedOptions.length < 3) {
+       setErrorMessage("Please select at least 3 interests to proceed.")
+       return
+     }
+     if (selectedOptions.length > 7) {
+       setErrorMessage("You can select a maximum of 7 interests.")
+       return
+     }
+
+     onNext() 
+   }
 
   const handleBack = () => {
-    setPrevious() // Trigger previous step from the store
-    onBack() // Call parent's onBack if needed
+    setPrevious() 
+    onBack()
   }
 
   return (
@@ -75,6 +86,11 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
           Click the button to add your interests:
         </p>
       </div>
+      {errorMessage && (
+        <div className="text-center text-red-500 font-semibold mb-4">
+          {errorMessage}
+        </div>
+      )}
 
       <div className="flex flex-col">
         <div className="text-center">
@@ -112,8 +128,8 @@ const LookSitizenStep1: FC<StepProps> = ({ onNext, onBack }) => {
         <OptionsCard
           isVisible={showOptions}
           onClose={() => setShowOptions(false)}
-          onUpdateOptions={handleUpdateOptions} // Pass array-based handler to OptionsCard
-          selectedOptions={selectedOptions} // Pass selectedOptions to OptionsCard
+          onUpdateOptions={handleUpdateOptions} 
+          selectedOptions={selectedOptions}
         />
       </div>
 

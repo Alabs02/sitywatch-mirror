@@ -16,7 +16,7 @@ const pandaSection = {
       image: "/coreAssets/PandarUs/CreatePollHeader/poll.svg",
       title: "Create Pandar Poll",
       description:
-        "Set up your own pandar poll to help others find their soul_pandars.You can ask those questions you don’t wanna ask in person andno one will know its you ... not even us.",
+        "Set up your own pandar poll to help others find their soul_pandars. You can ask those questions you don’t wanna ask in person and no one will know it's you ...not even us.",
     },
   ],
   polls: [

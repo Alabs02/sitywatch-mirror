@@ -2,6 +2,7 @@ import { create } from "zustand"
 import Cookies from "js-cookie"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 
+
 export interface Interaction {
   id: string
   pollInteractionId: string
@@ -41,13 +42,13 @@ export interface PollData {
 }
 
 interface PandarPollState {
-  pollData: PollData[] // All polls
-  currentPoll: PollData | null // Single poll
+  pollData: PollData[] 
+  currentPoll: PollData | null 
   isFetching: boolean
   error: string | null
-  progress: Record<string, string[]> // Tracks answered options
+  progress: Record<string, string[]>
   fetchPollData: () => Promise<void>
-  fetchSinglePoll: (pollId: string) => Promise<void> // Fetch single poll
+  fetchSinglePoll: (pollId: string) => Promise<void> 
   updateProgress: (pollId: string, answerOptionId: string) => void
   loadProgress: () => void
 }

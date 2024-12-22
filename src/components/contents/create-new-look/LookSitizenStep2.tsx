@@ -18,85 +18,103 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
   const [phoneValid, setPhoneValid] = useState(true)
   const [emailChecked, setEmailChecked] = useState(false)
   const [isLoadingEmail, setIsLoadingEmail] = useState(false)
+  const [isEmailBeingEdited, setIsEmailBeingEdited] = useState(false)
 
+  let timeoutId: NodeJS.Timeout
 
+  const debounce = <T extends (...args: any[]) => void>(
+    func: T,
+    delay: number,
+  ): T => {
+    return ((...args: Parameters<T>) => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => func(...args), delay)
+    }) as T
+  }
 
- let timeoutId: NodeJS.Timeout
+  const checkEmail = async () => {
+    if (form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setIsLoadingEmail(true)
+      const isAvailable = await authStore.checkEmail(form.email)
+      setIsEmailValid(isAvailable) // Interpret boolean response
+      setIsLoadingEmail(false)
+    } else {
+      setIsEmailValid(false)
+    }
+  }
 
- const debounce = <T extends (...args: any[]) => void>(
-   func: T,
-   delay: number,
- ): T => {
-   return ((...args: Parameters<T>) => {
-     clearTimeout(timeoutId)
-     timeoutId = setTimeout(() => func(...args), delay)
-   }) as T
- }
+  // Debounced function to check email availability
+  const debouncedCheckEmail = debounce(async (email: string) => {
+    setIsLoadingEmail(true)
+    setIsEmailBeingEdited(false) // User stopped typing, ready to show feedback
 
- const checkEmail = async () => {
-   if (form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-     setIsLoadingEmail(true)
-     const isAvailable = await authStore.checkEmail(form.email)
-     setIsEmailValid(isAvailable) // Interpret boolean response
-     setIsLoadingEmail(false)
-   } else {
-     setIsEmailValid(false)
-   }
- }
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      const isAvailable = await authStore.checkEmail(email) // Call the API
+      setIsEmailValid(isAvailable) // Update validity based on API response
+    } else {
+      setIsEmailValid(false) // Ensure invalid emails are handled properly
+    }
 
- const debouncedCheckEmail = debounce(checkEmail, 500)
+    setIsLoadingEmail(false)
+  }, 500)
 
- const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-   e.preventDefault() 
-   const newEmail = e.target.value
-   authStore.setForm("email", newEmail)
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value
 
-   // Validate format locally; API call handles availability check
-   setIsEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail))
-   debouncedCheckEmail()
- }
+    // Update email in the store
+    authStore.setForm("email", newEmail)
 
- const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
-   event.preventDefault()
-   if (
-     !form.firstName ||
-     !form.lastName ||
-     !form.shortName ||
-     !form.email ||
-     !form.phone ||
-     !form.password ||
-     !confirmPassword
-   ) {
-     alert("Please fill out all fields.")
-     return
-   }
+    // Start showing typing feedback
+    setIsEmailBeingEdited(true)
 
-   if (!isEmailValid) {
-     alert("Please enter a valid and available email address.")
-     return
-   }
+    // Validate the format locally
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      setIsEmailValid(true)
+      debouncedCheckEmail(newEmail) // Trigger debounced API check
+    } else {
+      setIsEmailValid(false) // Mark as invalid locally
+    }
+  }
 
-   if (!phoneValid) {
-     alert("Please enter a valid Nigerian phone number.")
-     return
-   }
+  const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.shortName ||
+      !form.email ||
+      !form.phone ||
+      !form.password ||
+      !confirmPassword
+    ) {
+      alert("Please fill out all fields.")
+      return
+    }
 
-   if (form.password !== confirmPassword) {
-     setPasswordsMatch(false)
-     return
-   }
+    if (!isEmailValid) {
+      alert("Please enter a valid and available email address.")
+      return
+    }
 
-   authStore.setForm("confirmPassword", confirmPassword)
-   onNext()
- }
+    if (!phoneValid) {
+      alert("Please enter a valid Nigerian phone number.")
+      return
+    }
+
+    if (form.password !== confirmPassword) {
+      setPasswordsMatch(false)
+      return
+    }
+
+    authStore.setForm("confirmPassword", confirmPassword)
+    onNext()
+  }
 
   // Nigerian phone number validation function
   const validatePhoneNumber = (phone: string) => {
     const nigerianPhoneRegex = /^(0\d{10}|[7-9]\d{9})$/
     setPhoneValid(nigerianPhoneRegex.test(phone))
   }
-
-
 
   const handleShortNameChange = (value: string) => {
     if (!value.startsWith("@")) {
@@ -182,9 +200,11 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
               <span className="text-gray-500">Loading...</span>
             </div>
           )}
-          {!isEmailValid && (
+          {!isEmailBeingEdited && !isLoadingEmail && !isEmailValid && (
             <p className="text-red-500 text-center mt-1">
-              Email is unavailable or invalid.
+              {form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+                ? "Email is unavailable or already taken."
+                : "Please enter a valid email address."}
             </p>
           )}
         </div>
@@ -276,16 +296,17 @@ const LookSitizenStep2: FC<StepProps> = ({ onNext, onBack }) => {
       </div>
 
       {/* Next Button */}
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between my-4">
         <button
           onClick={onBack}
-          className="p-2 bg-gradient-to-r from-[#F2406D] to-[#FF6B2C] text-white rounded"
+          className="p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
         >
           Back
         </button>
+
         <button
           onClick={handleNext}
-          className="p-2 bg-gradient-to-r from-[#F2406D] to-[#FF6B2C] text-white rounded"
+          className="p-2 bg-gradient-to-r from-[#F24055] to-[#1E7881] text-white rounded-lg"
         >
           Next
         </button>
