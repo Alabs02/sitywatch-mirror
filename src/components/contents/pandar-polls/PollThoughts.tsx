@@ -191,7 +191,7 @@ useEffect(() => {
                           ? formatDistanceToNow(new Date(thought.createdAt), {
                               addSuffix: true,
                             })
-                          : "Just now"}
+                          : ""}
                       </p>
                     </div>
                     <span
