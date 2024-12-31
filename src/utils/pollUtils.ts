@@ -1,37 +1,47 @@
 // utils/pollUtils.ts
-import { baseURI, apiRoutes } from "@/constants/apiRoutes"
+import { AnswerOption } from "@/store/pandar.store"
 
-export const fetchPollData = async (accessToken: string) => {
-  const response = await fetch(`${baseURI}${apiRoutes.PANDAR_POLLS}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-  })
-
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData?.message || "Failed to fetch polls")
-  }
-
-  return response.json()
+// Calculate total votes for a poll's options
+export const getTotalVotes = (options: AnswerOption[]): number => {
+  return options.reduce((sum, option) => {
+    return sum + (option.interactions ? option.interactions.length : 0)
+  }, 0)
 }
 
-export const fetchSinglePoll = async (pollId: string, accessToken: string) => {
-  const response = await fetch(
-    `${baseURI}${apiRoutes.GET_SINGLE_POLL(pollId)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    },
-  )
+// Calculate the percentage of votes for an option
+export const getPercentage = (votes: number, total: number): string => {
+  if (total === 0) return "0"
+  return ((votes / total) * 100).toFixed(1)
+}
 
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData?.message || `Failed to fetch poll ${pollId}`)
-  }
+// Calculate countdown for poll expiration
+export const calculateCountdown = (expiresAt: string): string => {
+  const now = new Date().getTime()
+  const end = new Date(expiresAt).getTime()
+  const diff = end - now
 
-  return response.json()
+  if (diff <= 0) return "Expired"
+
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  return `${hours} hrs ${minutes} mins remaining`
+}
+
+// Update countdowns and determine expired polls
+export const updateCountdowns = (
+  pollData: any[],
+  setCountdowns: Function,
+  setExpiredPolls: Function,
+) => {
+  const updatedCountdowns: { [key: string]: string } = {}
+  const updatedExpiredPolls: { [key: string]: boolean } = {}
+
+  pollData.forEach((poll) => {
+    const countdown = calculateCountdown(poll.expiresAt)
+    updatedCountdowns[poll.id] = countdown
+    updatedExpiredPolls[poll.id] = countdown === "Expired"
+  })
+
+  setCountdowns(updatedCountdowns)
+  setExpiredPolls(updatedExpiredPolls)
 }

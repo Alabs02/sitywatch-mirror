@@ -7,6 +7,12 @@ import { http } from "@/libs"
 import { apiRoutes, baseURI } from "@/constants/apiRoutes"
 import Cookies from "js-cookie"
 import PollThoughts from "../contents/pandar-polls/PollThoughts"
+import {
+  getTotalVotes,
+  getPercentage,
+  calculateCountdown,
+  updateCountdowns,
+} from "@/utils/pollUtils"
 
 
 interface SinglePollProps {
@@ -39,38 +45,14 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
       fetchPollData()
     }
   }, [pollData, fetchPollData])
-  useEffect(() => {
-    const calculateCountdown = (expiresAt: string) => {
-      const now = new Date().getTime()
-      const end = new Date(expiresAt).getTime()
-      const diff = end - now
-
-      if (diff <= 0) return "Expired"
-
-      const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      )
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      return `${hours} hrs ${minutes} mins remaining`
-    }
-
-    const updateCountdowns = () => {
-      const updatedCountdowns: { [key: string]: string } = {}
-      const updatedExpiredPolls: { [key: string]: boolean } = {}
-      pollData.forEach((poll) => {
-        const countdown = calculateCountdown(poll.expiresAt)
-        updatedCountdowns[poll.id] = countdown
-        updatedExpiredPolls[poll.id] = countdown === "Expired"
-      })
-
-      setCountdowns(updatedCountdowns)
-      setExpiredPolls(updatedExpiredPolls)
-    }
-
-    updateCountdowns()
-    const intervalId = setInterval(updateCountdowns, 60000)
-    return () => clearInterval(intervalId)
-  }, [pollData])
+   useEffect(() => {
+     updateCountdowns(pollData, setCountdowns, setExpiredPolls)
+     const intervalId = setInterval(
+       () => updateCountdowns(pollData, setCountdowns, setExpiredPolls),
+       60000,
+     )
+     return () => clearInterval(intervalId)
+   }, [pollData])
 
   // Filter the specific poll based on pollId
   const selectedPoll = pollData.find((pollItem) => pollItem?.id === poll.id)
@@ -112,11 +94,11 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     return <div>Poll not found.</div>
   }
 
-  const getTotalVotes = (options: AnswerOption[]) => {
-    return options.reduce((sum, option) => {
-      return sum + (option.interactions ? option.interactions.length : 0)
-    }, 0)
-  }
+  // const getTotalVotes = (options: AnswerOption[]) => {
+  //   return options.reduce((sum, option) => {
+  //     return sum + (option.interactions ? option.interactions.length : 0)
+  //   }, 0)
+  // }
   const pollTotalVotes = getTotalVotes(selectedPoll.stations[0].answerOptions)
   const isPollExpired = expiredPolls[selectedPoll.id]
   const isCurrentlyPandering = isSubmitting[selectedPoll.id]
@@ -124,81 +106,74 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     setShowOverlay(!showOverlay)
   }
 
-   const handleOptionSelect = async (
-     pollId: string,
-     stationId: string,
-     optionIndex: number,
-   ) => {
-     const stationKey = `${pollId}-${stationId}`
-     if (selectedOptions[stationKey] !== undefined) return
+  const handleOptionSelect = async (
+    pollId: string,
+    stationId: string,
+    optionIndex: number,
+  ) => {
+    const stationKey = `${pollId}-${stationId}`
+    if (selectedOptions[stationKey] !== undefined) return
 
     setSelectedOptions((prev) => ({ ...prev, [stationKey]: optionIndex }))
-    //  setShowResults((prev) => ({
-    //    ...prev,
-    //    [stationKey]: true,
-    //  }))
 
-     // Update the poll data in the store
-     const updatedPollData = pollData.map((poll) => {
-       if (poll.id === pollId) {
-         poll.stations = poll.stations.map((station) => {
-           if (station.id === stationId) {
-             station.answerOptions[optionIndex].interactions.push({
-               id: `interaction-${Date.now()}`,
-               pollInteractionId: pollId,
-               answerOptionId: station.answerOptions[optionIndex].id,
-               createdAt: new Date().toISOString(),
-             })
-           }
-           return station
-         })
-       }
-       return poll
-     })
+    const updatedPollData = pollData.map((poll) => {
+      if (poll.id === pollId) {
+        poll.stations = poll.stations.map((station) => {
+          if (station.id === stationId) {
+            station.answerOptions[optionIndex].interactions.push({
+              id: `interaction-${Date.now()}`,
+              pollInteractionId: pollId,
+              answerOptionId: station.answerOptions[optionIndex].id,
+              createdAt: new Date().toISOString(),
+            })
+          }
+          return station
+        })
+      }
+      return poll
+    })
 
-     usePandarPollStore.setState({ pollData: updatedPollData })
+    usePandarPollStore.setState({ pollData: updatedPollData })
 
-     // Save interaction to backend
-     const accessToken = Cookies.get("ACCESS_TOKEN")
-     try {
-       await http.service(false).post(
-         `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
-         {
-           selectedAnswers: [
-             {
-               answerOptionId: updatedPollData
-                 .find((poll) => poll.id === pollId)!
-                 .stations.find((station) => station.id === stationId)!
-                 .answerOptions[optionIndex].id,
-             },
-           ],
-         },
-         {
-           headers: { Authorization: `Bearer ${accessToken}` },
-           withCredentials: true,
-         },
-       )
-     } catch (error) {
-       console.error("Error saving interaction:", error)
-     }
-   }
-
-  const toggleExpandedPoll = (pollId: string) => {
-    setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
+    const accessToken = Cookies.get("ACCESS_TOKEN")
+    try {
+      await http.service(false).post(
+        `${baseURI}${apiRoutes.PANDAR_POLLS_INTERACTIONS(pollId)}`,
+        {
+          selectedAnswers: [
+            {
+              answerOptionId: updatedPollData
+                .find((poll) => poll.id === pollId)!
+                .stations.find((station) => station.id === stationId)!
+                .answerOptions[optionIndex].id,
+            },
+          ],
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        },
+      )
+    } catch (error) {
+      console.error("Error saving interaction:", error)
+    }
   }
+
+   const toggleExpandedPoll = (pollId: string) => {
+     setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
+   }
 
   // Calculate the total votes for a set of options, handling undefined interactions
 
   // Calculate the percentage of votes for an option
-  const getPercentage = (votes: number, total: number) => {
-    if (total === 0) return "0"
-    return ((votes / total) * 100).toFixed(1)
-  }
+  // const getPercentage = (votes: number, total: number) => {
+  //   if (total === 0) return "0"
+  //   return ((votes / total) * 100).toFixed(1)
+  // }
 
  const onSubmitPoll = async (pollId: string, stationId: string) => {
    const stationKey = `${pollId}-${stationId}`
 
-   // If no option is selected, prevent submission
    if (
      selectedOptions[stationKey] === undefined ||
      selectedOptions[stationKey] === null
@@ -221,7 +196,6 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
    }
 
    try {
-     // Submit to backend
      await http
        .service(false)
        .post(
@@ -233,7 +207,6 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
          },
        )
 
-     // Show results only after successful submission
      setShowResults((prev) => ({ ...prev, [stationKey]: true }))
    } catch (error) {
      console.error("Error submitting poll:", error)
