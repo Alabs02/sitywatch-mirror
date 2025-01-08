@@ -83,9 +83,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
     })
   }, [pollData])
 
-  // Filter the specific poll based on pollId
-  // const selectedPoll = pollData.find((poll) => poll.id === pollId)
-
+  
   // Debugging log for pollId
   console.log("Selected Poll ID:", poll)
   console.log("Selected Poll:", selectedPoll)
@@ -93,12 +91,7 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
   if (!selectedPoll) {
     return <div>Poll not found.</div>
   }
-
-  // const getTotalVotes = (options: AnswerOption[]) => {
-  //   return options.reduce((sum, option) => {
-  //     return sum + (option.interactions ? option.interactions.length : 0)
-  //   }, 0)
-  // }
+  
   const pollTotalVotes = getTotalVotes(selectedPoll.stations[0].answerOptions)
   const isPollExpired = expiredPolls[selectedPoll.id]
   const isCurrentlyPandering = isSubmitting[selectedPoll.id]
@@ -163,13 +156,6 @@ const SinglePoll: React.FC<SinglePollProps> = ({ poll, onBack }) => {
      setExpanded((prev) => ({ ...prev, [pollId]: !prev[pollId] }))
    }
 
-  // Calculate the total votes for a set of options, handling undefined interactions
-
-  // Calculate the percentage of votes for an option
-  // const getPercentage = (votes: number, total: number) => {
-  //   if (total === 0) return "0"
-  //   return ((votes / total) * 100).toFixed(1)
-  // }
 
  const onSubmitPoll = async (pollId: string, stationId: string) => {
    const stationKey = `${pollId}-${stationId}`
