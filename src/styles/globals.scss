@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
@@ -11,6 +12,10 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+* {
+  font-family: "Inter", serif, 'Segoe UI', Geneva, Verdana, sans-serif;
+}
+
 html[data-theme='dark'] {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
@@ -22,7 +27,6 @@ body {
   background: rgb(var(--background-start-rgb)) url('/background-image.jfif') no-repeat;
   background-size: cover;
   background-color: rgb(var(--background-start-rgb)); /* Fallback color */
-  color: rgb(var(--foreground-rgb));
 }
 
 /* Hide the scrollbar but keep scrolling functionality */
@@ -187,6 +191,11 @@ h1.h1-with-border::before {
   width: 2px; /* Make it thinner */
   height: 40px; /* Adjust the height as needed */
   background-color: #F24055; /* Adjust color if needed */
+}
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
 }
 
 

@@ -53,6 +53,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <title>Scout City</title>
         <link rel="icon" href="/sclogo-light.png" type="image/svg+xml" />
       </Head>
+      
       {isBuildSitadelPage ? (
         <Component {...pageProps} />
       ) : (
