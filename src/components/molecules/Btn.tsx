@@ -1,7 +1,7 @@
 // CustomButton.tsx
 
 import React from "react"
-import classnames from "classnames"
+import clsx from "clsx"
 
 interface CustomButtonProps {
   isCollapsed: boolean
@@ -9,7 +9,7 @@ interface CustomButtonProps {
 
 const Btn: React.FC<CustomButtonProps> = ({ isCollapsed }) => (
   <button
-    className={classnames(
+    className={clsx(
       "p-3 lg:px-8 lg:py-2 rounded-full lg:rounded-3xl bg-gradient-to-b from-primary-500 to-secondary-500 text-primary-content font-medium text-[15px] grid place-items-center lg:flex lg:items-center lg:gap-x-2 shadow z-50",
       {
         "hidden lg:block": isCollapsed,

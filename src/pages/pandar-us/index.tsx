@@ -16,13 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -53,7 +47,7 @@ const PandaUs = () => {
 
 const PandaUsTab = () => {
   return (
-    <TabGroup className={cn("flex flex-col gap-y-4 w-full xl:w-auto ")}>
+    <TabGroup className={cn("flex flex-col gap-y-4 w-full xl:w-[60%] ")}>
       <TabList
         className={cn(
           "flex gap-x-2 items-center justify-between rounded-full bg-transparent p-2"
