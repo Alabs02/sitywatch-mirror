@@ -334,7 +334,7 @@ const PollPanel = () => {
               </motion.button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-56 bg-sitywatch-bg bg-cover bg-center">
+            <DropdownMenuContent className="w-56 bg-sitywatch-bg bg-cover bg-center border-[rgb(163_138_138/0.3)]">
               <DropdownMenuItem>
                 <span className="inline-block material-symbols-outlined text-[20px]">
                   frame_source
