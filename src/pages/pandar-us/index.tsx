@@ -2,6 +2,7 @@ import React from "react";
 import { HTMLMotionProps, motion } from "framer-motion";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib";
 
 import {
@@ -24,6 +25,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { imagePaths, whileTapOptions } from "@/constants";
 import { CreatePandarPollDialog } from "@/pages/pandar-us/create-pandar-poll-dialog";
+import { routes } from "@/constants/api.routes";
 
 export type StationOptionProps = HTMLMotionProps<"button"> & {
   children?: React.ReactNode;
@@ -31,12 +33,36 @@ export type StationOptionProps = HTMLMotionProps<"button"> & {
 
 const MotionTab = motion(Tab);
 
-const PandaUs = () => {
+const PandarUs = () => {
+  const headers = new Headers();
+  headers.append("X-CSCAPI-KEY", "");
+
+  const requestOptions: RequestInit = {
+    method: "GET",
+    headers: headers,
+    redirect: "follow",
+  };
+
+  const spoolCountries = async () => {
+    try {
+      const response = await fetch(
+        routes.external.SPOOL_COUNTRIES,
+        requestOptions
+      );
+
+      console.log({ response });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // spoolCountries();
+
   return (
     <>
       <div className="min-h-screen w-full grid grid-cols-12 lg:gap-x-12">
         <div className="col-span-8 2xl:col-span-9 flex justify-center">
-          <PandaUsTab />
+          <PandarUsTab />
         </div>
 
         <div className="col-span-4 2xl:col-span-3"></div>
@@ -45,9 +71,14 @@ const PandaUs = () => {
   );
 };
 
-const PandaUsTab = () => {
+const PandarUsTab = () => {
+  const soulPandarEmptyState = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   return (
-    <TabGroup className={cn("flex flex-col gap-y-4 w-full xl:w-[60%] ")}>
+    <TabGroup className={cn("flex flex-col gap-y-4 w-full 2xl:w-[60%] ")}>
       <TabList
         className={cn(
           "flex gap-x-2 items-center justify-between rounded-full bg-transparent p-2"
@@ -121,6 +152,7 @@ const PandaUsTab = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
+
           <Dialog>
             <DialogTrigger asChild>
               <motion.button
@@ -156,12 +188,99 @@ const PandaUsTab = () => {
           <PollPanel />
         </TabPanel>
 
-        <TabPanel key="soul-pandars">
-          <h1>Soul Pandars</h1>
+        <TabPanel
+          key="soul-pandars"
+          className={"p-5 lg:p-6 rounded-t-[60px] flex flex-col gap-y-4"}
+        >
+          <motion.div
+            ref={soulPandarEmptyState.ref}
+            initial={{ opacity: 0, filter: "blur(10px)", y: 100 }}
+            animate={
+              soulPandarEmptyState.inView
+                ? { y: 0, opacity: 1, filter: "blur(0px)" }
+                : {}
+            }
+            transition={{ duration: 0.5, type: "tween", ease: "easeInOut" }}
+            className="flex flex-col items-center gap-y-5 my-12"
+          >
+            <div className="size-14 relative overflow-hidden">
+              <Image
+                src={imagePaths.SHY_PANDAR}
+                width={100}
+                height={100}
+                quality={100}
+                priority
+                alt={""}
+                className="size-full object-contain"
+              />
+            </div>
+
+            <p className="text-grayRed-950/65 text-sm text-center xl:max-w-[95%] 2xl:max-w-[80%]">
+              No soul Pandar matches yet! 🐼✨ Create a Pandar Poll to discover
+              your perfect matches and start connecting.
+            </p>
+          </motion.div>
         </TabPanel>
 
-        <TabPanel key="pandar-scents">
-          <h1></h1>
+        <TabPanel
+          key="pandar-scents"
+          className={"p-5 lg:p-6 rounded-t-[60px] flex flex-col gap-y-4"}
+        >
+          <div className="w-full flex items-center justify-end">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    transition={{
+                      scale: {
+                        type: "tween",
+                        duration: 0.03,
+                        ease: "easeInOut",
+                      },
+                    }}
+                    className="size-6 lg:size-8 group/info rounded-full p-0.5 grid place-items-center cursor-pointer text-grayRed-900 bg-gradient-to-b from-white/35 hover:from-secondary-100/75 to-grayRed-400/50 hover:to-primary-200/75 hover:shadow-sm transition-colors duration-300 backdrop-blur-md backdrop-filter border-none will-change-auto"
+                  >
+                    <i className="material-symbols-outlined group-hover/info:text-transparent group-hover/info:bg-gradient-to-r group-hover/info:bg-clip-text group-hover/info:from-primary group-hover/info:to-secondary transition-colors duration-300 will-change-auto">
+                      info
+                    </i>
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>You&apos;ll only know if your Soul Pandar left a scent after you share one first!</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <motion.div
+            ref={soulPandarEmptyState.ref}
+            initial={{ opacity: 0, filter: "blur(10px)", y: 100 }}
+            animate={
+              soulPandarEmptyState.inView
+                ? { y: 0, opacity: 1, filter: "blur(0px)" }
+                : {}
+            }
+            transition={{ duration: 0.5, type: "tween", ease: "easeInOut" }}
+            className="flex flex-col items-center gap-y-5 my-12"
+          >
+            <div className="size-14 relative overflow-hidden">
+              <Image
+                src={imagePaths.SHY_PANDAR}
+                width={100}
+                height={100}
+                quality={100}
+                priority
+                alt={""}
+                className="size-full object-contain"
+              />
+            </div>
+
+            <p className="text-grayRed-950/65 text-sm text-center xl:max-w-[95%] 2xl:max-w-[80%]">
+              No Pandar Scents yet! 🌸 Leave a scent on your Soul Pandar
+              matches, and they might just send one back your way. Let the
+              connection bloom!
+            </p>
+          </motion.div>
         </TabPanel>
       </TabPanels>
     </TabGroup>
@@ -229,30 +348,7 @@ const PollPanel = () => {
                   <span className="inline-block material-symbols-outlined text-[20px]">
                     eye_tracking
                   </span>
-                  <span className="inline">
-                    Watch{" "}
-                    <span className="text-secondary-600">@badassjess</span>
-                  </span>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  <span className="inline-block material-symbols-outlined text-[20px]">
-                    multiple_stop
-                  </span>
-                  <span className="inline">
-                    Avoid{" "}
-                    <span className="text-secondary-600">@badassjess</span>
-                  </span>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  <span className="inline-block material-symbols-outlined text-[20px]">
-                    domino_mask
-                  </span>
-                  <span className="inline">
-                    Blind{" "}
-                    <span className="text-secondary-600">@badassjess</span>
-                  </span>
+                  <span className="inline">Watch </span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
@@ -414,9 +510,9 @@ const PollActionButton: React.FC<
   );
 };
 
-PandaUs.displayName = "PandaUs";
+PandarUs.displayName = "PandaUs";
 PollPanel.displayName = "PollPanel";
-PandaUsTab.displayName = "PandaUsTab";
+PandarUsTab.displayName = "PandaUsTab";
 StationPanel.displayName = "StationPanel";
 StationOption.displayName = "StationOption";
-export default PandaUs;
+export default PandarUs;

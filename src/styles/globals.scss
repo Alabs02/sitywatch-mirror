@@ -185,12 +185,12 @@ h1.h1-with-border::before {
 }
 .step-connector {
   position: absolute;
-  top: 50%; /* Center vertically */
+  top: 50%;
   left: 50%;
-  transform: translateY(-50%); /* Adjust centering */
-  width: 2px; /* Make it thinner */
-  height: 40px; /* Adjust the height as needed */
-  background-color: #F24055; /* Adjust color if needed */
+  transform: translateY(-50%);
+  width: 2px;
+  height: 40px;
+  background-color: #F24055;
 }
 @layer base {
   :root {
@@ -198,6 +198,15 @@ h1.h1-with-border::before {
   }
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield !important;
+}
 
 
 

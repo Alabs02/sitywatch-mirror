@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef, useState } from "react";
 import {
   DialogClose,
   DialogContent,
@@ -7,6 +7,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from "@headlessui/react";
+
+import { format } from "date-fns";
+
 import Image from "next/image";
 import { imagePaths, whileTapOptions } from "@/constants";
 import { motion } from "framer-motion";
@@ -16,6 +37,9 @@ import { useDropzone } from "react-dropzone";
 import { Formik, Form, FieldArray, ErrorMessage, useField } from "formik";
 
 import * as Yup from "yup";
+
+import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
 
 const startPollTextColors =
   "text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600 group-hover/create-poll-btn:from-primary-50 group-hover/create-poll-btn:to-secondary-50 transition-all duration-300 will-change-auto";
@@ -52,22 +76,51 @@ const validationSchema = Yup.object().shape({
     )
     .min(1, "At least 1 station is required")
     .max(10, "No more than 10 stations are allowed"),
+  pollVisibility: Yup.object().shape({
+    type: Yup.string()
+      .oneOf(
+        ["everyone", "restricted", "manual"],
+        'Type must be "everyone", "restricted", or "manual"'
+      )
+      .required("Poll visibility type is required"),
+    locations: Yup.array().when("type", {
+      is: "restricted",
+      then: (schema) =>
+        schema
+          .of(Yup.string())
+          .min(1, "At least one location is required")
+          .required("Locations are required when visibility is restricted"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
 });
 
-interface Option {
+type Option = {
   type: string;
   value: any;
-}
+};
 
-interface Station {
+type Station = {
   label: string;
   options: Option[];
-}
+};
 
-interface FormValues {
-  pollDescription: string;
+type PollVisibility = {
+  type: "everyone" | "restricted" | "manual";
+  locations: string[];
+};
+
+type FormValues = {
+  expiresAt: string;
   stations: Station[];
-}
+  pollDescription: string;
+  pollVisibility: PollVisibility;
+};
+
+type TimeInput = {
+  hours?: number;
+  minutes?: number;
+};
 
 const CreatePandarPollDialog = () => {
   return (
@@ -109,11 +162,11 @@ const FileUpload = (props: any) => {
   const [field, utils, helpers] = useField(name);
   const { setValue } = helpers;
 
-  const onDrop = (acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      setValue(acceptedFiles[0]);
-    }
-  };
+  // const onDrop = (acceptedFiles: File[]) => {
+  //   if (acceptedFiles.length > 0) {
+  //     setValue(acceptedFiles[0]);
+  //   }
+  // };
 
   const { getRootProps, getInputProps, open, acceptedFiles, isDragActive } =
     useDropzone({
@@ -143,7 +196,9 @@ const FileUpload = (props: any) => {
       <div
         {...getRootProps({ className: "dropzone" })}
         className={`w-full min-h-full p-2 rounded-xl grid place-items-center group-hover/drop-zone:rounded-[10px] relative focus:rounded-[10px] resize-none shadow-inner text-grayRed-950/85 text-[15px] leading-[23px] backdrop-blur backdrop-filter focus:outline-none ${
-          isDragActive ? "bg-gradient-to-br from-primary-200/80 to-secondary-200/80": "bg-white/85"
+          isDragActive
+            ? "bg-gradient-to-br from-primary-200/80 to-secondary-200/80"
+            : "bg-white/85"
         }`}
       >
         <input
@@ -161,20 +216,90 @@ const FileUpload = (props: any) => {
             Drop your file here...
           </p>
         ) : (
-            <p className="text-sm text-secondary-600 absolute transition-all duration-300">
-              Drag & drop a file here, or click to select a file
-            </p>
+          <p className="text-sm text-secondary-600 absolute transition-all duration-300">
+            Drag & drop a file here, or click to select a file
+          </p>
         )}
       </div>
     </div>
   );
 };
 
-const CreatePandarPollDialogFormik: React.FC = () => {
+const locations = [
+  "New York",
+  "Los Angeles",
+  "Chicago",
+  "Houston",
+  "Phoenix",
+  "Philadelphia",
+  "San Antonio",
+  "San Diego",
+  "Dallas",
+  "San Jose",
+];
+
+const CreatePandarPollDialogFormik = () => {
+  const [query, setQuery] = useState("");
+
+  const hoursRef = useRef<HTMLInputElement>(null);
+  const minutesRef = useRef<HTMLInputElement>(null);
+
+  const addHoursAndMinutes = (
+    time: TimeInput = { hours: 23, minutes: 59 }
+  ): string => {
+    const now = new Date();
+    const { hours = 23, minutes = 59 } = time;
+
+    if (hours < 0 || minutes < 0) {
+      throw new Error("Hours and minutes must be non-negative numbers.");
+    }
+
+    now.setHours(now.getHours() + hours);
+    now.setMinutes(now.getMinutes() + minutes);
+
+    return now.toISOString();
+  };
+
+  const getTimeDifference = (
+    expiresAt: string
+  ): { hours: number; minutes: number } => {
+    const now = new Date();
+    const expiresAtDate = new Date(expiresAt);
+
+    const diffInMilliseconds = expiresAtDate.getTime() - now.getTime();
+    if (diffInMilliseconds < 0) {
+      throw new Error("expiresAt cannot be in the past.");
+    }
+
+    const totalMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return { hours, minutes };
+  };
+
+  const handleTimeChange = debounce((setFieldValue, field, value) => {
+    const updatedValue = Math.max(
+      0,
+      Math.min(field === "hours" ? 23 : 59, parseInt(value, 10) || 0)
+    );
+
+    const newExpiresAt = addHoursAndMinutes({
+      [field]: updatedValue,
+    });
+
+    setFieldValue("expiresAt", newExpiresAt);
+  }, 300);
+
   return (
     <Formik<FormValues>
       initialValues={{
         pollDescription: "",
+        pollVisibility: {
+          type: "everyone",
+          locations: [],
+        },
+        expiresAt: addHoursAndMinutes(),
         stations: [{ label: "", options: [{ type: "text", value: null }] }],
       }}
       validationSchema={validationSchema}
@@ -206,6 +331,187 @@ const CreatePandarPollDialogFormik: React.FC = () => {
                 value={values.pollDescription}
                 className="w-full min-h-full p-2 rounded-xl group-hover/textarea:rounded-[10px] focus:rounded-[10px] resize-none shadow-inner text-grayRed-950/85 text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
               />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-y-1 w-full">
+            <label
+              htmlFor="poll-description"
+              className="font-bold text-base text-secondary"
+            >
+              Poll Duration
+            </label>
+
+            <small className="text-grayRed-950/65 text-sm">
+              Set the expiration duration for your Pandar Poll. The default
+              duration is 24 hours, and you can adjust it as needed up to a
+              maximum of 24 hours.
+            </small>
+
+            <div className="flex items-center gap-4 mt-2 flex-wrap">
+              <div className="min-w-32 min-h-10 p-2 text-sm rounded-[10px] flex items-center space-x-1 cursor-not-allowed shadow-[0px_0px_0px_1px_rgb(163_138_138/0.3)] text-grayRed-950/85 leading-[23px] focus:outline-none select-none">
+                <span className="material-symbols-outlined text-transparent bg-gradient-to-b bg-clip-text from-primary to-secondary text-[18px] lg:text-[20px]">
+                  calendar_month
+                </span>
+                <span className="text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600">
+                  {format(new Date(values.expiresAt), "PPpp")}
+                </span>
+              </div>
+
+              <div className="min-h-10 min-w-32 flex items-center gap-x-0.5 rounded-xl px-2 py-1 shadow-[0px_0px_0px_1px_rgb(163_138_138/0.3)]">
+                <span className="text-sm mr-1.5 text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600">
+                  Set Time
+                </span>
+
+                <div className="group/time-picker h-full w-10 grid grid-cols-1 p-0.5 bg-gradient-to-br from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-lg">
+                  <input
+                    ref={hoursRef}
+                    type="number"
+                    min={0}
+                    max={23}
+                    maxLength={2}
+                    placeholder="HH"
+                    onChange={(e) =>
+                      handleTimeChange(setFieldValue, "hours", e.target.value)
+                    }
+                    className="w-full h-full px-1 py-0.5 text-center text-grayRed-950/85 placeholder:text-grayRed-950/40 rounded-md text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                  />
+                </div>
+
+                <span className="text-[18px] relative -translate-y-[1.25px] text-transparent font-extrabold bg-gradient-to-b bg-clip-text from-primary to-secondary">
+                  :
+                </span>
+
+                <div className="group/time-picker h-full w-10 grid grid-cols-1 p-0.5 bg-gradient-to-br from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-lg">
+                  <input
+                    max={59}
+                    maxLength={2}
+                    type="number"
+                    placeholder="MM"
+                    ref={minutesRef}
+                    min={new Date(values.expiresAt).getHours() === 0 ? 1 : 0}
+                    onChange={(e) =>
+                      handleTimeChange(setFieldValue, "minutes", e.target.value)
+                    }
+                    className="w-full h-full px-1 py-0.5 text-center rounded-md text-grayRed-950/85 placeholder:text-grayRed-950/40 text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-y-1 w-full">
+            <label
+              htmlFor="poll-description"
+              className="font-bold text-base text-secondary"
+            >
+              Poll Visibility
+            </label>
+
+            <small className="text-grayRed-950/65 text-sm">
+              Determine who can see this poll. Choose between making it visible
+              to everyone or restricting it to specific countries, states, or
+              cities.
+            </small>
+
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-2 md:gap-y-0 md:gap-x-4 mt-2">
+              <div className="cols-span-1 flex flex-col gap-y-2 w-full">
+                <Select
+                  name="pollVisibility.type"
+                  onValueChange={(value) =>
+                    setFieldValue("pollVisibility.type", value)
+                  }
+                  defaultValue={values.pollVisibility.type}
+                >
+                  <div className="group/select w-full p-0.5 bg-gradient-to-br from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-xl">
+                    <SelectTrigger className="w-full min-h-[42px] !p-2 !px-3 rounded-xl group-hover/select:rounded-[10px] focus:rounded-[10px] shadow-inner text-grayRed-950/85 text-sm lg:text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none">
+                      <SelectValue placeholder="Select Poll Visiblity" />
+                    </SelectTrigger>
+                  </div>
+                  <SelectContent className="bg-sitywatch-bg bg-cover bg-center bg-no-repeat text-grayRed-950 border-[rgb(163_138_138/0.3)]">
+                    <SelectGroup>
+                      <SelectLabel>Visibility Options</SelectLabel>
+                      <SelectItem value="everyone">Everyone</SelectItem>
+                      <SelectItem value="restricted">Restricted</SelectItem>
+                      <SelectItem value="manual">Manual</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
+                <ErrorMessage
+                  name={`pollVisibility.type`}
+                  component="small"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+
+              <div className="col-span-1 flex flex-col gap-y-2 w-full">
+                <Combobox onClose={() => setQuery('')} onChange={(e) => { console.log(e) }}>
+                  <div className="group/combobox w-full min-h-[42px] p-0.5 bg-gradient-to-br grid grid-cols-1 from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-xl relative">
+                    <ComboboxInput
+                      name={`pollVisibility.locations`}
+                      aria-label="Poll Visibility Locations"
+                      placeholder="Start typing to add locations..."
+                      onChange={(event) => setQuery(event.target.value)}
+                      className={cn(
+                        "w-full min-h-full p-2 px-3 rounded-xl group-hover/combobox:rounded-[10px] focus:rounded-[10px] shadow-inner text-grayRed-950/85 placeholder:text-grayRed-950/40 placeholder:opacity-95 text-sm lg:text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                      )}
+                    />
+
+                    <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-transparent bg-gradient-to-br bg-clip-text from-primary to-secondary text-[18px] md:text-[20px]">
+                      travel_explore
+                    </span>
+                  </div>
+
+                  <ComboboxOptions
+                    anchor="bottom"
+                    className="border border-[rgb(163_138_138/0.3)] empty:invisible absolute !z-[9999] bg-sitywatch-bg bg-cover bg-center text-sm bg-no-repeat min-w-64 max-w-80 rounded-lg shadow-lg text-grayRed-950 !overflow-y-auto overflow-x-hidden"
+                  >
+                    {locations.map((location) => (
+                      <ComboboxOption
+                        key={useId()}
+                        value={location}
+                        className="group flex gap-2 bg-transparent data-[focus]:bg-primary-100/55 hover:bg-primary-100/45 py-1.5 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined size-4 text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600 text-[20px]">
+                          check
+                        </span>
+                        <span>{location}</span>
+                      </ComboboxOption>
+                    ))}
+                  </ComboboxOptions>
+                </Combobox>
+
+                <ErrorMessage
+                  name={`pollVisibility.locations`}
+                  component="small"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+            </div>
+
+            <div
+              className={cn(
+                "w-full min-h-10 flex flex-row items-center flex-wrap gap-x-2 p-2 relative rounded-xl shadow-[0px_0px_0px_1px_rgb(163_138_138/0.3)] mt-2 opacity-100",
+                values.pollVisibility.type !== "restricted" &&
+                  "opacity-0 hidden"
+              )}
+            >
+              {/* <motion.button { ...whileTapOptions } type="button" className="group/chip rounded-full py-1.5 px-3 flex items-center space-x-2 text-sm bg-gradient-to-b from-grayRed-200 to-grayRed/50 text-grayRed-950 shadow-inner hover:shadow-primary-700/40 transition-all duration-300 will-change-auto transform-gpu">
+                <span className="text-inherit">Jos</span>
+                <span  className="material-symbols-outlined text-inherit text-[18px] lg:text-[20px] scale-100 group-hover/chip:scale-110 transition-all duration-300 will-change-auto transform-gpu group-hover/chip:text-primary">do_not_disturb_on</span>
+              </motion.button> */}
+
+              <p
+                className={cn(
+                  "text-sm absolute top-1/2 left-1/2 w-full 2xl:w-[80%] text-grayRed-950/65 text-center -translate-y-[50%] -translate-x-[50%] opacity-100 transition-all duration-300 will-change-auto",
+                  !isEmpty(values.pollVisibility.locations) &&
+                    "opacity-0 hidden"
+                )}
+              >
+                No locations selected. Choose countries, states, or cities to
+                target your audience.
+              </p>
             </div>
           </div>
 
@@ -292,7 +598,7 @@ const CreatePandarPollDialogFormik: React.FC = () => {
                       <ErrorMessage
                         name={`stations.${stationIndex}.label`}
                         component="small"
-                        className="text-red-500 mt-2"
+                        className="text-red-500 text-sm mt-2"
                       />
 
                       <label
@@ -406,7 +712,8 @@ const CreatePandarPollDialogFormik: React.FC = () => {
                                         disabled={station.options.length < 2}
                                         className={cn(
                                           "flex items-center justify-center gap-x-1 text-sm font-medium text-primary py-0.5 px-2 bg-gradient-to-b from-grayRed-50/0 hover:from-grayRed-50 to-primary-100/0 hover:to-primary-100 rounded-full opacity-100 transition-all duration-300 will-change-auto transform-gpu",
-                                          station.options.length < 2 && "opacity-0 hidden"
+                                          station.options.length < 2 &&
+                                            "opacity-0 hidden"
                                         )}
                                       >
                                         <span className="material-symbols-outlined text-[18px]">
@@ -420,13 +727,13 @@ const CreatePandarPollDialogFormik: React.FC = () => {
                                   </div>
 
                                   {option.type === "text" ? (
-                                    <div className="group/textarea w-full min-h-10 p-0.5 bg-gradient-to-br from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-xl">
+                                    <div className="group/input w-full min-h-10 p-0.5 bg-gradient-to-br from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-xl">
                                       <input
                                         id={`stations.${stationIndex}.options.${optionIndex}.value`}
                                         name={`stations.${stationIndex}.options.${optionIndex}.value`}
                                         value={option.value}
                                         onChange={handleChange}
-                                        className="w-full min-h-full p-2 rounded-xl group-hover/textarea:rounded-[10px] focus:rounded-[10px] resize-none shadow-inner text-grayRed-950/85 text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                                        className="w-full min-h-full p-2 rounded-xl group-hover/input:rounded-[10px] focus:rounded-[10px] resize-none shadow-inner text-grayRed-950/85 text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
                                       />
                                     </div>
                                   ) : (
@@ -438,7 +745,7 @@ const CreatePandarPollDialogFormik: React.FC = () => {
                                   <ErrorMessage
                                     name={`stations.${stationIndex}.options.${optionIndex}.value`}
                                     component="small"
-                                    className="text-red-500 mt-2"
+                                    className="text-red-500 text-sm mt-2"
                                   />
                                 </div>
                               )
