@@ -1,4 +1,4 @@
-import React, { useId, useRef, useState } from "react";
+import React, { FormEvent, useId, useRef, useState } from "react";
 import {
   DialogClose,
   DialogContent,
@@ -18,14 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from "@headlessui/react";
-
 import { format } from "date-fns";
 
 import Image from "next/image";
@@ -40,6 +32,7 @@ import * as Yup from "yup";
 
 import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
+import { useSpoolCountries, useSpoolStates } from "@/hooks";
 
 const startPollTextColors =
   "text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600 group-hover/create-poll-btn:from-primary-50 group-hover/create-poll-btn:to-secondary-50 transition-all duration-300 will-change-auto";
@@ -225,24 +218,24 @@ const FileUpload = (props: any) => {
   );
 };
 
-const locations = [
-  "New York",
-  "Los Angeles",
-  "Chicago",
-  "Houston",
-  "Phoenix",
-  "Philadelphia",
-  "San Antonio",
-  "San Diego",
-  "Dallas",
-  "San Jose",
-];
-
 const CreatePandarPollDialogFormik = () => {
   const [query, setQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const hoursRef = useRef<HTMLInputElement>(null);
   const minutesRef = useRef<HTMLInputElement>(null);
+
+  const { states } = useSpoolStates();
+  const { countries } = useSpoolCountries();
+
+  const locations = countries.concat(states);
+
+  const filteredLocations =
+    query === ""
+      ? []
+      : locations.filter((location) => {
+          return location.value.toLowerCase().includes(query.toLowerCase());
+        });
 
   const addHoursAndMinutes = (
     time: TimeInput = { hours: 23, minutes: 59 }
@@ -290,6 +283,22 @@ const CreatePandarPollDialogFormik = () => {
 
     setFieldValue("expiresAt", newExpiresAt);
   }, 300);
+
+  const handleLocationSearchOnBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    const value = e.target.value; 
+
+    debounce(() => {
+      setQuery("");
+      e.target.value = "";
+      setIsDropdownOpen(false);
+    }, 300)();
+  };
+
+  const handleLocationOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debounce(() => {
+      setQuery(e.target.value);
+    }, 100)();
+  }
 
   return (
     <Formik<FormValues>
@@ -374,7 +383,7 @@ const CreatePandarPollDialogFormik = () => {
                     onChange={(e) =>
                       handleTimeChange(setFieldValue, "hours", e.target.value)
                     }
-                    className="w-full h-full px-1 py-0.5 text-center text-grayRed-950/85 placeholder:text-grayRed-950/40 rounded-md text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                    className="w-full h-full px-1 py-0.5 text-center placeholder:text-grayRed-950/40 rounded-md text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
                   />
                 </div>
 
@@ -393,7 +402,7 @@ const CreatePandarPollDialogFormik = () => {
                     onChange={(e) =>
                       handleTimeChange(setFieldValue, "minutes", e.target.value)
                     }
-                    className="w-full h-full px-1 py-0.5 text-center rounded-md text-grayRed-950/85 placeholder:text-grayRed-950/40 text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
+                    className="w-full h-full px-1 py-0.5 text-center rounded-md placeholder:text-grayRed-950/40 text-sm resize-none shadow-inner text-grayRed-950/85 leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
                   />
                 </div>
               </div>
@@ -445,14 +454,24 @@ const CreatePandarPollDialogFormik = () => {
                 />
               </div>
 
-              <div className="col-span-1 flex flex-col gap-y-2 w-full">
-                <Combobox onClose={() => setQuery('')} onChange={(e) => { console.log(e) }}>
+              <div
+                className={cn(
+                  "col-span-1 flex-col gap-y-2 w-full transition-all duration-300 will-change-auto",
+                  values.pollVisibility.type === "restricted"
+                    ? "flex opacity-100"
+                    : "hidden opacity-0"
+                )}
+              >
+                <div>
                   <div className="group/combobox w-full min-h-[42px] p-0.5 bg-gradient-to-br grid grid-cols-1 from-primary/0 to:secondary/0 hover:from-primary focus-within:from-primary hover:to-secondary focus-within:to-secondary rounded-xl relative">
-                    <ComboboxInput
+                    <input
                       name={`pollVisibility.locations`}
                       aria-label="Poll Visibility Locations"
                       placeholder="Start typing to add locations..."
-                      onChange={(event) => setQuery(event.target.value)}
+                      onChange={handleLocationOnChange}
+                      type="search"
+                      onFocus={debounce(() => setIsDropdownOpen(true), 300)}
+                      onBlur={handleLocationSearchOnBlur}
                       className={cn(
                         "w-full min-h-full p-2 px-3 rounded-xl group-hover/combobox:rounded-[10px] focus:rounded-[10px] shadow-inner text-grayRed-950/85 placeholder:text-grayRed-950/40 placeholder:opacity-95 text-sm lg:text-[15px] leading-[23px] bg-white/90 focus:bg-white/95 backdrop-blur backdrop-filter focus:outline-none"
                       )}
@@ -463,24 +482,53 @@ const CreatePandarPollDialogFormik = () => {
                     </span>
                   </div>
 
-                  <ComboboxOptions
-                    anchor="bottom"
-                    className="border border-[rgb(163_138_138/0.3)] empty:invisible absolute !z-[9999] bg-sitywatch-bg bg-cover bg-center text-sm bg-no-repeat min-w-64 max-w-80 rounded-lg shadow-lg text-grayRed-950 !overflow-y-auto overflow-x-hidden"
+                  <div
+                    className={cn(
+                      "border border-[rgb(163_138_138/0.3)] grid-cols-1 absolute !z-[9998] bg-sitywatch-bg bg-cover bg-center text-sm bg-no-repeat min-w-64 max-w-80 max-h-96 rounded-lg shadow-lg text-grayRed-950 !overflow-y-auto overflow-x-hidden transition-all duration-300 will-change-transform transform-gpu",
+                      isDropdownOpen && filteredLocations.length > 0
+                        ? "grid opacity-100 scale-100"
+                        : "hidden opacity-0 scale-0"
+                    )}
                   >
-                    {locations.map((location) => (
-                      <ComboboxOption
-                        key={useId()}
-                        value={location}
-                        className="group flex gap-2 bg-transparent data-[focus]:bg-primary-100/55 hover:bg-primary-100/45 py-1.5 cursor-pointer"
+                    {filteredLocations.map((location) => (
+                      <button
+                        type="button"
+                        key={`dropdown-option-${location.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          console.log(location.value);
+                          const _locations = Array.from(
+                            new Set([
+                              ...values.pollVisibility.locations,
+                              location.value,
+                            ])
+                          );
+
+                          console.log({ _locations, v: location.value });
+                          setFieldValue("pollVisibility.locations", _locations);
+                        }}
+                        disabled={values.pollVisibility.locations.includes(location.value)}
+                        className={cn("group flex gap-2 px-2 w-full bg-transparent focus:bg-primary-100/55 hover:bg-primary-100/45 py-1.5 !cursor-pointer relative !z-[9999]")}
                       >
-                        <span className="material-symbols-outlined size-4 text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600 text-[20px]">
+                        <span
+                          className={cn(
+                            "material-symbols-outlined size-4 text-transparent bg-gradient-to-b bg-clip-text from-primary-600 to-secondary-600 text-[20px] transition-all duration-300 will-change-auto",
+                            values.pollVisibility.locations.includes(
+                              location.value
+                            )
+                              ? "inline-block"
+                              : "hidden"
+                          )}
+                        >
                           check
                         </span>
-                        <span>{location}</span>
-                      </ComboboxOption>
+
+                        <span>{location.value}</span>
+                      </button>
                     ))}
-                  </ComboboxOptions>
-                </Combobox>
+                  </div>
+                </div>
 
                 <ErrorMessage
                   name={`pollVisibility.locations`}
@@ -497,21 +545,43 @@ const CreatePandarPollDialogFormik = () => {
                   "opacity-0 hidden"
               )}
             >
-              {/* <motion.button { ...whileTapOptions } type="button" className="group/chip rounded-full py-1.5 px-3 flex items-center space-x-2 text-sm bg-gradient-to-b from-grayRed-200 to-grayRed/50 text-grayRed-950 shadow-inner hover:shadow-primary-700/40 transition-all duration-300 will-change-auto transform-gpu">
-                <span className="text-inherit">Jos</span>
-                <span  className="material-symbols-outlined text-inherit text-[18px] lg:text-[20px] scale-100 group-hover/chip:scale-110 transition-all duration-300 will-change-auto transform-gpu group-hover/chip:text-primary">do_not_disturb_on</span>
-              </motion.button> */}
+              {values.pollVisibility.locations.length === 0 && (
+                <p
+                  className={cn(
+                    "text-sm absolute top-1/2 left-1/2 w-full 2xl:w-[80%] text-grayRed-950/65 text-center -translate-y-[50%] -translate-x-[50%] transition-all duration-300 will-change-auto opacity-100"
+                  )}
+                >
+                  No locations selected. Choose countries, states, or cities to
+                  target your audience.
+                </p>
+              )}
 
-              <p
-                className={cn(
-                  "text-sm absolute top-1/2 left-1/2 w-full 2xl:w-[80%] text-grayRed-950/65 text-center -translate-y-[50%] -translate-x-[50%] opacity-100 transition-all duration-300 will-change-auto",
-                  !isEmpty(values.pollVisibility.locations) &&
-                    "opacity-0 hidden"
-                )}
-              >
-                No locations selected. Choose countries, states, or cities to
-                target your audience.
-              </p>
+              {values.pollVisibility.locations.map((location) => (
+                <motion.button
+                  {...whileTapOptions}
+                  type="button"
+                  key={`chip-${location}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    setFieldValue(
+                      "pollVisibility.locations",
+                      values.pollVisibility.locations.filter(
+                        (loc) => loc !== location
+                      )
+                    );
+                  }}
+                  className="group/chip rounded-full py-1.5 px-3 flex items-center space-x-2 text-sm bg-gradient-to-b from-grayRed-200 to-grayRed/50 text-grayRed-950 shadow-inner hover:shadow-primary-700/40 transition-all duration-300 will-change-auto transform-gpu"
+                >
+                  <span className="text-inherit">{location}</span>
+                  <span
+                    aria-hidden="true"
+                    className="material-symbols-outlined text-inherit text-[18px] lg:text-[20px] scale-100 group-hover/chip:scale-110 transition-all duration-300 will-change-auto transform-gpu group-hover/chip:text-primary"
+                  >
+                    do_not_disturb_on
+                  </span>
+                </motion.button>
+              ))}
             </div>
           </div>
 
@@ -525,7 +595,10 @@ const CreatePandarPollDialogFormik = () => {
                     station: { label: string; options: Option[] },
                     stationIndex: number
                   ) => (
-                    <div className="flex flex-col gap-y-1 w-full shadow-[0px_0px_0px_1px_rgb(163_138_138/0.2)] rounded-xl p-4 transition-all duration-300 will-change-auto transform-gpu">
+                    <div
+                      key={`station-${stationIndex}-container`}
+                      className="flex flex-col gap-y-1 w-full shadow-[0px_0px_0px_1px_rgb(163_138_138/0.2)] rounded-xl p-4 transition-all duration-300 will-change-auto transform-gpu"
+                    >
                       <div className="flex items-center justify-between">
                         <label
                           htmlFor={`stations.${stationIndex}.label`}
@@ -621,6 +694,7 @@ const CreatePandarPollDialogFormik = () => {
                             {station.options.map(
                               (option: Option, optionIndex: number) => (
                                 <div
+                                  key={`stations-${stationIndex}-options-${optionIndex}`}
                                   className={cn(
                                     "flex flex-col gap-y-1 w-full p-2 shadow-[0px_0px_0px_1px_rgb(163_138_138/0.30)] rounded-xl mb-2 transition-all duration-300 will-change-auto transform-gpu",
                                     optionIndex ===

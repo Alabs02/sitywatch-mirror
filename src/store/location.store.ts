@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-export type Location = { id: string; value: string };
+export type Location = { id: string; value: string; iso3?: string; iso2?: string; latitude?: string; longitude?: string };
 
 export type LocationStore = {
   cities: Location[];

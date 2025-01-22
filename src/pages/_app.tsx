@@ -2,6 +2,7 @@ import { AppProps } from "next/app"
 import { Fragment, useEffect } from "react"
 import Head from "next/head"
 import "@/styles/globals.scss"
+import "../../public/static/font-icons/style.css";
 import "animate.css"
 import Layout from "@/layouts/Layout"
 import { useAuthStore } from "@/store"
