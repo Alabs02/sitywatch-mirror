@@ -284,8 +284,10 @@ const CreatePandarPollDialogFormik = () => {
     setFieldValue("expiresAt", newExpiresAt);
   }, 300);
 
-  const handleLocationSearchOnBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
-    const value = e.target.value; 
+  const handleLocationSearchOnBlur = (
+    e: React.FocusEvent<HTMLInputElement, Element>
+  ) => {
+    const value = e.target.value;
 
     debounce(() => {
       setQuery("");
@@ -298,7 +300,7 @@ const CreatePandarPollDialogFormik = () => {
     debounce(() => {
       setQuery(e.target.value);
     }, 100)();
-  }
+  };
 
   return (
     <Formik<FormValues>
@@ -508,8 +510,12 @@ const CreatePandarPollDialogFormik = () => {
                           console.log({ _locations, v: location.value });
                           setFieldValue("pollVisibility.locations", _locations);
                         }}
-                        disabled={values.pollVisibility.locations.includes(location.value)}
-                        className={cn("group flex gap-2 px-2 w-full bg-transparent focus:bg-primary-100/55 hover:bg-primary-100/45 py-1.5 !cursor-pointer relative !z-[9999]")}
+                        disabled={values.pollVisibility.locations.includes(
+                          location.value
+                        )}
+                        className={cn(
+                          "group flex gap-2 px-2 w-full bg-transparent focus:bg-primary-100/55 hover:bg-primary-100/45 py-1.5 !cursor-pointer relative !z-[9999]"
+                        )}
                       >
                         <span
                           className={cn(
