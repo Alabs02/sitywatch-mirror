@@ -576,7 +576,7 @@ const PollPanel = () => {
           <span className="text-inherit">•</span>
           <Link
             href={""}
-            aria-label={`thoughts`}
+            aria-label={`recites`}
             className="text-inherit hover:text-transparent hover:bg-gradient-to-b hover:bg-clip-text hover:from-primary hover:to-secondary transition-colors duration-300 will-change-auto"
           >
             2 recites
