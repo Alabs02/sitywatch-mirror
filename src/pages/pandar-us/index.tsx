@@ -24,7 +24,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { imagePaths, whileTapOptions } from "@/constants";
-import { CreatePandarPollDialog } from "@/pages/pandar-us/create-pandar-poll-dialog";
+import { CreatePandarPollDialog } from "@/components/forms";
 import { routes } from "@/constants/api.routes";
 import { useLocationStore } from "@/store/location.store";
 import { nanoid } from "@reduxjs/toolkit";

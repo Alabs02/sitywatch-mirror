@@ -2,6 +2,7 @@
   "name": "citywatch-client-side",
   "version": "1.0",
   "private": true,
+  "license": "SITYWATCH",
   "scripts": {
     "dev": "next -p 3050",
     "build": "next build",

@@ -51,7 +51,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
   return (
     <Fragment>
       <Head>
-        <title>SityWatch</title>
+        <title>Scout City</title>
+        <meta name="description" content="Connect with peers and like-minds, hear the latest gists buzzing, explore talent-based opportunities, and gain recognition for your achievements" />
+        <meta name="keywords" content="SityWatch, scout sity social network, connect, peers, opportunities, recognition, achievements" />
       </Head>
       
       {isBuildSitadelPage ? (
